@@ -1,3 +1,5 @@
+var modelview_neuron_viewers = [];
+
 $(function() {
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
@@ -24,9 +26,15 @@ $(function() {
     if (modelview_data.neuron == undefined) {
         modelview_data.neuron = [];
     }
+
+    if (modelview_data.neuronviewer == undefined) {
+        modelview_data.neuronviewer = [];
+    }
     
-    $.each(modelview_data.neuron, function(i, neuron_data) {
-        MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
+    $.each(modelview_data.neuronviewer, function(i, neuron_view) {
+        var neuron_data = modelview_data.neuron[neuron_view];
+        var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
+        modelview_neuron_viewers.push(new_view_id);
     });
     
     /*

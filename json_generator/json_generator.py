@@ -327,6 +327,7 @@ data = {
     'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
     'title': 'CA1 pyramidal neuron: effects of Ih on distal inputs (Migliore et al 2004)',
     'short_title': 'Migliore et al 2004',
+    'neuronviewer': range(len(root_sections)),
     'tree': [
             summary,
             blank_line,
