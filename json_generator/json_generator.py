@@ -33,12 +33,13 @@ def morph_per_root(root):
         z = [h.z3d(i, sec=sec) for i in xrange(n3d)]
         d = [h.diam3d(i, sec=sec) for i in xrange(n3d)]
         arc = [h.arc3d(i, sec=sec) for i in xrange(n3d)]
-        half_dx = 0.5 * sec.L / sec.nseg
+        length = sec.L
+        half_dx = 0.5 / sec.nseg
         for seg in sec:
-            morph.append(get_pts_between(x, y, z, d, arc, seg.x - half_dx, seg.x + half_dx))
+            morph.append(get_pts_between(x, y, z, d, arc, (seg.x - half_dx) * length, (seg.x + half_dx) * length))
     return morph
 
-data = {'neuron': [{'title': root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
+data = {'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
         'title': 'CA1 pyramidal neuron: effects of Ih on distal inputs (Migliore et al 2004)',
         'short_title': 'Migliore et al 2004',
         'tree': [
@@ -55,7 +56,6 @@ data = {'neuron': [{'title': root.name(), 'morphology': morph_per_root(root)} fo
                 }	                
 	        ]
 	    }
-
 
 
 with open('modelview.json', 'w') as f:
