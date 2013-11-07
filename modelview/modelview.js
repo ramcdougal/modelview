@@ -43,9 +43,7 @@ function modelview_build_tree_(src_tree) {
         if (row.children != undefined) {
             children = modelview_build_tree_(row.children);
         }
-        console.log('i = ' + i);
         result.push([row.text, {children: children}])
     });
-    console.log('finished recursion:' + result);
     return result;
 }
