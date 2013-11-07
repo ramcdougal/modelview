@@ -89,6 +89,50 @@ references = {
 
 blank_line = {'text': ''}
 
+# linear mechanisms
+linear_mechs = h.List('LinearMechanism')
+linear_mechs = {'text': '%d LinearMechanism objects' % linear_mechs.count()}
+
+# TODO: generate this automatically by analyzing modeldb
+mech_xref = {
+    'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
+    'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
+    'kap': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kaprox.mod">kaprox.mod</a>)',
+    'kdr': ' (K-dr, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kdrca1.mod">kdrca1.mod</a>)',
+    'na3': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\na3n.mod">na3n.mod</a>)',
+    'nax': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\naxn.mod">naxn.mod</a>)',
+    'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
+}
+
+# mechanisms in use
+mechs = []
+h("""
+objref mt
+strdef mname
+""")
+h.mt = h.MechanismType(0)
+for i in xrange(int(h.mt.count()) - 1):
+    h.mt.select(i)
+    h('mt.selected(mname)')
+    mechs.append({'text': h.mname + mech_xref.get(h.mname, '')})
+mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
+
+# density mechanisms
+density_mechanisms = {
+    'text': 'Density Mechanisms',
+    'children': [
+        mech_in_use
+    ]
+}
+
+# TODO: this
+kschan_defs = {
+    'text': 'KSChan definitions for density mechanisms'
+}
+
+
+
+
 data = {
     'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
     'title': 'CA1 pyramidal neuron: effects of Ih on distal inputs (Migliore et al 2004)',
@@ -98,6 +142,11 @@ data = {
             blank_line,
             real_cells,
             artificial_cells,
+            linear_mechs,
+            blank_line,
+            density_mechanisms,
+            kschan_defs,
+            blank_line,
             references              
         ]
 }
