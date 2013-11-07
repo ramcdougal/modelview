@@ -63,12 +63,14 @@ summary = {
 }
 
 # real cells
+# TODO: action: display all cells
 real_cells = {
     'text': '%d real cells' % len(root_sections)
 }
 if root_sections:
     real_cells['children'] = []
     for root in root_sections:
+        # TODO: action: when clicking on a specific cell, display just that one
         real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root)})
 
 # TODO: this
@@ -108,6 +110,7 @@ mech_xref = {
 mechs = []
 h("""
 objref mt
+json_var = 0
 strdef mname
 """)
 h.mt = h.MechanismType(0)
@@ -124,6 +127,42 @@ density_mechanisms = {
         mech_in_use
     ]
 }
+
+def process_values(name, values):
+    if len(values) == 1:
+        # TODO: plot location
+        return {'text': '%s = %g' % (name, values[0])}
+    else:
+        # TODO: plot location, plot values as a function of distance to root
+        return {
+            'text': '%d values for %s from %g to %g' % (len(values), name, min(values), max(values)),
+            'children': [{'text': v} for v in values]
+        }
+
+# NetCon (based on ncview.hoc)
+netcon_list = h.List('NetCon')
+netcons = {'text': '%d NetCon objects' % netcon_list.count()}
+if netcon_list.count():
+    weights = []
+    delays = []
+    threshold = []
+    # TODO: talk to Michael about why this doesn't work in pure python
+    for i in xrange(int(netcon_list.count())):
+        h.mt = netcon_list.object(i)
+        h('json_var = mt.weight')
+        weights.append(h.json_var)
+        h('json_var = mt.delay')
+        delays.append(h.json_var)
+        h('json_var = mt.threshold')
+        threshold.append(h.json_var)
+    weights = sorted(set(weights))
+    delays = sorted(set(delays))
+    threshold = sorted(set(threshold))
+    netcons['children'] = [
+        process_values('weight', weights),
+        process_values('delay', delays),
+        process_values('threshold', threshold)
+    ]
 
 # TODO: this
 kschan_defs = {
@@ -142,6 +181,7 @@ data = {
             blank_line,
             real_cells,
             artificial_cells,
+            netcons,
             linear_mechs,
             blank_line,
             density_mechanisms,
