@@ -51,8 +51,9 @@ function modelview_build_tree_(src_tree) {
         children = undefined;
         if (row.children != undefined) {
             children = modelview_build_tree_(row.children);
+            if (children.length == 0) children = undefined;
         }
-        result.push([row.text, {children: children}])
+        result.push([row.text, {children: children}]);
     });
     return result;
 }
