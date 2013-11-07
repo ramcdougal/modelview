@@ -38,7 +38,7 @@ def morph_per_root(root):
             morph.append(get_pts_between(x, y, z, d, arc, seg.x - half_dx, seg.x + half_dx))
     return morph
 
-data = {'neuron': [morph_per_root(root) for root in root_sections],
+data = {'neuron': [{'title': root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
         'title': 'CA1 pyramidal neuron: effects of Ih on distal inputs (Migliore et al 2004)',
         'short_title': 'Migliore et al 2004',
         'tree': [
