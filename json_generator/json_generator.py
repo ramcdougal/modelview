@@ -22,6 +22,18 @@ for sec in h.allsec():
     if not h.SectionRef(sec).has_parent():
         root_sections.append(sec)
 
+# TODO: generate this automatically by analyzing modeldb
+mech_xref = {
+    'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
+    'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
+    'kap': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kaprox.mod">kaprox.mod</a>)',
+    'kdr': ' (K-dr, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kdrca1.mod">kdrca1.mod</a>)',
+    'na3': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\na3n.mod">na3n.mod</a>)',
+    'nax': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\naxn.mod">naxn.mod</a>)',
+    'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
+}
+
+
 # get all mech names
 mech_names = []
 h("""
@@ -75,7 +87,7 @@ def sec_seg(secs):
         num_segs = '%d segments' % num_segs
     return '%s; %s' % (num_secs, num_segs)
 
-def nseg_analysis(secs):
+def nseg_analysis(secs, cell_id):
     nsegs = {}
     dx_max = 0
     for sec in secs:
@@ -85,18 +97,24 @@ def nseg_analysis(secs):
         nsegs[sec.nseg] = 0
     return {
         'text': '%d distinct value%s of nseg' % (len(nsegs.values()), 's' if len(nsegs.values()) != 1 else ''),
+        'action': [{'kind': 'neuronviewer', 'id': cell_id}],
         'children': [
-            {'text': 'Longest dx is %g at %s with nseg=%d' % (dx_max, dx_max_loc.name(), dx_max_loc.nseg)}
+            {
+                'text': 'Longest dx is %g at %s with nseg=%d' % (dx_max, dx_max_loc.name(), dx_max_loc.nseg),
+                'action': [{'kind': 'neuronviewer', 'id': cell_id}]
+            }
         ]
     }
 
 def cell_mech_analysis(secs, cell_id):
-    mechs = mechs_present(secs)
+    mps = mechs_present(secs)
+    mechs = [name + mech_xref.get(name, '') for name in mps]
     return {
         'text': '%d inserted mechanisms' % len(mechs),
+        'action': [{'kind': 'neuronviewer', 'id': cell_id}],
         'children': [
             {
-                'text': mech,
+                'text': mech_text,
                 'action': [
                     {
                         'kind': 'neuronviewer',
@@ -104,7 +122,7 @@ def cell_mech_analysis(secs, cell_id):
                         'id': cell_id
                     }
                 ]
-            } for mech in mechs
+            } for mech_text, mech in zip(mechs, mps)
         ]
     }
 
@@ -121,8 +139,11 @@ def cell_tree(root):
     cell_id = root_sections.index(root)
     secs = secs_with_root(root)
     return [
-        {'text': sec_seg(secs)},
-        nseg_analysis(secs),
+        {
+            'text': sec_seg(secs),
+            'action': [{'kind': 'neuronviewer', 'id': cell_id}]
+        },
+        nseg_analysis(secs, cell_id),
         cell_mech_analysis(secs, cell_id)
     ]
 
@@ -144,9 +165,9 @@ real_cells = {
 }
 if root_sections:
     real_cells['children'] = []
-    for root in root_sections:
+    for cell_id, root in enumerate(root_sections):
         # TODO: action: when clicking on a specific cell, display just that one
-        real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root)})
+        real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
 
 # TODO: this
 artificial_cells = {'text': '0 artificial cells'}
@@ -170,16 +191,6 @@ blank_line = {'text': ''}
 linear_mechs = h.List('LinearMechanism')
 linear_mechs = {'text': '%d LinearMechanism objects' % linear_mechs.count()}
 
-# TODO: generate this automatically by analyzing modeldb
-mech_xref = {
-    'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
-    'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
-    'kap': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kaprox.mod">kaprox.mod</a>)',
-    'kdr': ' (K-dr, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kdrca1.mod">kdrca1.mod</a>)',
-    'na3': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\na3n.mod">na3n.mod</a>)',
-    'nax': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\naxn.mod">naxn.mod</a>)',
-    'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
-}
 
 # mechanisms in use
 mechs = [{'text': name + mech_xref.get(name, '')} for name in mechs_present(list(h.allsec()))]
