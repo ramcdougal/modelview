@@ -35,6 +35,7 @@ $(function() {
         var neuron_data = modelview_data.neuron[neuron_view];
         var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
         modelview_neuron_viewers.push(new_view_id);
+        hide_dialog(new_view_id);
     });
     
     /*
@@ -52,16 +53,40 @@ $(function() {
     */
 });
 
+function modelview_hide_all_() {
+    var i, id;
+    $.each(modelview_neuron_viewers, function (i, id) {
+        hide_dialog(id);
+    });
+}
 
 function modelview_build_tree_(src_tree) {
     var result = [];
+    var f, i, j;
     $.each(src_tree, function (i, row) {
         children = undefined;
         if (row.children != undefined) {
             children = modelview_build_tree_(row.children);
             if (children.length == 0) children = undefined;
         }
-        result.push([row.text, {children: children}]);
+        if (row.action != undefined) {
+            f = function() {
+                modelview_hide_all_();
+                $.each(row.action, function (j, action) {
+                    if (action.kind == 'neuronviewer') {
+                        var id = modelview_neuron_viewers[action.id];
+                        show_dialog(id);
+                        set_neuron_markers(id, action.markers);
+                        set_neuron_colors(id, action.colors);
+                    } else {
+                        console.log('ignoring unknown action kind: ' + action.kind);
+                    }
+                });
+            }
+        } else {
+            f = modelview_hide_all_;
+        }
+        result.push([row.text, {children: children, callback: f}]);
     });
     return result;
 }

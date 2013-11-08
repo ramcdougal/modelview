@@ -115,7 +115,13 @@ summary = {
 # real cells
 # TODO: action: display all cells
 real_cells = {
-    'text': '%d real cell%s' % (len(root_sections), 's' if len(root_sections) != 1 else '')
+    'text': '%d real cell%s' % (len(root_sections), 's' if len(root_sections) != 1 else ''),
+    'action': [
+        {
+            'kind': 'neuronviewer',
+            'id': i
+        } for i in xrange(len(root_sections))
+    ]
 }
 if root_sections:
     real_cells['children'] = []
