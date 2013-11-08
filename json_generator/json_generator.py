@@ -101,7 +101,7 @@ def nseg_analysis(secs, cell_id):
         'children': [
             {
                 'text': 'Longest dx is %g at %s with nseg=%d' % (dx_max, dx_max_loc.name(), dx_max_loc.nseg),
-                'action': [{'kind': 'neuronviewer', 'id': cell_id}]
+                'action': [{'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_if_sec(secs, dx_max_loc)}]
             }
         ]
     }
@@ -125,6 +125,12 @@ def cell_mech_analysis(secs, cell_id):
             } for mech_text, mech in zip(mechs, mps)
         ]
     }
+
+def colorize_if_sec(secs, match_sec):
+    result = []
+    for sec in secs:
+        result += ['red' if sec == match_sec else 'black'] * int(sec.nseg)
+    return result
 
 def colorize_if_mech_present(secs, mech):
     result = []
