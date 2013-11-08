@@ -33,6 +33,9 @@ mech_xref = {
     'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
 }
 
+# TODO: identify these automatically (can get a list by doing a dir() on a mechanism, but then too many (since get internal states too)
+# TODO: need to handle section variables (Ra, maybe cm) separately
+range_vars = {'hd': ['ghdbar', 'vhalfl'], 'kad': ['gkabar'], 'kap': ['gkabar'], 'kdr': ['gkdrbar'], 'na3': ['sh', 'gbar', 'ar'], 'nax': ['sh', 'gbar'], 'pas': ['g', 'e'], 'na_ion': ['ena'], 'k_ion': ['ek']}
 
 # get all mech names
 mech_names = []
@@ -55,6 +58,30 @@ def mechs_present(secs):
                 result.append(name)
                 break
     return ['Ra', 'cm'] + result
+
+def two_char_hex(n):
+    s = hex(int(n))[-2 :]
+    if s[0] == 'x':
+        s = '0' + s[1]
+    return s
+
+def hex_rgb(r, g, b):
+    """expects r, g, b between 0 and 1"""
+    return '#' + two_char_hex(r * 255) + two_char_hex(g * 255) + two_char_hex(b * 255)
+
+def values_to_colors(values):
+    non_nan = [v for v in values if not numpy.isnan(v)]
+    if len(non_nan) == 0:
+        return ['black'] * len(values)
+    lo = min(non_nan)
+    hi = max(non_nan)
+    length = float(hi - lo)
+    if lo == hi:
+        return ['black' if numpy.isnan(v) else 'red' for v in values]
+    else:
+        values = numpy.array([(v - lo) / length for v in values])
+        # gradient from blue (lo) to red (hi)
+        return [(hex_rgb(v, 0, 1 - v) if not numpy.isnan(v) else 'black') for v in values]
 
 def morph_per_root(root):
     morph = []
@@ -106,24 +133,45 @@ def nseg_analysis(secs, cell_id):
         ]
     }
 
+def colorize_by_mech_value(secs, mech, name):
+    values = []
+    for sec in secs:
+        try:
+            v = getattr(getattr(sec(0.5), mech), name)
+            for seg in sec:
+                values.append(getattr(getattr(seg, mech), name))
+        except:    
+            if not hasattr(sec(0.5), mech):
+                values += [numpy.nan] * sec.nseg
+    return values_to_colors(values)
+
 def cell_mech_analysis(secs, cell_id):
     mps = mechs_present(secs)
     mechs = [name + mech_xref.get(name, '') for name in mps]
+    children = []
+    for mech_text, mech in zip(mechs, mps):
+        child = {
+            'text': mech_text,
+            'action': [
+                {
+                    'kind': 'neuronviewer',
+                    'colors': colorize_if_mech_present(secs, mech),
+                    'id': cell_id
+                }
+            ]
+        }
+        if mech in range_vars:
+            child['children'] = [
+                {
+                    'text': name,
+                    'action': [{'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_by_mech_value(secs, mech, name)}]
+                } for name in range_vars[mech]
+            ]
+        children.append(child)
     return {
         'text': '%d inserted mechanisms' % len(mechs),
         'action': [{'kind': 'neuronviewer', 'id': cell_id}],
-        'children': [
-            {
-                'text': mech_text,
-                'action': [
-                    {
-                        'kind': 'neuronviewer',
-                        'colors': colorize_if_mech_present(secs, mech),
-                        'id': cell_id
-                    }
-                ]
-            } for mech_text, mech in zip(mechs, mps)
-        ]
+        'children': children
     }
 
 def colorize_if_sec(secs, match_sec):
