@@ -90,21 +90,40 @@ def nseg_analysis(secs):
         ]
     }
 
-def cell_mech_analysis(secs):
+def cell_mech_analysis(secs, cell_id):
     mechs = mechs_present(secs)
     return {
         'text': '%d inserted mechanisms' % len(mechs),
         'children': [
-            {'text': mech} for mech in mechs
+            {
+                'text': mech,
+                'action': [
+                    {
+                        'kind': 'neuronviewer',
+                        'colors': colorize_if_mech_present(secs, mech),
+                        'id': cell_id
+                    }
+                ]
+            } for mech in mechs
         ]
     }
 
+def colorize_if_mech_present(secs, mech):
+    result = []
+    for sec in secs:
+        if hasattr(sec, mech) or hasattr(sec(0.5), mech):
+            result += ['red'] * sec.nseg
+        else:
+            result += ['black'] * sec.nseg
+    return result
+
 def cell_tree(root):
+    cell_id = root_sections.index(root)
     secs = secs_with_root(root)
     return [
         {'text': sec_seg(secs)},
         nseg_analysis(secs),
-        cell_mech_analysis(secs)
+        cell_mech_analysis(secs, cell_id)
     ]
 
 # summary
