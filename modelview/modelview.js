@@ -38,26 +38,33 @@ $(function() {
         hide_dialog(new_view_id);
     });
     
-    /*
-    		    $('.treeButton').click(function() {
-			    var windowID = $('#windowID').val();
-			    AddTree(windowID, [
-			        ['Animals', {callback: function() {console.log('Animals!');}, children:[
-	                    ['Dogs', {callback: function() {console.log('Dogs!');}}],
-	                    ['Cats'],
-	                    ['Aardvarks']]}],
-                    ['Plants', {callback: function() {console.log('Vegetables?');}, children:[
-                        ['Tree'],
-                        ['Arabidopsis']]}]]);
-		    });
-    */
+    // flot dialog
+    flot_dialog = MakeDialog(modelview_data.short_title, true);
+    $('#' + flot_dialog).parent().addClass('no-close');
+    counter++;
+    flot_title = AddComponent(flot_dialog, '<div style="text-align: center;" id=' + counter + '>title</div>');
+    flot_fig = AddChart(flot_dialog, {contextmenu: false, doplot: false});
+    plottedFlot['placeholder' + flot_fig] = $.plot($('#placeholder' + flot_fig), []);
+    $('#' + flot_dialog).resize(function() {
+        $('#placeholder' + flot_fig).height(max(300, $('#' + flot_dialog).height() - $('#' + flot_title).height() - 50));
+        plottedFlot['placeholder' + flot_fig].draw();
+    });
+    hide_dialog(flot_dialog);
+
 });
+
+function show_flot_(data, title) {
+    show_dialog(flot_dialog);
+    $('#' + flot_title)[0].innerHTML = title;
+    plottedFlot['placeholder' + flot_fig] = $.plot($('#placeholder' + flot_fig), data, {zoom: {interactive: true}, pan: {interactive: true}});
+}
 
 function modelview_hide_all_() {
     var i, id;
     $.each(modelview_neuron_viewers, function (i, id) {
         hide_dialog(id);
     });
+    hide_dialog(flot_dialog);
 }
 
 function modelview_build_tree_(src_tree) {
@@ -78,6 +85,8 @@ function modelview_build_tree_(src_tree) {
                         show_dialog(id);
                         set_neuron_markers(id, action.markers);
                         set_neuron_colors(id, action.colors);
+                    } else if (action.kind == 'flot') {
+                        show_flot_(action.data, action.title);
                     } else {
                         console.log('ignoring unknown action kind: ' + action.kind);
                     }

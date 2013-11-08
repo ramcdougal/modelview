@@ -145,6 +145,24 @@ def colorize_by_mech_value(secs, mech, name):
                 values += [numpy.nan] * sec.nseg
     return values_to_colors(values)
 
+def flot_by_distance_from_root(root, mech, name, secs):
+    # measure distance from the midpt of the root
+    h.distance(0, 0.5, sec=root)
+    data = []
+    for sec in secs:
+        try:
+            v = getattr(getattr(sec(0.5), mech), name)
+            for seg in sec:
+                data.append([h.distance(1, seg.x, sec=sec), v])
+        except:
+            pass
+    return [{
+        'data': data,
+        'color': 'black',
+        'points': {'show': True}
+    }]
+                
+
 def cell_mech_analysis(secs, cell_id):
     mps = mechs_present(secs)
     mechs = [name + mech_xref.get(name, '') for name in mps]
@@ -164,7 +182,10 @@ def cell_mech_analysis(secs, cell_id):
             child['children'] = [
                 {
                     'text': name,
-                    'action': [{'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_by_mech_value(secs, mech, name)}]
+                    'action': [
+                        {'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_by_mech_value(secs, mech, name)},
+                        {'kind': 'flot', 'data': flot_by_distance_from_root(root_sections[cell_id], mech, name, secs), 'title': '%s.%s vs distance' % (mech, name)}
+                    ]
                 } for name in range_vars[mech]
             ]
         children.append(child)
