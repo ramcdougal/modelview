@@ -22,6 +22,28 @@ for sec in h.allsec():
     if not h.SectionRef(sec).has_parent():
         root_sections.append(sec)
 
+# get all mech names
+mech_names = []
+h("""
+objref mt
+json_var = 0
+strdef mname
+""")
+h.mt = h.MechanismType(0)
+for i in xrange(int(h.mt.count())):
+    h.mt.select(i)
+    h('mt.selected(mname)')
+    mech_names.append(h.mname)
+
+def mechs_present(secs):
+    result = []
+    for name in mech_names:
+        for sec in secs:
+            if hasattr(sec(0.5), name):
+                result.append(name)
+                break
+    return ['Ra', 'cm'] + result
+
 def morph_per_root(root):
     morph = []
     h.define_shape()
@@ -53,9 +75,37 @@ def sec_seg(secs):
         num_segs = '%d segments' % num_segs
     return '%s; %s' % (num_secs, num_segs)
 
+def nseg_analysis(secs):
+    nsegs = {}
+    dx_max = 0
+    for sec in secs:
+        if sec.L / sec.nseg > dx_max:
+            dx_max = sec.L / sec.nseg
+            dx_max_loc = sec
+        nsegs[sec.nseg] = 0
+    return {
+        'text': '%d distinct value%s of nseg' % (len(nsegs.values()), 's' if len(nsegs.values()) != 1 else ''),
+        'children': [
+            {'text': 'Longest dx is %g at %s with nseg=%d' % (dx_max, dx_max_loc.name(), dx_max_loc.nseg)}
+        ]
+    }
+
+def cell_mech_analysis(secs):
+    mechs = mechs_present(secs)
+    return {
+        'text': '%d inserted mechanisms' % len(mechs),
+        'children': [
+            {'text': mech} for mech in mechs
+        ]
+    }
+
 def cell_tree(root):
     secs = secs_with_root(root)
-    return [{'text': sec_seg(secs)}]
+    return [
+        {'text': sec_seg(secs)},
+        nseg_analysis(secs),
+        cell_mech_analysis(secs)
+    ]
 
 # summary
 summary = {
@@ -65,7 +115,7 @@ summary = {
 # real cells
 # TODO: action: display all cells
 real_cells = {
-    'text': '%d real cells' % len(root_sections)
+    'text': '%d real cell%s' % (len(root_sections), 's' if len(root_sections) != 1 else '')
 }
 if root_sections:
     real_cells['children'] = []
@@ -84,7 +134,7 @@ references = {
             'text': 'Paper: <a href="http://dx.doi.org/10.1023/B:JCNS.0000004837.81595.b0">doi:10.1023/B:JCNS.0000004837.81595.b0</a>'
         },
         {
-            'text': '<a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992">ModelDB Entry</a>'
+            'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992">ModelDB Entry</a>'
         }
     ]
 }	  
@@ -97,27 +147,17 @@ linear_mechs = {'text': '%d LinearMechanism objects' % linear_mechs.count()}
 
 # TODO: generate this automatically by analyzing modeldb
 mech_xref = {
-    'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
-    'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
-    'kap': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kaprox.mod">kaprox.mod</a>)',
-    'kdr': ' (K-dr, <a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kdrca1.mod">kdrca1.mod</a>)',
-    'na3': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\na3n.mod">na3n.mod</a>)',
-    'nax': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\naxn.mod">naxn.mod</a>)',
-    'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
+    'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
+    'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
+    'kap': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kaprox.mod">kaprox.mod</a>)',
+    'kdr': ' (K-dr, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kdrca1.mod">kdrca1.mod</a>)',
+    'na3': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\na3n.mod">na3n.mod</a>)',
+    'nax': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\naxn.mod">naxn.mod</a>)',
+    'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
 }
 
 # mechanisms in use
-mechs = []
-h("""
-objref mt
-json_var = 0
-strdef mname
-""")
-h.mt = h.MechanismType(0)
-for i in xrange(int(h.mt.count()) - 1):
-    h.mt.select(i)
-    h('mt.selected(mname)')
-    mechs.append({'text': h.mname + mech_xref.get(h.mname, '')})
+mechs = [{'text': name + mech_xref.get(name, '')} for name in mechs_present(list(h.allsec()))]
 mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 
 # density mechanisms
