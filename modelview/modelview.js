@@ -53,10 +53,13 @@ $(function() {
 
 });
 
-function show_flot_(data, title) {
+function show_flot_(data, title, xaxes, yaxes) {
+    if (!xaxes.length) xaxes = undefined;
+    if (!yaxes.length) yaxes = undefined;
+    if (title == undefined) title = '';
     show_dialog(flot_dialog);
     $('#' + flot_title)[0].innerHTML = title;
-    plottedFlot['placeholder' + flot_fig] = $.plot($('#placeholder' + flot_fig), data, {zoom: {interactive: true}, pan: {interactive: true}});
+    plottedFlot['placeholder' + flot_fig] = $.plot($('#placeholder' + flot_fig), data, {zoom: {interactive: true}, pan: {interactive: true}, xaxes: xaxes, yaxes: yaxes});
 }
 
 function modelview_hide_all_() {
@@ -86,7 +89,7 @@ function modelview_build_tree_(src_tree) {
                         set_neuron_markers(id, action.markers);
                         set_neuron_colors(id, action.colors);
                     } else if (action.kind == 'flot') {
-                        show_flot_(action.data, action.title);
+                        show_flot_(action.data, action.title, action.xaxes, action.yaxes);
                     } else {
                         console.log('ignoring unknown action kind: ' + action.kind);
                     }

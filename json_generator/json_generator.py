@@ -179,15 +179,22 @@ def cell_mech_analysis(secs, cell_id):
             ]
         }
         if mech in range_vars:
-            child['children'] = [
-                {
+            child_parts = []
+            for name in range_vars[mech]:
+                flotchart = flot_by_distance_from_root(root_sections[cell_id], mech, name, secs)
+                child_parts.append({
                     'text': name,
                     'action': [
                         {'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_by_mech_value(secs, mech, name)},
-                        {'kind': 'flot', 'data': flot_by_distance_from_root(root_sections[cell_id], mech, name, secs), 'title': '%s.%s vs distance' % (mech, name)}
+                        {
+                            'kind': 'flot',
+                            'data': flotchart,
+                            'xaxes': [{'axisLabel': 'Distance from root', 'labelcolor': 'black'}],
+                            'yaxes': [{'axisLabel': '%s.%s' % (mech, name), 'labelcolor': 'black'}]
+                        }
                     ]
-                } for name in range_vars[mech]
-            ]
+                })
+            child['children'] = child_parts
         children.append(child)
     return {
         'text': '%d inserted mechanisms' % len(mechs),
