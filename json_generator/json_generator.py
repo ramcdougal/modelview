@@ -166,7 +166,7 @@ def flot_by_distance_from_root(root, mech, name, secs):
         try:
             v = getattr(getattr(sec(0.5), mech), name)
             for seg in sec:
-                data.append([h.distance(1, seg.x, sec=sec), v])
+                data.append([h.distance(1, seg.x, sec=sec), getattr(getattr(seg, mech), name)])
         except:
             pass
     return [{
