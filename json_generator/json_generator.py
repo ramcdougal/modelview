@@ -46,6 +46,16 @@ for i in xrange(int(h.mt.count())):
     h('mt.selected(mname)')
     mech_names.append(h.mname)
 
+# get all point process names
+pointprocess_names = []
+h.mt = h.MechanismType(1)
+for i in xrange(int(h.mt.count())):
+    h.mt.select(i)
+    h('mt.selected(mname)')
+    pointprocess_names.append(h.mname)
+
+print 'pointprocess_names: ', pointprocess_names
+
 # get the names of mechanism parameters (range_vars)
 range_vars = {}
 for mech in mech_names:
@@ -174,7 +184,7 @@ def flot_by_distance_from_root(root, mech, name, secs):
         'color': 'black',
         'points': {'show': True}
     }]
-                
+
 
 def cell_mech_analysis(secs, cell_id):
     mps = mechs_present(secs)
