@@ -33,10 +33,6 @@ mech_xref = {
     'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
 }
 
-# TODO: identify these automatically (can get a list by doing a dir() on a mechanism, but then too many (since get internal states too)
-# TODO: need to handle section variables (Ra, maybe cm) separately
-range_vars = {'hd': ['ghdbar', 'vhalfl'], 'kad': ['gkabar'], 'kap': ['gkabar'], 'kdr': ['gkdrbar'], 'na3': ['sh', 'gbar', 'ar'], 'nax': ['sh', 'gbar'], 'pas': ['g', 'e'], 'na_ion': ['ena'], 'k_ion': ['ek']}
-
 # get all mech names
 mech_names = []
 h("""
@@ -49,6 +45,23 @@ for i in xrange(int(h.mt.count())):
     h.mt.select(i)
     h('mt.selected(mname)')
     mech_names.append(h.mname)
+
+# get the names of mechanism parameters (range_vars)
+range_vars = {}
+for mech in mech_names:
+    h.mt = h.MechanismStandard(mech)
+    range_vars[mech] = []
+    suffix = '_' + mech
+    lensuffix = len(suffix)
+    for i in xrange(int(h.mt.count())):
+        h('mt.name(mname, %d)' % i)
+        mname = h.mname
+        if mname[-lensuffix :] == suffix:
+            mname = mname[: -lensuffix]
+        range_vars[mech].append(mname)
+    if not range_vars[mech]: del range_vars[mech]
+print 'range_vars:', range_vars
+
 
 def mechs_present(secs):
     result = []
