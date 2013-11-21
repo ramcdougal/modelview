@@ -1,5 +1,22 @@
 var modelview_neuron_viewers = [];
 
+var last_right, last_top;
+
+function reposition_dialog(id) {
+    // set next to the last positioned dialog
+    var doc_width = document.width;
+    var me = $('#' + id);
+    var mep = me.parent();
+    mep.offset({left: last_right + 10, top: last_top});
+
+    // except: drop down if too far to the right
+    if (mep.offset().left + mep.outerWidth() > doc_width) {
+        mep.offset({left: 20, top: last_top + 100});
+    }
+    last_top = mep.offset().top;
+    last_right = mep.offset().left + mep.outerWidth();
+}
+
 $(function() {
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
@@ -24,16 +41,18 @@ $(function() {
     // the user can still resize it, but this prevents it from growing when the
     // tree is expanded
     var spacing = tree_dialog_handle.parent().height() - tree_dialog_handle.height()
-    console.log('spacing = ' + spacing);
     // start at 2/3 of the height. arbitrary.
     tree_dialog_handle.parent().height(document.height * 0.66);
     tree_dialog_handle.height(tree_dialog_handle.parent().height() - spacing);
-    console.log('my height:' + tree_dialog_handle.height());
-    console.log('parent height:' + tree_dialog_handle.parent().height());
     
     // position it somewhere better
     tree_dialog_handle.parent().css('top', '1em');
     tree_dialog_handle.parent().css('left', '1em');
+
+    last_top = tree_dialog_handle.parent().offset().top;
+    last_right = tree_dialog_handle.parent().offset().left + tree_dialog_handle.parent().outerWidth();
+    
+    last_positioned_dialog = tree_dialog;
     
     // open all links in new window, based on http://trevordavis.net/blog/use-jquery-to-open-all-external-links-in-a-new-window
     $('a').attr('target', '_blank');
@@ -50,6 +69,7 @@ $(function() {
     $.each(modelview_data.neuronviewer, function(i, neuron_view) {
         var neuron_data = modelview_data.neuron[neuron_view];
         var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
+        reposition_dialog(new_view_id);
         modelview_neuron_viewers.push(new_view_id);
         hide_dialog(new_view_id);
     });
@@ -65,6 +85,7 @@ $(function() {
         $('#placeholder' + flot_fig).height(max(300, $('#' + flot_dialog).height() - $('#' + flot_title).height() - 50));
         plottedFlot['placeholder' + flot_fig].draw();
     });
+    reposition_dialog(flot_dialog);
     hide_dialog(flot_dialog);
 
 });
