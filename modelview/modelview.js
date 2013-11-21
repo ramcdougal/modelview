@@ -14,10 +14,26 @@ $(function() {
     
     // create a dialog for the tree with no close box
     tree_dialog = MakeDialog(modelview_data.short_title, true);
-    $('#' + tree_dialog).parent().addClass('no-close');
+    var tree_dialog_handle = $('#' + tree_dialog);
+    tree_dialog_handle.parent().addClass('no-close');
     
     // generate the tree
     AddTree(tree_dialog, modelview_build_tree_(modelview_data.tree));
+
+    // start with a fixed initial height for this dialog.
+    // the user can still resize it, but this prevents it from growing when the
+    // tree is expanded
+    var spacing = tree_dialog_handle.parent().height() - tree_dialog_handle.height()
+    console.log('spacing = ' + spacing);
+    // start at 2/3 of the height. arbitrary.
+    tree_dialog_handle.parent().height(document.height * 0.66);
+    tree_dialog_handle.height(tree_dialog_handle.parent().height() - spacing);
+    console.log('my height:' + tree_dialog_handle.height());
+    console.log('parent height:' + tree_dialog_handle.parent().height());
+    
+    // position it somewhere better
+    tree_dialog_handle.parent().css('top', '1em');
+    tree_dialog_handle.parent().css('left', '1em');
     
     // open all links in new window, based on http://trevordavis.net/blog/use-jquery-to-open-all-external-links-in-a-new-window
     $('a').attr('target', '_blank');
