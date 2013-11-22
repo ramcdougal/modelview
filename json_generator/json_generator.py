@@ -528,7 +528,7 @@ data = {
 
 
 with open('modelview.json', 'w') as f:
-    f.write('modelview_data = ' + json.dumps(data))
+    f.write(json.dumps(data))
     
     
     

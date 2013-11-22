@@ -24,8 +24,13 @@
     <!-- the modelview code -->
     <script src="modelview/modelview.js" type="text/javascript"></script>
 
-    <!-- replace this with an ajax query -->
-    <script src="modelview.json" type="text/javascript"></script>
+    <script type="text/javascript">
+        $.getJSON('modelview.json', function(json) {
+            // TODO: recursively handle includes
+            modelview_data = json;
+            init_modelview();
+        });
+    </script>
 </head>
 
 <body>

@@ -17,7 +17,7 @@ function reposition_dialog(id) {
     last_right = mep.offset().left + mep.outerWidth();
 }
 
-$(function() {
+function init_modelview() {
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
     } else {
@@ -88,7 +88,7 @@ $(function() {
     reposition_dialog(flot_dialog);
     hide_dialog(flot_dialog);
 
-});
+}
 
 function show_flot_(data, title, xaxes, yaxes) {
     if (!xaxes.length) xaxes = undefined;
