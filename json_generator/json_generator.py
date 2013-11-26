@@ -2,6 +2,25 @@ from neuron import h
 import numpy
 import json
 
+h.load_file("mview.hoc")
+
+mview = h.ModelView(1)
+
+items = []
+def navigate(hlist):
+    items = []
+    i=0
+    for ho in hlist:
+        item = {'text': ho.s.lstrip(' *')}
+        if ho.children:
+            item['children'] = navigate(ho.children)
+        items.append(item)
+    return items
+
+classic_rows = navigate(mview.display.top)
+for row in classic_rows:
+    print row['text']
+
 def get_pts_between(x, y, z, d, arc, lo, hi):
     left_x = numpy.interp(lo, arc, x, left=x[0], right=x[-1])
     left_y = numpy.interp(lo, arc, y, left=y[0], right=y[-1])
