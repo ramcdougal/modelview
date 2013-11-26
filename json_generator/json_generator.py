@@ -17,9 +17,23 @@ def navigate(hlist):
         items.append(item)
     return items
 
+# TODO: build these in instead of scraping from classic ModelView
 classic_rows = navigate(mview.display.top)
 for row in classic_rows:
-    print row['text']
+    words = row['text'].split()
+    # NOTE: the row contains all its children in the same format as in the JSON
+    if len(words) == 3 and words[1] == 'LinearMechanism':
+        linear_mechanisms = row
+    if len(words) == 3 and words[1] == 'artificial':
+        artificial_cells = row
+    if row['text'] == 'Density Mechanisms':
+        for child_row in row['children']:
+            if child_row['text'] == 'Global parameters for density mechanisms':
+                global_param_for_density = child_row
+            if child_row['text'] == 'KSChan definitions for density mechanisms':
+                kschan_defs = child_row
+
+
 
 def get_pts_between(x, y, z, d, arc, lo, hi):
     left_x = numpy.interp(lo, arc, x, left=x[0], right=x[-1])
@@ -41,7 +55,7 @@ for sec in h.allsec():
     if not h.SectionRef(sec).has_parent():
         root_sections.append(sec)
 
-# TODO: generate this automatically by analyzing modeldb
+# TODO: generate this automatically by analyzing modeldb or, better, the model files
 mech_xref = {
     'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
     'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
@@ -293,9 +307,6 @@ if root_sections:
         # TODO: action: when clicking on a specific cell, display just that one
         real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
 
-# TODO: this
-artificial_cells = {'text': '0 artificial cells'}
-
 # TODO: generate this automatically
 references = {
     'text': 'References',
@@ -311,11 +322,6 @@ references = {
 
 blank_line = {'text': ''}
 
-# linear mechanisms
-linear_mechs = h.List('LinearMechanism')
-linear_mechs = {'text': '%d LinearMechanism objects' % linear_mechs.count()}
-
-
 # mechanisms in use
 mechs = [{'text': name + mech_xref.get(name, '')} for name in mechs_present(list(h.allsec()))]
 mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
@@ -324,7 +330,9 @@ mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 density_mechanisms = {
     'text': 'Density Mechanisms',
     'children': [
-        mech_in_use
+        mech_in_use,
+        global_param_for_density,
+        kschan_defs
     ]
 }
 
@@ -364,13 +372,9 @@ if netcon_list.count():
         process_values('threshold', threshold)
     ]
 
-# TODO: this
-kschan_defs = {
-    'text': 'KSChan definitions for density mechanisms'
-}
-
 
 # TODO: generate this by scanning modeldb. we already have this information
+# TODO: actually use an include; do not store directly in the main json
 components = {
     'text': '10 files shared with other ModelDB models',
     'children': [
@@ -534,10 +538,9 @@ data = {
             real_cells,
             artificial_cells,
             netcons,
-            linear_mechs,
+            linear_mechanisms,
             blank_line,
             density_mechanisms,
-            kschan_defs,
             blank_line,
             components,
             blank_line,
