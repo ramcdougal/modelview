@@ -318,12 +318,15 @@ references = {
     'text': 'References',
     'children': [
         {
-            'text': 'Paper: <a href="http://dx.doi.org/10.1023/B:JCNS.0000004837.81595.b0">doi:10.1023/B:JCNS.0000004837.81595.b0</a>'
+            'text': 'Paper: <a href="http://dx.doi.org/10.1023/B:JCNS.0000004837.81595.b0">doi:10.1023/B:JCNS.0000004837.81595.b0</a>',
+            'noop': True
         },
         {
-            'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992">ModelDB Entry</a>'
+            'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992">ModelDB Entry</a>',
+            'noop': True
         }
-    ]
+    ],
+    'noop': True    
 }	  
 
 blank_line = {'text': ''}
@@ -534,6 +537,15 @@ components = {
         }
     ]
 }
+
+# make all of the components noop
+def make_noop(tree):
+    for row in tree:
+        row['noop'] = True
+        if 'children' in row:
+            make_noop(row['children'])
+make_noop([components])
+
 
 data = {
     'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root)} for root in root_sections],

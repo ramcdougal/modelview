@@ -116,26 +116,30 @@ function modelview_build_tree_(src_tree) {
             children = modelview_build_tree_(row.children);
             if (children.length == 0) children = undefined;
         }
-        if (row.action != undefined) {
-            f = function() {
-                modelview_hide_all_();
-                $.each(row.action, function (j, action) {
-                    if (action.kind == 'neuronviewer') {
-                        var id = modelview_neuron_viewers[action.id];
-                        show_dialog(id);
-                        set_neuron_markers(id, action.markers);
-                        set_neuron_colors(id, action.colors);
-                    } else if (action.kind == 'flot') {
-                        show_flot_(action.data, action.title, action.xaxes, action.yaxes);
-                    } else {
-                        console.log('ignoring unknown action kind: ' + action.kind);
-                    }
-                });
-            }
+        if (row.noop == true) {
+            f = undefined;
         } else {
-            f = modelview_hide_all_;
+            if (row.action != undefined) {
+                f = function() {
+                    modelview_hide_all_();
+                    $.each(row.action, function (j, action) {
+                        if (action.kind == 'neuronviewer') {
+                            var id = modelview_neuron_viewers[action.id];
+                            show_dialog(id);
+                            set_neuron_markers(id, action.markers);
+                            set_neuron_colors(id, action.colors);
+                        } else if (action.kind == 'flot') {
+                            show_flot_(action.data, action.title, action.xaxes, action.yaxes);
+                        } else {
+                            console.log('ignoring unknown action kind: ' + action.kind);
+                        }
+                    });
+                }
+            } else {
+                f = modelview_hide_all_;
+            }
         }
-        result.push([row.text, {children: children, callback: f}]);
+        result.push([row.text, {children: children, callback: f, noop: row.noop}]);
     });
     return result;
 }
