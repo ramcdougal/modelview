@@ -32,6 +32,12 @@ for row in classic_rows:
                 global_param_for_density = child_row
             if child_row['text'] == 'KSChan definitions for density mechanisms':
                 kschan_defs = child_row
+            if child_row['text'] == 'Homogeneous Parameters':
+                # TODO: colorize
+                homogeneous_parameters = child_row
+            if child_row['text'] == 'Heterogeneous Parameters':
+                # TODO: colorize
+                heterogeneous_parameters = child_row
 
 
 
@@ -331,6 +337,8 @@ density_mechanisms = {
     'text': 'Density Mechanisms',
     'children': [
         mech_in_use,
+        homogeneous_parameters,
+        heterogeneous_parameters,
         global_param_for_density,
         kschan_defs
     ]
