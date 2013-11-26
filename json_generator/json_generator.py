@@ -19,6 +19,7 @@ def navigate(hlist):
 
 # TODO: build these in instead of scraping from classic ModelView
 classic_rows = navigate(mview.display.top)
+nsegs = {}
 for row in classic_rows:
     words = row['text'].split()
     # NOTE: the row contains all its children in the same format as in the JSON
@@ -26,6 +27,10 @@ for row in classic_rows:
         linear_mechanisms = row
     if len(words) == 3 and words[1] == 'artificial':
         artificial_cells = row
+    if len(words) == 3 and words[1] == 'real' and words[2] == 'cells':
+        for root in row['children']:
+            root_name = root['text'][5:]
+            nsegs[root_name] = root['children'][1]
     if row['text'] == 'Density Mechanisms':
         for child_row in row['children']:
             if child_row['text'] == 'Global parameters for density mechanisms':
@@ -39,7 +44,7 @@ for row in classic_rows:
                 # TODO: colorize
                 heterogeneous_parameters = child_row
 
-
+print nsegs
 
 def get_pts_between(x, y, z, d, arc, lo, hi):
     left_x = numpy.interp(lo, arc, x, left=x[0], right=x[-1])
@@ -176,8 +181,25 @@ def sec_seg(secs):
         num_segs = '%d segments' % num_segs
     return '%s; %s' % (num_secs, num_segs)
 
-def nseg_analysis(secs, cell_id):
-    nsegs = {}
+def set_action_to_all(tree, action):
+    for row in tree:
+        row['action'] = action
+        if 'children' in row:
+            set_action_to_all(row['children'], action)
+
+def nseg_analysis(secs, cell_id, root_name):
+    dx_max = 0
+    for sec in secs:
+        if sec.L / sec.nseg > dx_max:
+            dx_max = sec.L / sec.nseg
+            dx_max_loc = sec
+    result = nsegs[root_name]
+    set_action_to_all([result], [{'kind': 'neuronviewer', 'id': cell_id}])
+    if result['text'] == '1 distinct values of nseg':
+        result['text'] = '1 distinct value of nseg'
+    result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_if_sec(secs, dx_max_loc)}]
+    return result
+    """
     dx_max = 0
     for sec in secs:
         if sec.L / sec.nseg > dx_max:
@@ -194,6 +216,7 @@ def nseg_analysis(secs, cell_id):
             }
         ]
     }
+    """
 
 def colorize_by_mech_value(secs, mech, name):
     values = []
@@ -287,7 +310,7 @@ def cell_tree(root):
             'text': sec_seg(secs),
             'action': [{'kind': 'neuronviewer', 'id': cell_id}]
         },
-        nseg_analysis(secs, cell_id),
+        nseg_analysis(secs, cell_id, root.name()),
         cell_mech_analysis(secs, cell_id)
     ]
 
