@@ -197,7 +197,7 @@ def nseg_analysis(secs, cell_id, root_name):
     set_action_to_all([result], [{'kind': 'neuronviewer', 'id': cell_id}])
     if result['text'] == '1 distinct values of nseg':
         result['text'] = '1 distinct value of nseg'
-    result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_if_sec(secs, dx_max_loc)}]
+    result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight_if_sec(secs, dx_max_loc)}]
     return result
     """
     dx_max = 0
@@ -286,7 +286,7 @@ def cell_mech_analysis(secs, cell_id):
             'action': [
                 {
                     'kind': 'neuronviewer',
-                    'colors': highlight_if_mech_present(secs, mech),
+                    'highlight': highlight_if_mech_present(secs, mech),
                     'id': cell_id
                 }
             ]
@@ -320,10 +320,14 @@ def cell_mech_analysis(secs, cell_id):
         'children': children
     }
 
-def colorize_if_sec(secs, match_sec):
+def highlight_if_sec(secs, match_sec):
+    """return a list of segments matching a given section"""
     result = []
+    i = 0
     for sec in secs:
-        result += ['red' if sec == match_sec else 'black'] * int(sec.nseg)
+        if sec == match_sec:
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
     return result
 
 def highlight_if_mech_present(secs, mech):
