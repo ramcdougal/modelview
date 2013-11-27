@@ -240,7 +240,7 @@ def colorize_homogeneous(tree):
             secs = secs_with_root(root)
             action.append({
                 'kind': 'neuronviewer',
-                'colors': colorize_if_mech_present(secs, prop),
+                'highlight': highlight_if_mech_present(secs, prop),
                 'id': cell_id                
             })
         row['action'] = action
@@ -286,7 +286,7 @@ def cell_mech_analysis(secs, cell_id):
             'action': [
                 {
                     'kind': 'neuronviewer',
-                    'colors': colorize_if_mech_present(secs, mech),
+                    'colors': highlight_if_mech_present(secs, mech),
                     'id': cell_id
                 }
             ]
@@ -326,13 +326,14 @@ def colorize_if_sec(secs, match_sec):
         result += ['red' if sec == match_sec else 'black'] * int(sec.nseg)
     return result
 
-def colorize_if_mech_present(secs, mech):
+def highlight_if_mech_present(secs, mech):
+    """returns a list of the segments containing the mechanism"""
     result = []
+    i = 0
     for sec in secs:
         if hasattr(sec, mech) or hasattr(sec(0.5), mech):
-            result += ['red'] * sec.nseg
-        else:
-            result += ['black'] * sec.nseg
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
     return result
 
 
