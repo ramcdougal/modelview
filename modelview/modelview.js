@@ -17,6 +17,8 @@ function reposition_dialog(id) {
     last_right = mep.offset().left + mep.outerWidth();
 }
 
+var colorbar_types = [];
+
 function init_modelview() {
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
@@ -27,6 +29,17 @@ function init_modelview() {
     
     if (modelview_data.short_title == undefined) {
         modelview_data.short_title = modelview_data.title;
+    }
+    
+    if (modelview_data.colorbars != undefined) {
+        $.each(modelview_data.colorbars, function(i, colorbar_data) {
+            colorbar_types.push(colorbar_data.type);
+            if (colorbar_data.type == 'css') {
+                DeclareCSSClass('colorbar' + i, colorbar_data.css);
+            } else {
+                console.log('unknown colorbar type: ' + colorbar_data.type)
+            }
+        });
     }
     
     // create a dialog for the tree with no close box
@@ -71,6 +84,7 @@ function init_modelview() {
         var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
         reposition_dialog(new_view_id);
         modelview_neuron_viewers.push(new_view_id);
+        console.log('neuron viewer ' + new_view_id + ' created');
         hide_dialog(new_view_id);
     });
     
@@ -107,6 +121,24 @@ function modelview_hide_all_() {
     hide_dialog(flot_dialog);
 }
 
+function set_colorbar(id, colorbar, orientation, lo, hi) {
+    var obj = $('#below' + id);
+    if (colorbar == undefined) {
+        obj.css('display', 'none');
+    } else {
+        if (orientation != 'horizontal') {
+            console.log('unsupported colorbar orientation: ' + orientation);
+        } else {
+            if (colorbar_types[colorbar] != 'css') {
+                console.log('unsupported colorbar type: ' + colorbar_types[colorbar]);
+            } else {
+                obj.html('<div class="colorbar' + colorbar + '">&nbsp;</div><div><span style="float: left">' + lo + '</span><span style="float: right">' + hi + '</span></div><div style="clear: both;"></div>');
+                obj.css('display', 'block');
+            }
+        }
+    }
+}
+
 function modelview_build_tree_(src_tree) {
     var result = [];
     var f, i, j;
@@ -128,6 +160,7 @@ function modelview_build_tree_(src_tree) {
                             show_dialog(id);
                             set_neuron_markers(id, action.markers);
                             set_neuron_colors(id, action.colors);
+                            set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
                         } else if (action.kind == 'flot') {
                             show_flot_(action.data, action.title, action.xaxes, action.yaxes);
                         } else {

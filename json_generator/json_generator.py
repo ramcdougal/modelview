@@ -218,6 +218,20 @@ def nseg_analysis(secs, cell_id, root_name):
     }
     """
 
+def min_no_nan(values):
+    values = [v for v in values if not numpy.isnan(v)]
+    if values:
+        return min(values)
+    else:
+        return None
+
+def max_no_nan(values):
+    values = [v for v in values if not numpy.isnan(v)]
+    if values:
+        return max(values)
+    else:
+        return None
+
 def colorize_by_mech_value(secs, mech, name):
     values = []
     for sec in secs:
@@ -228,7 +242,7 @@ def colorize_by_mech_value(secs, mech, name):
         except:    
             if not hasattr(sec(0.5), mech):
                 values += [numpy.nan] * sec.nseg
-    return values_to_colors(values)
+    return values_to_colors(values), min_no_nan(values), max_no_nan(values)
 
 def flot_by_distance_from_root(root, mech, name, secs):
     # measure distance from the midpt of the root
@@ -267,10 +281,15 @@ def cell_mech_analysis(secs, cell_id):
             child_parts = []
             for name in range_vars[mech]:
                 flotchart = flot_by_distance_from_root(root_sections[cell_id], mech, name, secs)
+                colors, lo, hi = colorize_by_mech_value(secs, mech, name)
+                if lo is not None:
+                    nv_action = {'kind': 'neuronviewer', 'id': cell_id, 'colors': colors, 'colorbar': 0, 'colorbar_orientation': 'horizontal', 'colorbar_low': '%g' % lo, 'colorbar_high': '%g' % hi}
+                else:
+                    nv_action = {'kind': 'neuronviewer', 'id': cell_id}
                 child_parts.append({
                     'text': name,
                     'action': [
-                        {'kind': 'neuronviewer', 'id': cell_id, 'colors': colorize_by_mech_value(secs, mech, name)},
+                        nv_action,
                         {
                             'kind': 'flot',
                             'data': flotchart,
@@ -588,7 +607,24 @@ data = {
             components,
             blank_line,
             references              
-        ]
+    ],
+    'colorbars': [
+        {
+            'type': 'css',
+            'css': """
+                /* from http://www.colorzilla.com/gradient-editor/#0000ff+0,ff0000+100; accessed 26 Nov 2013 */
+                background: #0000ff;
+                background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwMDBmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZjAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+                background: -moz-linear-gradient(left,  #0000ff 0%, #ff0000 100%);
+                background: -webkit-gradient(linear, left top, right top, color-stop(0%,#0000ff), color-stop(100%,#ff0000));
+                background: -webkit-linear-gradient(left,  #0000ff 0%,#ff0000 100%);
+                background: -o-linear-gradient(left,  #0000ff 0%,#ff0000 100%);
+                background: -ms-linear-gradient(left,  #0000ff 0%,#ff0000 100%);
+                background: linear-gradient(to right,  #0000ff 0%,#ff0000 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0000ff', endColorstr='#ff0000',GradientType=1 );
+            """
+        }
+    ]
 }
 
 
