@@ -232,6 +232,20 @@ def max_no_nan(values):
     else:
         return None
 
+def colorize_homogeneous(tree):
+    for row in tree['children']:
+        prop = row['text'].split()[0]
+        action = []
+        for cell_id, root in enumerate(root_sections):
+            secs = secs_with_root(root)
+            action.append({
+                'kind': 'neuronviewer',
+                'colors': colorize_if_mech_present(secs, prop),
+                'id': cell_id                
+            })
+        row['action'] = action
+    return tree
+
 def colorize_by_mech_value(secs, mech, name):
     values = []
     for sec in secs:
@@ -321,6 +335,8 @@ def colorize_if_mech_present(secs, mech):
             result += ['black'] * sec.nseg
     return result
 
+
+
 def cell_tree(root):
     cell_id = root_sections.index(root)
     secs = secs_with_root(root)
@@ -382,7 +398,7 @@ density_mechanisms = {
     'text': 'Density Mechanisms',
     'children': [
         mech_in_use,
-        homogeneous_parameters,
+        colorize_homogeneous(homogeneous_parameters),
         heterogeneous_parameters,
         global_param_for_density,
         kschan_defs
