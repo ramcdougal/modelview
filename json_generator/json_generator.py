@@ -20,6 +20,7 @@ def navigate(hlist):
 # TODO: build these in instead of scraping from classic ModelView
 classic_rows = navigate(mview.display.top)
 nsegs = {}
+uniques = {}
 for row in classic_rows:
     words = row['text'].split()
     # NOTE: the row contains all its children in the same format as in the JSON
@@ -31,6 +32,9 @@ for row in classic_rows:
         for root in row['children']:
             root_name = root['text'][5:]
             nsegs[root_name] = root['children'][1]
+            for child in root['children']:
+                if 'with unique parameters' in child['text']:
+                    uniques[root_name] = child
     if row['text'] == 'Density Mechanisms':
         for child_row in row['children']:
             if child_row['text'] == 'Global parameters for density mechanisms':
@@ -44,7 +48,38 @@ for row in classic_rows:
                 # TODO: colorize
                 heterogeneous_parameters = child_row
 
-print nsegs
+def highlight_if_sec(secs, match_sec):
+    """return a list of segments matching a given section"""
+    result = []
+    i = 0
+    for sec in secs:
+        if sec == match_sec:
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
+    return result
+
+def highlight_if_secname(secs, match_secname):
+    """return a list of segments matching a given section"""
+    result = []
+    i = 0
+    for sec in secs:
+        if sec.name() == match_secname:
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
+    return result
+
+def highlight_if_mech_present(secs, mech):
+    """returns a list of the segments containing the mechanism"""
+    result = []
+    i = 0
+    for sec in secs:
+        if hasattr(sec, mech) or hasattr(sec(0.5), mech):
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
+    return result
+
+
+
 
 def get_pts_between(x, y, z, d, arc, lo, hi):
     left_x = numpy.interp(lo, arc, x, left=x[0], right=x[-1])
@@ -320,32 +355,13 @@ def cell_mech_analysis(secs, cell_id):
         'children': children
     }
 
-def highlight_if_sec(secs, match_sec):
-    """return a list of segments matching a given section"""
-    result = []
-    i = 0
-    for sec in secs:
-        if sec == match_sec:
-            result += range(i, i + sec.nseg)
-        i += sec.nseg
-    return result
-
-def highlight_if_mech_present(secs, mech):
-    """returns a list of the segments containing the mechanism"""
-    result = []
-    i = 0
-    for sec in secs:
-        if hasattr(sec, mech) or hasattr(sec(0.5), mech):
-            result += range(i, i + sec.nseg)
-        i += sec.nseg
-    return result
-
 
 
 def cell_tree(root):
     cell_id = root_sections.index(root)
     secs = secs_with_root(root)
-    return [
+    # TODO: subsets with constant parameters, point processes
+    result = [
         {
             'text': sec_seg(secs),
             'action': [{'kind': 'neuronviewer', 'id': cell_id}]
@@ -353,6 +369,11 @@ def cell_tree(root):
         nseg_analysis(secs, cell_id, root.name()),
         cell_mech_analysis(secs, cell_id)
     ]
+    unique = uniques.get(root.name())
+    if unique:
+        result.append(unique)
+    return result
+
 
 # summary
 summary = {
@@ -393,6 +414,24 @@ references = {
 }	  
 
 blank_line = {'text': ''}
+
+
+# process uniques to remove {} and add highlighting
+for cell_id, root in enumerate(root_sections):
+    if root.name() in uniques:
+        all_uniques = set([])
+        for row in uniques[root.name()]['children']:
+            secname = row['text'].rstrip(' {')
+            row['text'] = secname
+            highlight = highlight_if_secname(secs_with_root(root), secname)
+            all_uniques = all_uniques.union(highlight)
+            action = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight}]
+            row['action'] = action
+            if row['children'][-1]['text'].strip() == '}':
+                row['children'] = row['children'][: -1]
+            for child in row['children']:
+                child['action'] = action
+        uniques[root.name()]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': list(all_uniques)}]
 
 # mechanisms in use
 mechs = [{'text': name + mech_xref.get(name, '')} for name in mechs_present(list(h.allsec()))]
