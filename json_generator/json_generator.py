@@ -283,11 +283,16 @@ def colorize_homogeneous(tree):
 
 def colorize_by_mech_value(secs, mech, name):
     values = []
+    if mech[-4 : ] == '_ion':
+        # need to do this to allow e.g. nao, a "property" of na_ion that stands alone
+        value_getter = lambda seg: getattr(seg, name)
+    else:
+        value_getter = lambda seg: getattr(getattr(seg, mech), name)
     for sec in secs:
         try:
-            v = getattr(getattr(sec(0.5), mech), name)
+            v = value_getter(sec(0.5))
             for seg in sec:
-                values.append(getattr(getattr(seg, mech), name))
+                values.append(value_getter(seg))
         except:    
             if not hasattr(sec(0.5), mech):
                 values += [numpy.nan] * sec.nseg
@@ -295,13 +300,18 @@ def colorize_by_mech_value(secs, mech, name):
 
 def flot_by_distance_from_root(root, mech, name, secs):
     # measure distance from the midpt of the root
+    if mech[-4 : ] == '_ion':
+        # need to do this to allow e.g. nao, a "property" of na_ion that stands alone
+        value_getter = lambda seg: getattr(seg, name)
+    else:
+        value_getter = lambda seg: getattr(getattr(seg, mech), name)
     h.distance(0, 0.5, sec=root)
     data = []
     for sec in secs:
         try:
-            v = getattr(getattr(sec(0.5), mech), name)
+            v = value_getter(sec(0.5))
             for seg in sec:
-                data.append([h.distance(1, seg.x, sec=sec), getattr(getattr(seg, mech), name)])
+                data.append([h.distance(1, seg.x, sec=sec), value_getter(seg)])
         except:
             pass
     return [{
