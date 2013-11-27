@@ -622,7 +622,7 @@ data = {
             blank_line,
             components,
             blank_line,
-            references              
+            references #, {'text': 'green circle', 'action': [{'kind': 'svg', 'svg': '<circle id="greencircle" cx="30" cy="30" r="30" fill="green" />', 'viewbox': '0 0 60 60'}]}
     ],
     'colorbars': [
         {

@@ -88,7 +88,7 @@ function init_modelview() {
         hide_dialog(new_view_id);
     });
     
-    // flot dialog
+    // flot dialog (TODO: allow many)
     flot_dialog = MakeDialog(modelview_data.short_title, true);
     $('#' + flot_dialog).parent().addClass('no-close');
     counter++;
@@ -101,6 +101,12 @@ function init_modelview() {
     });
     reposition_dialog(flot_dialog);
     hide_dialog(flot_dialog);
+    
+    // svg dialog (TODO: combine with flot dialog(s)?)
+    svg_dialog = MakeDialog(modelview_data.short_title, true);
+    $('#' + svg_dialog).parent().addClass('no-close');
+    reposition_dialog(svg_dialog);
+    hide_dialog(svg_dialog);
 
 }
 
@@ -119,6 +125,7 @@ function modelview_hide_all_() {
         hide_dialog(id);
     });
     hide_dialog(flot_dialog);
+    hide_dialog(svg_dialog);
 }
 
 function set_colorbar(id, colorbar, orientation, lo, hi) {
@@ -163,6 +170,9 @@ function modelview_build_tree_(src_tree) {
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
                         } else if (action.kind == 'flot') {
                             show_flot_(action.data, action.title, action.xaxes, action.yaxes);
+                        } else if (action.kind == 'svg') {
+                            $('#' + svg_dialog).html('<svg xmlns="http://www.w3.org/2000/svg" viewbox="' + action.viewbox + '" style="width:100%; height:100%">' + action.svg + '</svg>');
+                            show_dialog(svg_dialog);
                         } else {
                             console.log('ignoring unknown action kind: ' + action.kind);
                         }
