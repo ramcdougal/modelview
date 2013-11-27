@@ -167,7 +167,11 @@ function modelview_build_tree_(src_tree) {
                             var id = modelview_neuron_viewers[action.id];
                             show_dialog(id);
                             set_neuron_markers(id, action.markers);
-                            set_neuron_colors(id, action.colors);
+                            if (action.highlight != undefined) {
+                                set_neuron_highlights(id, action.highlight);
+                            } else {
+                                set_neuron_colors(id, action.colors);
+                            }
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
                         } else if (action.kind == 'flot') {
                             show_flot_(action.data, action.title, action.xaxes, action.yaxes);
