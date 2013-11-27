@@ -1,10 +1,11 @@
 var modelview_neuron_viewers = [];
 
 var last_right, last_top;
+var doc_width = document.width;
+
 
 function reposition_dialog(id) {
     // set next to the last positioned dialog
-    var doc_width = document.width;
     var me = $('#' + id);
     var mep = me.parent();
     mep.offset({left: last_right + 10, top: last_top});
