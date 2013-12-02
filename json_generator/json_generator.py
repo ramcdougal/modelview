@@ -1,3 +1,5 @@
+# TODO: make components noop
+
 from neuron import h
 import numpy
 import json
