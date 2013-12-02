@@ -20,7 +20,52 @@ function reposition_dialog(id) {
 
 var colorbar_types = [];
 
+var did_sub;
+
 function init_modelview() {
+    // only call setup modelview if no substitutions to do
+    // if there are substitutions, process_level_ will recall init_modelview
+    // when done
+    did_sub = false;
+    process_level_(modelview_data.tree);
+    if (did_sub) {
+        // if here, then did an include so stop and will be rerun later
+        return;
+    }
+    setup_modelview();
+}
+
+var json_parent_obj_, json_index_;
+
+function jsonp_callback_(new_row) {
+    json_parent_obj_[json_index_] = new_row;
+    init_modelview();
+}
+
+function process_level_(data) {
+    // returns true if requested a substitution; else false
+    $.each(data, function(i, row) {
+        if (row.include != undefined) {
+            // do substitution via JSONP
+            json_index_ = i;
+            json_parent_obj_ = data;
+            $('body').append('<script src="' + row.include + '"></script>');
+            console.log('doing sub. returning true');     
+            did_sub = true;
+        }
+        if (did_sub) {
+            return true;
+        }
+        if (row.include == undefined && row.children != undefined) {
+            if (process_level_(row.children)) {
+                return true;
+            }
+        }
+    });
+    return false;
+}
+
+function setup_modelview() {
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
     } else {
@@ -42,7 +87,6 @@ function init_modelview() {
             }
         });
     }
-    
     // create a dialog for the tree with no close box
     tree_dialog = MakeDialog(modelview_data.short_title, true);
     var tree_dialog_handle = $('#' + tree_dialog);
