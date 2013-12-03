@@ -3,8 +3,20 @@ import numpy
 import json
 from urllib import urlopen
 from bs4 import BeautifulSoup, Comment
+import os
 
 model_id = 32992
+
+# TODO: add this to modeldb, then read from there
+mech_types = {
+    'hd': 'I-h',
+    'kad': 'K-A',
+    'kap': 'K-A',
+    'kdr': 'K-dr',
+    'na3': 'Na',
+    'nax':  'Na'
+}
+
 
 # load the modeldb entry
 modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d' % model_id).read()
@@ -19,6 +31,38 @@ if paper_doi is None:
     print 'Could not find doi.'
     import sys
     sys.exit()
+
+# get the top level folder name (assumes we are running inside that)
+top_level_folder = os.getcwd().split(os.path.sep)[-1]
+
+# scan the MOD files to find SUFFIX and POINT_PROCESS information
+mech_files = {}
+for root, dirs, files in os.walk('.'):
+    # TODO: block the other architecture libraries too
+    # TODO: of course, there's nothing inherently wrong with a mod file being in one of these
+    #       folders... it's just that those tend to be copies made by nrnivmodl
+    if 'x86_64' not in root:
+        for filename in files:
+            if filename[-4:].lower() == '.mod':
+                with open(os.path.join(root, filename)) as f:
+                    for line in f:
+                        # strip comments (this isn't quite right because : could be inside of a VERBATIM)
+                        if ':' in line:
+                            line = line[: line.index(':')]
+                        # TODO: really should be checking to make sure I'm inside of a NEURON block
+                        split_line = line.strip().split()
+                        if len(split_line) == 2 and split_line[0] in ('SUFFIX', 'POINT_PROCESS'):
+                            mech_files[split_line[1]] = os.path.join(root, filename)[2:]
+
+
+mech_xref = {}
+for name, filename in mech_files.iteritems():
+    link = '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d&file=/%s/%s">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
+    if name in mech_types:
+        row = '%s, %s' % (mech_types[name], link)
+    else:
+        row = link
+    mech_xref[name] = ' (%s)' % row
 
 h.load_file("mview.hoc")
 
@@ -118,17 +162,6 @@ root_sections = []
 for sec in h.allsec():
     if not h.SectionRef(sec).has_parent():
         root_sections.append(sec)
-
-# TODO: generate this automatically by analyzing modeldb or, better, the model files
-mech_xref = {
-    'hd': ' (I-h, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\h.mod">h.mod</a>)',
-    'kad': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kadist.mod">kadist.mod</a>)',
-    'kap': ' (K-A, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kaprox.mod">kaprox.mod</a>)',
-    'kdr': ' (K-dr, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\kdrca1.mod">kdrca1.mod</a>)',
-    'na3': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\na3n.mod">na3n.mod</a>)',
-    'nax': ' (Na, <a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\naxn.mod">naxn.mod</a>)',
-    'ds': ' (<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992&file=\\synchro-ca1\\distr.mod">distr.mod</a>)'
-}
 
 # get all mech names
 mech_names = []
