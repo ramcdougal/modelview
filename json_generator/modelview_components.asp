@@ -39,7 +39,7 @@ function compute_jsonp(search_id, jsonp_callback) {
 
 
     var duplicates = [];
-    var i, j, k, matches, dup;
+    var i, j, k, matches, dup, has_entry;
     for (i = 0; i < files.length; i++) {
         matches = get_matches(search_id, files[i]);
         if (matches.length > 1) {
@@ -68,16 +68,20 @@ function compute_jsonp(search_id, jsonp_callback) {
             
             result += ', "children": ['
             dup = duplicates[j][1];
+            has_entry = false;
             for (k = 0; k < dup.length; k++) {
-                if (k > 0) {
-                    result += ', ';
-                }
-                result += '{"text": "<a href=\\"http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=' + get_modelid(dup[k]) + '&file=/' + dup[k].substr(dup[k].indexOf('/') + 1) + '\\">'
-                // TODO: escape quotes etc in title
-                result += title_db[get_modelid(dup[k])];
-                result += '</a>"'
-                result += '}'
-                
+                // TODO: what if a file is duplicated exactly once in ModelDB, but that duplication is within the same model?
+                if (get_modelid(dup[k]) != search_id) {
+                    if (has_entry) {
+                        result += ', ';
+                    }
+                    has_entry = true;
+                    result += '{"text": "<a href=\\"http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=' + get_modelid(dup[k]) + '&file=/' + dup[k].substr(dup[k].indexOf('/') + 1) + '\\">'
+                    // TODO: escape quotes etc in title
+                    result += title_db[get_modelid(dup[k])];
+                    result += '</a>"'
+                    result += ', "noop": true}'
+                }                
             }
             result += ']'
             
