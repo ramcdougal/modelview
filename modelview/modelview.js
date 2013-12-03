@@ -23,6 +23,7 @@ var colorbar_types = [];
 var did_sub;
 
 function init_modelview() {
+    console.log('init_modelview');
     // only call setup modelview if no substitutions to do
     // if there are substitutions, process_level_ will recall init_modelview
     // when done
@@ -44,7 +45,9 @@ function jsonp_callback_(new_row) {
 
 function process_level_(data) {
     // returns true if requested a substitution; else false
+    console.log('data = ' + data);
     $.each(data, function(i, row) {
+        console.log('i = ' + i);
         if (row.include != undefined) {
             // do substitution via JSONP
             json_index_ = i;
@@ -66,6 +69,7 @@ function process_level_(data) {
 }
 
 function setup_modelview() {
+    console.log('setup_modelview');
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
     } else {

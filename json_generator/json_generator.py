@@ -500,7 +500,7 @@ if netcon_list.count():
 
 # include for components data
 # TODO: make this use an API to get dynamically
-components = {'include': 'http://neuron.yale.edu/neuron/static/ram/32992/components_32992.json'}
+components = {'include': 'http://senselab.med.yale.edu/modeldb/modelview_components.asp?model=32992&callback=jsonp_callback_'}
 
 # make all of the components noop
 def make_noop(tree):
