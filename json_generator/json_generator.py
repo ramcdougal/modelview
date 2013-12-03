@@ -83,6 +83,7 @@ def navigate(hlist):
 classic_rows = navigate(mview.display.top)
 nsegs = {}
 uniques = {}
+constant_parms = {}
 for row in classic_rows:
     words = row['text'].split()
     # NOTE: the row contains all its children in the same format as in the JSON
@@ -97,6 +98,8 @@ for row in classic_rows:
             for child in root['children']:
                 if 'with unique parameters' in child['text']:
                     uniques[root_name] = child
+                if 'with constant parameters' in child['text']:
+                    constant_parms[root_name] = child
     if row['text'] == 'Density Mechanisms':
         for child_row in row['children']:
             if child_row['text'] == 'Global parameters for density mechanisms':
@@ -104,11 +107,12 @@ for row in classic_rows:
             if child_row['text'] == 'KSChan definitions for density mechanisms':
                 kschan_defs = child_row
             if child_row['text'] == 'Homogeneous Parameters':
-                # TODO: colorize
                 homogeneous_parameters = child_row
             if child_row['text'] == 'Heterogeneous Parameters':
                 # TODO: colorize
                 heterogeneous_parameters = child_row
+
+# TODO: make a general highlight_if that takes a function to do matching
 
 def highlight_if_sec(secs, match_sec):
     """return a list of segments matching a given section"""
@@ -119,6 +123,32 @@ def highlight_if_sec(secs, match_sec):
             result += range(i, i + sec.nseg)
         i += sec.nseg
     return result
+
+def all_segs_have(sec, name, val):
+    """returns True iff all segments in the section have the same property value
+    
+    We compare their representations with %g rather than their exact values.
+    """
+    if name in ('cm', 'Ra'):
+        return '%g' % sec.__getattribute__(name) == '%g' % val
+    for seg in sec:
+        if not hasattr(seg, name):
+            return False
+        if '%g' % seg.__getattribute__(name) != '%g' % val:
+            return False
+    return True
+        
+
+def highlight_if_sec_parms(secs, parms):
+    """return a list of segments that belong to a section where all nodes have the stated parameters"""
+    result = []
+    i = 0
+    for sec in secs:
+        if all(all_segs_have(sec, name, value) for name, value in parms.iteritems()):
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
+    return result
+
 
 def highlight_if_secname(secs, match_secname):
     """return a list of segments matching a given section"""
@@ -431,6 +461,9 @@ def cell_tree(root):
         cell_mech_analysis(secs, cell_id)
     ]
     unique = uniques.get(root.name())
+    constant_parm = constant_parms.get(root.name())
+    if constant_parm:
+        result.append(constant_parm)
     if unique:
         result.append(unique)
     return result
@@ -493,6 +526,38 @@ for cell_id, root in enumerate(root_sections):
             for child in row['children']:
                 child['action'] = action
         uniques[root.name()]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': list(all_uniques)}]
+
+def parm_subset_properties(node):
+    """reads the tree to construct a dictionary of parameter values"""
+    result = {}
+    for row in node.get('children', []):
+        text = row['text'].split()
+        result[text[0]] = float(text[-1])
+    return result
+
+# process constant_parms to add highlighting
+for cell_id, root in enumerate(root_sections):
+    if root.name() in constant_parms:
+        all_constants = set([])
+        delete_rows = []
+        for i, row in enumerate(constant_parms[root.name()]['children']):
+            # TODO: the problem with this approach is that it ignores inserted mechanisms with no parameters (e.g. ds in 32992), but the tree we're scraping does not ignore that
+            parms = parm_subset_properties(row)
+            if parms:
+                highlight = highlight_if_sec_parms(secs_with_root(root), parms)
+                all_constants = all_constants.union(highlight)
+                action = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight}]
+                row['action'] = action
+                for child in row['children']:
+                    child['action'] = action
+            else:
+                delete_rows.append(i)
+        # remove the subsets with no parameters (these correspond to mechanisms with no parameters, but we cannot visualize that)
+        for item in delete_rows[::-1]:
+            del constant_parms[root.name()]['children'][item]
+        # TODO: map these section lists to named section lists (or their unions/intersections/etc... arbitrarily complicated problem)
+        constant_parms[root.name()]['text'] = '%d subsets with constant parameters' % len(constant_parms[root.name()]['children'])
+        constant_parms[root.name()]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': list(all_constants)}]
 
 # mechanisms in use
 mechs = [{'text': name + mech_xref.get(name, '')} for name in mechs_present(list(h.allsec()))]
