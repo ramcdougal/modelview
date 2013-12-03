@@ -1,8 +1,24 @@
-# TODO: make components noop
-
 from neuron import h
 import numpy
 import json
+from urllib import urlopen
+from bs4 import BeautifulSoup, Comment
+
+model_id = 32992
+
+# load the modeldb entry
+modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d' % model_id).read()
+modeldb_soup = BeautifulSoup(modeldb_html, 'html5lib')
+paper_doi = None
+for link in modeldb_soup.find_all('a'):
+    href = link.get('href')
+    if href is not None and 'http://dx.doi.org/' == href[ : 18]:
+        paper_doi = href[18 :]
+
+if paper_doi is None:
+    print 'Could not find doi.'
+    import sys
+    sys.exit()
 
 h.load_file("mview.hoc")
 
@@ -414,11 +430,11 @@ references = {
     'text': 'References',
     'children': [
         {
-            'text': 'Paper: <a href="http://dx.doi.org/10.1023/B:JCNS.0000004837.81595.b0">doi:10.1023/B:JCNS.0000004837.81595.b0</a>',
+            'text': 'Paper: <a href="http://dx.doi.org/%s">doi:%s</a>' % (paper_doi, paper_doi),
             'noop': True
         },
         {
-            'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=32992">ModelDB Entry</a>',
+            'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
             'noop': True
         }
     ],
@@ -500,7 +516,7 @@ if netcon_list.count():
 
 # include for components data
 # TODO: make this use an API to get dynamically
-components = {'include': 'http://senselab.med.yale.edu/modeldb/modelview_components.asp?model=32992&callback=jsonp_callback_'}
+components = {'include': 'http://senselab.med.yale.edu/modeldb/modelview_components.asp?model=%d&callback=jsonp_callback_' % model_id}
 
 # make all of the components noop
 def make_noop(tree):
