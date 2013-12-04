@@ -12,6 +12,12 @@ if len(sys.argv) != 2:
 
 model_id = int(sys.argv[1])
 
+h.load_file('mosinit.hoc')
+try:
+    h.init()
+except:
+    pass
+
 # TODO: add this to modeldb, then read from there
 if model_id == 32992:
     mech_types = {
