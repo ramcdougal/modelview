@@ -38,6 +38,13 @@ if paper_doi is None:
     print 'Could not find doi.'
     import sys
     sys.exit()
+    
+full_title = modeldb_soup.find_all('title')[0].text
+# TODO: Tom. Generalize.
+title, short_title = full_title.split('(')
+short_title = short_title[: -1]
+title = full_title
+
 
 # get the top level folder name (assumes we are running inside that)
 top_level_folder = os.getcwd().split(os.path.sep)[-1]
@@ -634,8 +641,8 @@ make_noop([components])
 
 data = {
     'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
-    'title': 'CA1 pyramidal neuron: effects of Ih on distal inputs (Migliore et al 2004)',
-    'short_title': 'Migliore et al 2004',
+    'title': title, 
+    'short_title': short_title,
     'neuronviewer': range(len(root_sections)),
     'tree': [
             summary,
