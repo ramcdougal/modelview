@@ -511,21 +511,32 @@ if root_sections:
         # TODO: action: when clicking on a specific cell, display just that one
         real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
 
-# TODO: generate this automatically
-references = {
-    'text': 'References',
-    'children': [
-        {
-            'text': 'Paper: <a href="http://dx.doi.org/%s">doi:%s</a>' % (paper_doi, paper_doi),
-            'noop': True
-        },
-        {
-            'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
-            'noop': True
-        }
-    ],
-    'noop': True    
-}	  
+if paper_doi is not None:
+    references = {
+        'text': 'References',
+        'children': [
+            {
+                'text': 'Paper: <a href="http://dx.doi.org/%s">doi:%s</a>' % (paper_doi, paper_doi),
+                'noop': True
+            },
+            {
+                'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
+                'noop': True
+            }
+        ],
+        'noop': True    
+    }	  
+else:
+    references = {
+        'text': 'References',
+        'children': [
+            {
+                'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
+                'noop': True
+            }
+        ],
+        'noop': True    
+    }	  
 
 blank_line = {'text': ''}
 
@@ -687,5 +698,6 @@ data = {
 with open('modelview.json', 'w') as f:
     f.write(json.dumps(data))
     
-    
+if paper_doi is None:
+    print 'No DOI found. Consider updating ModelDB and rerunning'    
     
