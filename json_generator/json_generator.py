@@ -695,7 +695,7 @@ data = {
 }
 
 
-with open('modelview.json', 'w') as f:
+with open('%d.json' % model_id, 'w') as f:
     f.write(json.dumps(data))
     
 if paper_doi is None:
