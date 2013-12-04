@@ -4,19 +4,26 @@ import json
 from urllib import urlopen
 from bs4 import BeautifulSoup, Comment
 import os
+import sys
 
-model_id = 32992
+if len(sys.argv) != 2:
+    print 'Usage: python %s MODELID' % sys.argv[0]
+    sys.exit()
+
+model_id = int(sys.argv[1])
 
 # TODO: add this to modeldb, then read from there
-mech_types = {
-    'hd': 'I-h',
-    'kad': 'K-A',
-    'kap': 'K-A',
-    'kdr': 'K-dr',
-    'na3': 'Na',
-    'nax':  'Na'
-}
-
+if model_id == 32992:
+    mech_types = {
+        'hd': 'I-h',
+        'kad': 'K-A',
+        'kap': 'K-A',
+        'kdr': 'K-dr',
+        'na3': 'Na',
+        'nax':  'Na'
+    }
+else:
+    mech_types = {}
 
 # load the modeldb entry
 modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d' % model_id).read()
