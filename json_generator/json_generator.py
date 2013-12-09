@@ -109,7 +109,7 @@ for row in classic_rows:
     # NOTE: the row contains all its children in the same format as in the JSON
     if len(words) == 3 and words[1] == 'LinearMechanism':
         linear_mechanisms = row
-    if len(words) == 3 and words[1] == 'artificial':
+    if len(words) >= 3 and words[1] == 'artificial':
         artificial_cells = row
     if len(words) == 3 and words[1] == 'real' and words[2] == 'cells':
         for root in row['children']:
