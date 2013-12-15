@@ -39,11 +39,6 @@ for link in modeldb_soup.find_all('a'):
     href = link.get('href')
     if href is not None and 'http://dx.doi.org/' == href[ : 18]:
         paper_doi = href[18 :]
-
-if paper_doi is None:
-    print 'Could not find doi.'
-    import sys
-    sys.exit()
     
 full_title = modeldb_soup.find_all('title')[0].text
 # TODO: Tom. Generalize.
