@@ -49,6 +49,13 @@ function process_level_(data) {
             // do substitution via JSONP
             json_index_ = i;
             json_parent_obj_ = data;
+            
+            // force including from the internet when testing locally
+            // TODO: is this always a good idea?
+            if ((window.location.protocol == 'file:' || window.location.protocol == 'file') && row.include.substr(0, 2) == '//') {
+                row.include = 'http:' + row.include;
+            }
+            
             $('body').append('<script src="' + row.include + '"></script>');
             did_sub = true;
         }
