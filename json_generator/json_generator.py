@@ -5,6 +5,7 @@ from urllib import urlopen
 from bs4 import BeautifulSoup, Comment
 import os
 import sys
+import math
 
 if len(sys.argv) != 2:
     print 'Usage: python %s MODELID' % sys.argv[0]
@@ -325,7 +326,31 @@ def nseg_analysis(secs, cell_id, root_name):
             dx_max = sec.L / sec.nseg
             dx_max_loc = sec
     result = nsegs[root_name]
+    
+    # compute bar chart for nseg distribution
+    min_nseg = min(sec.nseg for sec in secs)
+    max_nseg = max(sec.nseg for sec in secs)
+    num_bins = 10
+    delta_nseg = max(math.ceil((max_nseg - min_nseg) / float(num_bins)), 1)
+    nseg_counts = [0 for i in xrange(num_bins)]
+    for sec in secs:
+        nseg_counts[int((sec.nseg - min_nseg) / delta_nseg)] += 1
+    nseg_bar_data = [[i * delta_nseg + min_nseg, nseg_count] for i, nseg_count in enumerate(nseg_counts)]
+
+    # TODO: bar chart for dlambda, dx        
     set_action_to_all([result], [{'kind': 'neuronviewer', 'id': cell_id}])
+    
+    # add bar chart for distinct values of nseg
+    # TODO: tooltips!
+    result['action'].append({
+        'kind': 'flot',
+        'data': [{'data': nseg_bar_data, 'bars': {'show': True, 'barWidth': delta_nseg, 'fillColor': 'blue'}}],
+        'xaxes': [{'axisLabel': 'nseg', 'labelcolor': 'black'}],
+        'yaxes': [{'axisLabel': 'count', 'labelcolor': 'black'}],
+        'color': 'black',
+        'title': 'nseg frequency distribution'
+    })
+    
     if result['text'] == '1 distinct values of nseg':
         result['text'] = '1 distinct value of nseg'
     result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight_if_sec(secs, dx_max_loc)}]

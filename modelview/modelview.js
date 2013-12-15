@@ -162,8 +162,8 @@ function setup_modelview() {
 }
 
 function show_flot_(data, title, xaxes, yaxes) {
-    if (!xaxes.length) xaxes = undefined;
-    if (!yaxes.length) yaxes = undefined;
+    if (xaxes == undefined || !xaxes.length) xaxes = undefined;
+    if (yaxes == undefined || !yaxes.length) yaxes = undefined;
     if (title == undefined) title = '';
     show_dialog(flot_dialog);
     $('#' + flot_title)[0].innerHTML = title;
