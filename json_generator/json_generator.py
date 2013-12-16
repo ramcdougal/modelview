@@ -11,6 +11,27 @@ if len(sys.argv) != 2:
     print 'Usage: python %s MODELID' % sys.argv[0]
     sys.exit()
 
+active_model = None
+commands = {}
+
+try:
+    with open('/home/tmm46/nrntest/verify/nrnziprun.dat') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                commands[int(active_model)] = current
+                active_model = None
+            elif active_model is None:
+                if ' ' in line:
+                    active_model = line.split()[1]
+                else:
+                    active_model = line
+                current = []
+            else:
+                current.append(line)
+except:
+    pass
+
 model_id = int(sys.argv[1])
 
 h.load_file('mosinit.hoc')
@@ -18,6 +39,10 @@ try:
     h.init()
 except:
     pass
+if model_id in commands:
+    for command in commands[model_id]:
+        print 'running: ', command
+        h(command)
 
 # TODO: add this to modeldb, then read from there
 if model_id == 32992:
