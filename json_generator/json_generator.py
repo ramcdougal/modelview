@@ -5,10 +5,32 @@ from urllib import urlopen
 from bs4 import BeautifulSoup, Comment
 import os
 import sys
+import math
 
 if len(sys.argv) != 2:
     print 'Usage: python %s MODELID' % sys.argv[0]
     sys.exit()
+
+active_model = None
+commands = {}
+
+try:
+    with open('/home/tmm46/nrntest/verify/nrnziprun.dat') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                commands[int(active_model)] = current
+                active_model = None
+            elif active_model is None:
+                if ' ' in line:
+                    active_model = line.split()[1]
+                else:
+                    active_model = line
+                current = []
+            else:
+                current.append(line)
+except:
+    pass
 
 model_id = int(sys.argv[1])
 
@@ -17,6 +39,10 @@ try:
     h.init()
 except:
     pass
+if model_id in commands:
+    for command in commands[model_id]:
+        print 'running: ', command
+        h(command)
 
 # TODO: add this to modeldb, then read from there
 if model_id == 32992:
@@ -39,11 +65,6 @@ for link in modeldb_soup.find_all('a'):
     href = link.get('href')
     if href is not None and 'http://dx.doi.org/' == href[ : 18]:
         paper_doi = href[18 :]
-
-if paper_doi is None:
-    print 'Could not find doi.'
-    import sys
-    sys.exit()
     
 full_title = modeldb_soup.find_all('title')[0].text
 # TODO: Tom. Generalize.
@@ -109,7 +130,7 @@ for row in classic_rows:
     # NOTE: the row contains all its children in the same format as in the JSON
     if len(words) == 3 and words[1] == 'LinearMechanism':
         linear_mechanisms = row
-    if len(words) == 3 and words[1] == 'artificial':
+    if len(words) >= 3 and words[1] == 'artificial':
         artificial_cells = row
     if len(words) == 3 and words[1] == 'real' and words[2] == 'cells':
         for root in row['children']:
@@ -330,7 +351,31 @@ def nseg_analysis(secs, cell_id, root_name):
             dx_max = sec.L / sec.nseg
             dx_max_loc = sec
     result = nsegs[root_name]
+    
+    # compute bar chart for nseg distribution
+    min_nseg = min(sec.nseg for sec in secs)
+    max_nseg = max(sec.nseg for sec in secs)
+    num_bins = 10
+    delta_nseg = max(math.ceil((max_nseg - min_nseg) / float(num_bins)), 1)
+    nseg_counts = [0 for i in xrange(num_bins)]
+    for sec in secs:
+        nseg_counts[int((sec.nseg - min_nseg) / delta_nseg)] += 1
+    nseg_bar_data = [[i * delta_nseg + min_nseg, nseg_count] for i, nseg_count in enumerate(nseg_counts)]
+
+    # TODO: bar chart for dlambda, dx        
     set_action_to_all([result], [{'kind': 'neuronviewer', 'id': cell_id}])
+    
+    # add bar chart for distinct values of nseg
+    # TODO: tooltips!
+    result['action'].append({
+        'kind': 'flot',
+        'data': [{'data': nseg_bar_data, 'bars': {'show': True, 'barWidth': delta_nseg, 'fillColor': 'blue'}}],
+        'xaxes': [{'axisLabel': 'nseg', 'labelcolor': 'black'}],
+        'yaxes': [{'axisLabel': 'count', 'labelcolor': 'black'}],
+        'color': 'black',
+        'title': 'nseg frequency distribution'
+    })
+    
     if result['text'] == '1 distinct values of nseg':
         result['text'] = '1 distinct value of nseg'
     result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight_if_sec(secs, dx_max_loc)}]
@@ -645,7 +690,7 @@ if netcon_list.count():
 
 # include for components data
 # TODO: make this use an API to get dynamically
-components = {'include': 'http://senselab.med.yale.edu/modeldb/modelview_components.asp?model=%d&callback=jsonp_callback_' % model_id}
+components = {'include': '//senselab.med.yale.edu/modeldb/modelview_components.asp?model=%d&callback=jsonp_callback_' % model_id}
 
 # make all of the components noop
 def make_noop(tree):

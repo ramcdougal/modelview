@@ -49,6 +49,13 @@ function process_level_(data) {
             // do substitution via JSONP
             json_index_ = i;
             json_parent_obj_ = data;
+            
+            // force including from the internet when testing locally
+            // TODO: is this always a good idea?
+            if ((window.location.protocol == 'file:' || window.location.protocol == 'file') && row.include.substr(0, 2) == '//') {
+                row.include = 'http:' + row.include;
+            }
+            
             $('body').append('<script src="' + row.include + '"></script>');
             did_sub = true;
         }
@@ -155,8 +162,8 @@ function setup_modelview() {
 }
 
 function show_flot_(data, title, xaxes, yaxes) {
-    if (!xaxes.length) xaxes = undefined;
-    if (!yaxes.length) yaxes = undefined;
+    if (xaxes == undefined || !xaxes.length) xaxes = undefined;
+    if (yaxes == undefined || !yaxes.length) yaxes = undefined;
     if (title == undefined) title = '';
     show_dialog(flot_dialog);
     $('#' + flot_title)[0].innerHTML = title;
