@@ -125,6 +125,20 @@ classic_rows = navigate(mview.display.top)
 nsegs = {}
 uniques = {}
 constant_parms = {}
+
+def process_nseg(root):
+    if 'root ' in root['text']:
+        root_name = root['text'].split('root ')[1]
+        nsegs[root_name] = root['children'][1]
+        for child in root['children']:
+            if 'with unique parameters' in child['text']:
+                uniques[root_name] = child
+            if 'with constant parameters' in child['text']:
+                constant_parms[root_name] = child
+    else:
+        # get here if talking about all instances of a class instead of a specific one
+        pass
+
 for row in classic_rows:
     words = row['text'].split()
     # NOTE: the row contains all its children in the same format as in the JSON
@@ -132,15 +146,14 @@ for row in classic_rows:
         linear_mechanisms = row
     if len(words) >= 3 and words[1] == 'artificial':
         artificial_cells = row
-    if len(words) == 3 and words[1] == 'real' and words[2] == 'cells':
+    if len(words) >= 3 and words[1] == 'real' and words[2] == 'cells':
         for root in row['children']:
-            root_name = root['text'][5:]
-            nsegs[root_name] = root['children'][1]
-            for child in root['children']:
-                if 'with unique parameters' in child['text']:
-                    uniques[root_name] = child
-                if 'with constant parameters' in child['text']:
-                    constant_parms[root_name] = child
+            if root['text'][:5] != 'root ':
+                for item in root['children']:
+                    process_nseg(item)
+            else:
+                process_nseg(root)
+                    
     if row['text'] == 'Density Mechanisms':
         for child_row in row['children']:
             if child_row['text'] == 'Global parameters for density mechanisms':
@@ -517,14 +530,25 @@ def cell_tree(root):
     cell_id = root_sections.index(root)
     secs = secs_with_root(root)
     # TODO: subsets with constant parameters, point processes
-    result = [
-        {
-            'text': sec_seg(secs),
-            'action': [{'kind': 'neuronviewer', 'id': cell_id}]
-        },
-        nseg_analysis(secs, cell_id, root.name()),
-        cell_mech_analysis(secs, cell_id)
-    ]
+    if root.name() in nsegs:
+        result = [
+            {
+                'text': sec_seg(secs),
+                'action': [{'kind': 'neuronviewer', 'id': cell_id}]
+            },
+            nseg_analysis(secs, cell_id, root.name()),
+            cell_mech_analysis(secs, cell_id)
+        ]
+    else:
+        # TODO: better fallback for the non-first members of a group then to simply
+        #       omit all nseg analysis?
+        result = [
+            {
+                'text': sec_seg(secs),
+                'action': [{'kind': 'neuronviewer', 'id': cell_id}]
+            },
+            cell_mech_analysis(secs, cell_id)
+        ]
     unique = uniques.get(root.name())
     constant_parm = constant_parms.get(root.name())
     if constant_parm:
