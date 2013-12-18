@@ -14,6 +14,8 @@ if len(sys.argv) != 2:
 active_model = None
 commands = {}
 
+blank_line = {'text': ''}
+
 try:
     with open('/home/tmm46/nrntest/verify/nrnziprun.dat') as f:
         for line in f:
@@ -139,6 +141,7 @@ def process_nseg(root):
         # get here if talking about all instances of a class instead of a specific one
         pass
 
+point_processes = blank_line
 for row in classic_rows:
     words = row['text'].split()
     # NOTE: the row contains all its children in the same format as in the JSON
@@ -165,6 +168,10 @@ for row in classic_rows:
             if child_row['text'] == 'Heterogeneous Parameters':
                 # TODO: colorize
                 heterogeneous_parameters = child_row
+    
+    row_split = row['text'].split()
+    if len(row_split) >= 3 and row_split[1] == 'point' and row_split[2] == 'processes':
+        point_processes = row
 
 # TODO: make a general highlight_if that takes a function to do matching
 
@@ -607,7 +614,6 @@ else:
         'noop': True    
     }	  
 
-blank_line = {'text': ''}
 
 
 # process uniques to remove {} and add highlighting
@@ -739,6 +745,7 @@ data = {
             linear_mechanisms,
             blank_line,
             density_mechanisms,
+            point_processes,
             blank_line,
             components,
             blank_line,
