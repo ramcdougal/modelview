@@ -161,13 +161,17 @@ function setup_modelview() {
 
 }
 
-function show_flot_(data, title, xaxes, yaxes) {
+function show_flot_(data, title, xaxes, yaxes, hoverable, clickable) {
     if (xaxes == undefined || !xaxes.length) xaxes = undefined;
     if (yaxes == undefined || !yaxes.length) yaxes = undefined;
     if (title == undefined) title = '';
     show_dialog(flot_dialog);
     $('#' + flot_title)[0].innerHTML = title;
-    plottedFlot['placeholder' + flot_fig] = $.plot($('#placeholder' + flot_fig), data, {zoom: {interactive: true}, pan: {interactive: true}, xaxes: xaxes, yaxes: yaxes});
+    var opts = {zoom: {interactive: true}, pan: {interactive: true}, xaxes: xaxes, yaxes: yaxes};
+    if (hoverable || clickable) {
+        opts.grid = {'hoverable': hoverable, 'clickable': clickable};
+    }
+    plottedFlot['placeholder' + flot_fig] = $.plot($('#placeholder' + flot_fig), data, opts);
 }
 
 function modelview_hide_all_() {
@@ -224,7 +228,7 @@ function modelview_build_tree_(src_tree) {
                             }
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
                         } else if (action.kind == 'flot') {
-                            show_flot_(action.data, action.title, action.xaxes, action.yaxes);
+                            show_flot_(action.data, action.title, action.xaxes, action.yaxes, action.hoverable, action.clickable);
                         } else if (action.kind == 'svg') {
                             $('#' + svg_dialog).html('<svg xmlns="http://www.w3.org/2000/svg" viewbox="' + action.viewbox + '" style="width:100%; height:100%">' + action.svg + '</svg>');
                             show_dialog(svg_dialog);

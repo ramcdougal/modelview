@@ -534,7 +534,9 @@ def cell_mech_analysis(secs, cell_id):
                             'kind': 'flot',
                             'data': flotchart,
                             'xaxes': [{'axisLabel': 'Distance from root', 'labelcolor': 'black'}],
-                            'yaxes': [{'axisLabel': '%s.%s' % (mech, name), 'labelcolor': 'black'}]
+                            'yaxes': [{'axisLabel': '%s.%s' % (mech, name), 'labelcolor': 'black'}],
+                            'hoverable': True,
+                            'clickable': True
                         }
                     ]
                 })
