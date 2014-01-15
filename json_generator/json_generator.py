@@ -80,6 +80,8 @@ top_level_folder = os.getcwd().split(os.path.sep)[-1]
 
 # scan the MOD files to find SUFFIX and POINT_PROCESS information
 mech_files = {}
+mech_modulates = {}
+mech_depends = {}
 for root, dirs, files in os.walk('.'):
     # TODO: block the other architecture libraries too
     # TODO: of course, there's nothing inherently wrong with a mod file being in one of these
@@ -87,6 +89,9 @@ for root, dirs, files in os.walk('.'):
     if 'x86_64' not in root:
         for filename in files:
             if filename[-4:].lower() == '.mod':
+                depends_on = []
+                modulates = []
+                mech_name = None
                 with open(os.path.join(root, filename)) as f:
                     for line in f:
                         # strip comments (this isn't quite right because : could be inside of a VERBATIM)
@@ -94,8 +99,18 @@ for root, dirs, files in os.walk('.'):
                             line = line[: line.index(':')]
                         # TODO: really should be checking to make sure I'm inside of a NEURON block
                         split_line = line.strip().split()
+                        split_lower = line.lower().split()
                         if len(split_line) == 2 and split_line[0] in ('SUFFIX', 'POINT_PROCESS'):
-                            mech_files[split_line[1]] = os.path.join(root, filename)[2:]
+                            mech_name = split_line[1]
+                            mech_files[mech_name] = os.path.join(root, filename)[2:]
+                        if len(split_lower) and split_lower[0] == 'useion':
+                            ion_name = split_lower[1]
+                            if 'read' in split_lower: depends_on.append(ion_name)
+                            if 'write' in split_lower: modulates.append(ion_name)
+                if mech_name is not None:
+                    mech_depends[mech_name] = depends_on
+                    mech_modulates[mech_name] = modulates
+                            
 
 
 mech_xref = {}
@@ -667,6 +682,16 @@ for cell_id, root in enumerate(root_sections):
 
 # mechanisms in use
 mechs = [{'text': name + mech_xref.get(name, '')} for name in mechs_present(list(h.allsec()))]
+for row in mechs:
+    mech_name = row['text'].split()[0]
+    depends = mech_depends.get(mech_name, [])
+    modulates = mech_modulates.get(mech_name, [])
+    if len(depends) or len(modulates):
+        row['children'] = []
+    if len(depends):
+        row['children'].append({'text': 'Depends on: %s' % ', '.join(depends)})
+    if len(modulates):
+        row['children'].append({'text': 'Modulates: %s' % ', '.join(modulates)})
 mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 
 # density mechanisms
