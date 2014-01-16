@@ -216,6 +216,15 @@ function ensure_tooltip(id) {
 }
 
 var flot_highlighted = undefined;
+var neuron_highlighted_ = undefined;
+var neuron_highlighted_pt_ = undefined;
+
+function clear_neuron_highlight_() {
+    if (neuron_highlighted_ != undefined) {
+        neuron_highlighted_.unhighlight(neuron_highlighted_pt_, 0);
+        neuron_highlighted_ = undefined;
+    }
+}
 
 function modelview_build_tree_(src_tree) {
     var result = [];
@@ -283,7 +292,16 @@ function modelview_build_tree_(src_tree) {
                                 $('#placeholder' + flot_fig).bind("plothover", function (event, pos, item) {
                                     if (item) {
                                         $('#tooltip' + flot_fig).html('(' + item.datapoint[0].toPrecision(4) + ', ' + item.datapoint[1].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                        if (action.neuron_highlight_id != undefined) {
+                                            clear_neuron_highlight_();
+                                            var id = modelview_neuron_viewers[action.neuron_highlight_id];
+                                            var placeholder = $('#' + id).children('span')[0].id.replace('flotContainer', 'placeholder');
+                                            plottedFlot[placeholder].highlight(action.neuron_highlight_segs[item.dataIndex], 0);
+                                            neuron_highlighted_ = plottedFlot[placeholder];
+                                            neuron_highlighted_pt_ = action.neuron_highlight_segs[item.dataIndex];                                            
+                                        }
                                     } else {
+                                        clear_neuron_highlight_();
                                         $('#tooltip' + flot_fig).hide();
                                     }
                                     //console.log(item.series);

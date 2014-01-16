@@ -471,19 +471,24 @@ def colorize_by_mech_value(secs, mech, name):
         value_getter = lambda seg: getattr(getattr(seg, mech), name)
     indices = []
     i = 0
+    seg_count = 0
+    reverse_indices = []
     for sec in secs:
         try:
             v = value_getter(sec(0.5))
             for seg in sec:
                 values.append(value_getter(seg))
                 indices.append(i)
+                reverse_indices.append(seg_count)
                 i += 1
+                seg_count += 1
         except:    
             if not hasattr(sec(0.5), mech):
                 values += [numpy.nan] * sec.nseg
                 indices += [-1] * sec.nseg
+                seg_count += sec.nseg
 
-    return values_to_colors(values), values, min_no_nan(values), max_no_nan(values), indices
+    return values_to_colors(values), values, min_no_nan(values), max_no_nan(values), indices, reverse_indices
 
 def flot_by_distance_from_root(root, mech, name, secs):
     # measure distance from the midpt of the root
@@ -527,7 +532,7 @@ def cell_mech_analysis(secs, cell_id):
             child_parts = []
             for name in range_vars[mech]:
                 flotchart = flot_by_distance_from_root(root_sections[cell_id], mech, name, secs)
-                colors, values, lo, hi, indices = colorize_by_mech_value(secs, mech, name)
+                colors, values, lo, hi, indices, reverse_indices = colorize_by_mech_value(secs, mech, name)
                 values = [repr(v) for v in values]
                 if lo is not None:
                     nv_action = {'kind': 'neuronviewer', 'id': cell_id, 'colors': colors, 'colorbar': 0, 'colorbar_orientation': 'horizontal', 'colorbar_low': '%g' % lo, 'colorbar_high': '%g' % hi, 'colored_var': name, 'values': values, 'flotindices': indices}
@@ -543,7 +548,9 @@ def cell_mech_analysis(secs, cell_id):
                             'xaxes': [{'axisLabel': 'Distance from root', 'labelcolor': 'black'}],
                             'yaxes': [{'axisLabel': '%s.%s' % (mech, name), 'labelcolor': 'black'}],
                             'hoverable': True,
-                            'clickable': True
+                            'clickable': True,
+                            'neuron_highlight_id': cell_id,
+                            'neuron_highlight_segs': reverse_indices
                         }
                     ]
                 })
