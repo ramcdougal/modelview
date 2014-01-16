@@ -249,7 +249,13 @@ function modelview_build_tree_(src_tree) {
                             $('#' + placeholder).bind("plothover", function (event, pos, item) {
                                 if (item) {
                                     var pt = neuron_data_[id][item.seriesIndex][item.dataIndex];
-                                    $('#tooltip' + id).html('(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                    var tooltip_text = '';
+                                    if (action.colored_var != undefined && action.values != undefined) {
+                                        if (action.values[item.seriesIndex] != 'nan') {
+                                            tooltip_text = action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6) + '<br/>'
+                                        }
+                                    }
+                                    $('#tooltip' + id).html(tooltip_text + '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
                                 } else {
                                     $('#tooltip' + id).hide();
                                 }
