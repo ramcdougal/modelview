@@ -229,6 +229,12 @@ function modelview_build_tree_(src_tree) {
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
                         } else if (action.kind == 'flot') {
                             show_flot_(action.data, action.title, action.xaxes, action.yaxes, action.hoverable, action.clickable);
+                            if (action.hoverable) {
+                                $('#placeholder' + flot_fig).bind("plothover", function (event, pos, item) {
+                                    console.log('hovering over item #' + item.dataIndex);
+                                    //console.log(item.series);
+                                });
+                            }
                         } else if (action.kind == 'svg') {
                             $('#' + svg_dialog).html('<svg xmlns="http://www.w3.org/2000/svg" viewbox="' + action.viewbox + '" style="width:100%; height:100%">' + action.svg + '</svg>');
                             show_dialog(svg_dialog);
