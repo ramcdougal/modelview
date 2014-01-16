@@ -201,6 +201,20 @@ function set_colorbar(id, colorbar, orientation, lo, hi) {
     }
 }
 
+function ensure_tooltip(id) {
+    if (!$('#tooltip' + id).length) {
+        $('<div id="tooltip' + id + '"></div>').css({
+            position: 'absolute',
+            display: 'none',
+            border: '1px solid #000',
+            padding: '2px',
+            'background-color': '#fee',
+            opacity: 0.8,
+            zIndex: 10000
+        }).appendTo('body');
+    }
+}
+
 function modelview_build_tree_(src_tree) {
     var result = [];
     var f, i, j;
@@ -219,6 +233,7 @@ function modelview_build_tree_(src_tree) {
                     $.each(row.action, function (j, action) {
                         if (action.kind == 'neuronviewer') {
                             var id = modelview_neuron_viewers[action.id];
+                            neuron_hoverable_[id] = true;
                             show_dialog(id);
                             set_neuron_markers(id, action.markers);
                             if (action.highlight != undefined) {
@@ -227,22 +242,25 @@ function modelview_build_tree_(src_tree) {
                                 set_neuron_colors(id, action.colors);
                             }
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
+                            var placeholder = $('#' + id).children('span')[0].id.replace('flotContainer', 'placeholder');
+                            console.log('placeholder: ' + placeholder);
+                            ensure_tooltip(id);
+
+                            $('#' + placeholder).bind("plothover", function (event, pos, item) {
+                                if (item) {
+                                    var pt = neuron_data_[id][item.seriesIndex][item.dataIndex];
+                                    $('#tooltip' + id).html('(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                } else {
+                                    $('#tooltip' + id).hide();
+                                }
+                            });
                         } else if (action.kind == 'flot') {
                             show_flot_(action.data, action.title, action.xaxes, action.yaxes, action.hoverable, action.clickable);
                             if (action.hoverable) {
-                                if (!$('#tooltip' + flot_fig).length) {
-                                    $('<div id="tooltip' + flot_fig + '"></div>').css({
-                                        position: 'absolute',
-                                        display: 'none',
-                                        border: '1px solid #000',
-                                        padding: '2px',
-                                        'background-color': '#fee',
-                                        opacity: 0.8
-                                    }).appendTo('body');
-                                }
+                                ensure_tooltip(flot_fig);
                                 $('#placeholder' + flot_fig).bind("plothover", function (event, pos, item) {
                                     if (item) {
-                                        $('#tooltip' + flot_fig).html('(' + item.datapoint[0].toPrecision(4) + ', ' + item.datapoint[1].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5, zIndex: 10000}).fadeIn(200);
+                                        $('#tooltip' + flot_fig).html('(' + item.datapoint[0].toPrecision(4) + ', ' + item.datapoint[1].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
                                     } else {
                                         $('#tooltip' + flot_fig).hide();
                                     }
