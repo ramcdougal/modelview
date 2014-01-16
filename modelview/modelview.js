@@ -230,8 +230,22 @@ function modelview_build_tree_(src_tree) {
                         } else if (action.kind == 'flot') {
                             show_flot_(action.data, action.title, action.xaxes, action.yaxes, action.hoverable, action.clickable);
                             if (action.hoverable) {
+                                if (!$('#tooltip' + flot_fig).length) {
+                                    $('<div id="tooltip' + flot_fig + '"></div>').css({
+                                        position: 'absolute',
+                                        display: 'none',
+                                        border: '1px solid #000',
+                                        padding: '2px',
+                                        'background-color': '#fee',
+                                        opacity: 0.8
+                                    }).appendTo('body');
+                                }
                                 $('#placeholder' + flot_fig).bind("plothover", function (event, pos, item) {
-                                    console.log('hovering over item #' + item.dataIndex);
+                                    if (item) {
+                                        $('#tooltip' + flot_fig).html('(' + item.datapoint[0].toPrecision(4) + ', ' + item.datapoint[1].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5, zIndex: 10000}).fadeIn(200);
+                                    } else {
+                                        $('#tooltip' + flot_fig).hide();
+                                    }
                                     //console.log(item.series);
                                 });
                             }
