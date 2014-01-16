@@ -469,15 +469,21 @@ def colorize_by_mech_value(secs, mech, name):
         value_getter = lambda seg: getattr(seg, name)
     else:
         value_getter = lambda seg: getattr(getattr(seg, mech), name)
+    indices = []
+    i = 0
     for sec in secs:
         try:
             v = value_getter(sec(0.5))
             for seg in sec:
                 values.append(value_getter(seg))
+                indices.append(i)
+                i += 1
         except:    
             if not hasattr(sec(0.5), mech):
                 values += [numpy.nan] * sec.nseg
-    return values_to_colors(values), values, min_no_nan(values), max_no_nan(values)
+                indices += [-1] * sec.nseg
+
+    return values_to_colors(values), values, min_no_nan(values), max_no_nan(values), indices
 
 def flot_by_distance_from_root(root, mech, name, secs):
     # measure distance from the midpt of the root
@@ -521,10 +527,10 @@ def cell_mech_analysis(secs, cell_id):
             child_parts = []
             for name in range_vars[mech]:
                 flotchart = flot_by_distance_from_root(root_sections[cell_id], mech, name, secs)
-                colors, values, lo, hi = colorize_by_mech_value(secs, mech, name)
+                colors, values, lo, hi, indices = colorize_by_mech_value(secs, mech, name)
                 values = [repr(v) for v in values]
                 if lo is not None:
-                    nv_action = {'kind': 'neuronviewer', 'id': cell_id, 'colors': colors, 'colorbar': 0, 'colorbar_orientation': 'horizontal', 'colorbar_low': '%g' % lo, 'colorbar_high': '%g' % hi, 'colored_var': name, 'values': values}
+                    nv_action = {'kind': 'neuronviewer', 'id': cell_id, 'colors': colors, 'colorbar': 0, 'colorbar_orientation': 'horizontal', 'colorbar_low': '%g' % lo, 'colorbar_high': '%g' % hi, 'colored_var': name, 'values': values, 'flotindices': indices}
                 else:
                     nv_action = {'kind': 'neuronviewer', 'id': cell_id}
                 child_parts.append({

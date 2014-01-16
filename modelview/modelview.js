@@ -215,6 +215,8 @@ function ensure_tooltip(id) {
     }
 }
 
+var flot_highlighted = undefined;
+
 function modelview_build_tree_(src_tree) {
     var result = [];
     var f, i, j;
@@ -230,7 +232,7 @@ function modelview_build_tree_(src_tree) {
             if (row.action != undefined) {
                 f = function() {
                     modelview_hide_all_();
-                    $.each(row.action, function (j, action) {
+                    $.each(row.action, function (j, action) {                    
                         if (action.kind == 'neuronviewer') {
                             var id = modelview_neuron_viewers[action.id];
                             neuron_hoverable_[id] = true;
@@ -243,9 +245,8 @@ function modelview_build_tree_(src_tree) {
                             }
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
                             var placeholder = $('#' + id).children('span')[0].id.replace('flotContainer', 'placeholder');
-                            console.log('placeholder: ' + placeholder);
                             ensure_tooltip(id);
-
+                            
                             $('#' + placeholder).bind("plothover", function (event, pos, item) {
                                 if (item) {
                                     var pt = neuron_data_[id][item.seriesIndex][item.dataIndex];
@@ -256,7 +257,22 @@ function modelview_build_tree_(src_tree) {
                                         }
                                     }
                                     $('#tooltip' + id).html(tooltip_text + '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                    if (flot_highlighted != undefined) {
+                                        plottedFlot['placeholder' + flot_fig].unhighlight(0, flot_highlighted);
+                                        flot_highlighted = undefined;
+                                    }
+                                    if (action.flotindices != undefined) {
+                                        flot_highlighted = action.flotindices[item.seriesIndex];
+                                        if (flot_highlighted != undefined && flot_highlighted >= 0) {
+                                            plottedFlot['placeholder' + flot_fig].highlight(0, flot_highlighted);
+                                        }
+                                    }
+
                                 } else {
+                                    if (flot_highlighted != undefined) {
+                                        plottedFlot['placeholder' + flot_fig].unhighlight(0, flot_highlighted);
+                                        flot_highlighted = undefined;
+                                    }
                                     $('#tooltip' + id).hide();
                                 }
                             });
