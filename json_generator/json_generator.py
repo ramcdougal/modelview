@@ -6,8 +6,12 @@ from bs4 import BeautifulSoup, Comment
 import os
 import sys
 import math
+try:
+    from run_protocols import protocol
+except:
+    protocol = {}
 
-if len(sys.argv) != 2:
+if len(sys.argv) < 2:
     print 'Usage: python %s MODELID' % sys.argv[0]
     sys.exit()
 
@@ -36,15 +40,17 @@ except:
 
 model_id = int(sys.argv[1])
 
-h.load_file('mosinit.hoc')
-try:
-    h.init()
-except:
-    pass
-if model_id in commands:
-    for command in commands[model_id]:
-        print 'running: ', command
-        h(command)
+# load, run the model
+if sys.argv < 3 or sys.argv[2].lower() != 'norun':
+    h.load_file('mosinit.hoc')
+    try:
+        h.init()
+    except:
+        pass
+    if model_id in commands:
+        for command in commands[model_id]:
+            print 'running: ', command
+            h(command)
 
 # TODO: add this to modeldb, then read from there
 if model_id == 32992:
@@ -687,8 +693,32 @@ else:
             }
         ],
         'noop': True    
-    }	  
-
+    }
+if len(sys.argv) > 3:
+    # sys.argv[3] assumed to be the run protocol
+    if sys.argv[3] in protocol:
+        p = protocol[sys.argv[3]]
+        references['children'].append({
+            'text': 'Run Protocol',
+            'noop': True,
+            'children': [
+                {
+                    'text': 'Compiling',
+                    'children': [{'text': line, 'noop': True} for line in p['compile']],
+                    'noop': True
+                },
+                {
+                    'text': 'Launching NEURON',
+                    'children': [{'text': line, 'noop': True} for line in p['launch']],
+                    'noop': True
+                },
+                {
+                    'text': 'Running',
+                    'children': [{'text': line, 'noop': True} for line in p['run']],
+                    'noop': True
+                }
+            ]
+        })
 
 
 # process uniques to remove {} and add highlighting
