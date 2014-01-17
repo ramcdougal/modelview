@@ -292,6 +292,50 @@ for i in xrange(int(h.mt.count())):
 
 print 'pointprocess_names: ', pointprocess_names
 
+def pt_from_seg(seg):
+    sec = seg.sec
+    n = int(h.n3d(sec=sec))
+    x = [h.x3d(i, sec=sec) for i in xrange(n)]
+    y = [h.y3d(i, sec=sec) for i in xrange(n)]
+    z = [h.z3d(i, sec=sec) for i in xrange(n)]
+    arc = [h.arc3d(i, sec=sec) for i in xrange(n)]
+    f = seg.x * sec.L
+    return (numpy.interp(f, arc, x), numpy.interp(f, arc, y), numpy.interp(f, arc, z))
+
+
+pointprocess_locs_by_root = {}
+for name in pointprocess_names:
+    pointprocess_locs_by_root[name] = {root: [] for root in root_sections}
+    ell = h.List(name)
+    for i in xrange(int(ell.count())):
+        obj = ell.o(i)
+        if obj.has_loc():
+            seg = obj.get_segment()
+            pointprocess_locs_by_root[name][get_root(seg.sec)].append(list(pt_from_seg(seg)))
+
+if 'children' in point_processes:
+    base = point_processes['children']
+    if len(base):
+        text = base[0]['text'].split()
+        if len(text) == 3 and text[1] == 'Point' and text[2] == 'Processes':
+            base = base[0]['children']
+    for child in base:
+        name = child['text'].split()[1]
+        if name in mech_files:
+            child['text'] += ' ' + mech_xref[name]
+        elif name in ['AlphaSynapse', 'Exp2Syn', 'ExpSyn', 'IClamp', 'IntFire1', 'IntFire2', 'IntFire4', 'NetStim', 'SEClamp', 'VClamp']:
+            # TODO: this will need changed if help documentation is moved
+            child['text'] += ' (builtin: <a href="http://neuron.yale.edu/neuron/static/new_doc/modelspec/programmatic/mechanisms/mech.html#%s">ref</a>)' % name
+        child['action'] = []
+        for i, root in enumerate(root_sections):
+            child['action'].append({'kind': 'neuronviewer', 'id': i, 'markers': pointprocess_locs_by_root[name][root]})
+            print 'markers:', pointprocess_locs_by_root[name][root]
+        for grandchild in child['children']:
+            grandchild['noop'] = True
+
+
+
+
 # get the names of mechanism parameters (range_vars)
 range_vars = {}
 for mech in mech_names:

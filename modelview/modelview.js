@@ -104,7 +104,7 @@ function setup_modelview() {
     // start with a fixed initial height for this dialog.
     // the user can still resize it, but this prevents it from growing when the
     // tree is expanded
-    var spacing = tree_dialog_handle.parent().height() - tree_dialog_handle.height()
+    var spacing = tree_dialog_handle.parent().height() - tree_dialog_handle.height();
     // start at 2/3 of the height. arbitrary.
     tree_dialog_handle.parent().height(document.height * 0.66);
     tree_dialog_handle.height(tree_dialog_handle.parent().height() - spacing);
@@ -135,7 +135,6 @@ function setup_modelview() {
         var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
         reposition_dialog(new_view_id);
         modelview_neuron_viewers.push(new_view_id);
-        console.log('neuron viewer ' + new_view_id + ' created');
         hide_dialog(new_view_id);
     });
     
