@@ -885,9 +885,12 @@ data = {
     ]
 }
 
-
-with open('%d.json' % model_id, 'w') as f:
-    f.write(json.dumps(data))
+if len(sys.argv) < 4:
+    with open('%d.json' % model_id, 'w') as f:
+        f.write(json.dumps(data))
+else:
+    with open('%d.json' % sys.argv[3], 'w') as f:
+        f.write(json.dumps(data))
     
 if paper_doi is None:
     print 'No DOI found. Consider updating ModelDB and rerunning'    
