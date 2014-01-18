@@ -271,6 +271,9 @@ function modelview_build_tree_(src_tree) {
                                             tooltip_text += '<br/>' + action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6)
                                         }
                                     }
+                                    if (action.hover_text != undefined) {
+                                        tooltip_text += '<br/>' + action.hover_text[item.seriesIndex];
+                                    }
                                     $('#tooltip' + id).html(tooltip_text).css({left: item.pageX + 5, top: item.pageY + 5}).show();
                                     if (flot_highlighted != undefined) {
                                         plottedFlot['placeholder' + flot_fig].unhighlight(0, flot_highlighted);

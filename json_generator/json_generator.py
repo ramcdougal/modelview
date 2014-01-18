@@ -570,6 +570,12 @@ def flot_by_distance_from_root(root, mech, name, secs):
         'points': {'show': True}
     }]
 
+def seg_mechanisms(secs):
+    result = []
+    for sec in secs:
+        mechanisms = 'Mechanisms present:<br/>' + '<br/>'.join(['&nbsp;&nbsp; ' + m for m in mechs_present([sec])])
+        result += [mechanisms] * sec.nseg
+    return result
 
 def cell_mech_analysis(secs, cell_id):
     mps = mechs_present(secs)
@@ -616,7 +622,7 @@ def cell_mech_analysis(secs, cell_id):
         children.append(child)
     return {
         'text': '%d inserted mechanisms' % len(mechs),
-        'action': [{'kind': 'neuronviewer', 'id': cell_id}],
+        'action': [{'kind': 'neuronviewer', 'id': cell_id, 'hover_text': seg_mechanisms(secs)}],
         'children': children
     }
 
