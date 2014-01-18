@@ -439,9 +439,12 @@ def set_action_to_all(tree, action):
 
 def nseg_analysis(secs, cell_id, root_name):
     dx_max = 0
+    dxs = []
     for sec in secs:
-        if sec.L / sec.nseg > dx_max:
-            dx_max = sec.L / sec.nseg
+        dx = sec.L / sec.nseg
+        dxs += ['dx = %g' % dx] * sec.nseg
+        if dx > dx_max:
+            dx_max = dx
             dx_max_loc = sec
     result = nsegs[root_name]
     
@@ -471,7 +474,8 @@ def nseg_analysis(secs, cell_id, root_name):
     
     if result['text'] == '1 distinct values of nseg':
         result['text'] = '1 distinct value of nseg'
-    result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight_if_sec(secs, dx_max_loc)}]
+    # Longest dx section
+    result['children'][0]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight_if_sec(secs, dx_max_loc), 'hover_text': dxs}]
     return result
     """
     dx_max = 0
