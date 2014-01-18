@@ -408,6 +408,14 @@ def morph_per_root(root):
             morph.append(get_pts_between(x, y, z, d, arc, (seg.x - half_dx) * length, (seg.x + half_dx) * length))
     return morph
 
+def seg_names_per_root(root):
+    names = []
+    for sec in secs_with_root(root):
+        for seg in sec:
+            names.append('%s(%g)' % (sec.name(), seg.x))
+    return names
+    
+
 def secs_with_root(root):
     return [sec for sec in h.allsec() if get_root(sec) == root]
 
@@ -847,7 +855,7 @@ make_noop([components])
 
 
 data = {
-    'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root)} for root in root_sections],
+    'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root), 'seg_names': seg_names_per_root(root)} for root in root_sections],
     'title': title, 
     'short_title': short_title,
     'neuronviewer': range(len(root_sections)),

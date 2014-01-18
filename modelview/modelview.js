@@ -133,6 +133,7 @@ function setup_modelview() {
     $.each(modelview_data.neuronviewer, function(i, neuron_view) {
         var neuron_data = modelview_data.neuron[neuron_view];
         var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
+        seg_names_[new_view_id] = neuron_data.seg_names;
         reposition_dialog(new_view_id);
         modelview_neuron_viewers.push(new_view_id);
         hide_dialog(new_view_id);
@@ -225,6 +226,8 @@ function clear_neuron_highlight_() {
     }
 }
 
+seg_names_ = {};
+
 function modelview_build_tree_(src_tree) {
     var result = [];
     var f, i, j;
@@ -259,12 +262,16 @@ function modelview_build_tree_(src_tree) {
                                 if (item) {
                                     var pt = neuron_data_[id][item.seriesIndex][item.dataIndex];
                                     var tooltip_text = '';
+                                    if (seg_names_[id] != undefined) {
+                                        tooltip_text += seg_names_[id][item.seriesIndex] + '<br/>';
+                                    }
+                                    tooltip_text += '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')';
                                     if (action.colored_var != undefined && action.values != undefined) {
                                         if (action.values[item.seriesIndex] != 'nan') {
-                                            tooltip_text = action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6) + '<br/>'
+                                            tooltip_text += '<br/>' + action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6)
                                         }
                                     }
-                                    $('#tooltip' + id).html(tooltip_text + '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                    $('#tooltip' + id).html(tooltip_text).css({left: item.pageX + 5, top: item.pageY + 5}).show();
                                     if (flot_highlighted != undefined) {
                                         plottedFlot['placeholder' + flot_fig].unhighlight(0, flot_highlighted);
                                         flot_highlighted = undefined;
