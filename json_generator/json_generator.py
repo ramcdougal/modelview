@@ -62,6 +62,13 @@ if model_id == 32992:
         'na3': 'Na',
         'nax':  'Na'
     }
+elif model_id == 125857:
+    mech_types = {
+        'kahp': 'K-AHP',
+        'nap': 'Na,p',
+        'kc': 'K-Ca',
+        'kdr': 'K-dr'
+    }
 else:
     mech_types = {}
 
@@ -334,10 +341,19 @@ if 'children' in point_processes:
             child['text'] += ' (builtin: <a href="http://neuron.yale.edu/neuron/static/new_doc/modelspec/programmatic/mechanisms/mech.html#%s">ref</a>)' % name
         child['action'] = []
         for i, root in enumerate(root_sections):
-            child['action'].append({'kind': 'neuronviewer', 'id': i, 'markers': pointprocess_locs_by_root[name][root]})
-            print 'markers:', pointprocess_locs_by_root[name][root]
-        for grandchild in child['children']:
-            grandchild['noop'] = True
+            print 'name:', name
+            print 'root:', root
+            print pointprocess_locs_by_root
+            action = {'kind': 'neuronviewer', 'id': i}
+            try:
+                action['markers'] = pointprocess_locs_by_root[name][root]
+            except:
+                pass
+            child['action'].append(action)
+
+        if 'children' in child:
+            for grandchild in child['children']:
+                grandchild['noop'] = True
 
 
 
@@ -452,7 +468,7 @@ def nseg_analysis(secs, cell_id, root_name):
     min_nseg = min(sec.nseg for sec in secs)
     max_nseg = max(sec.nseg for sec in secs)
     num_bins = 10
-    delta_nseg = max(math.ceil((max_nseg - min_nseg) / float(num_bins)), 1)
+    delta_nseg = max(math.ceil((max_nseg + 1 - min_nseg) / float(num_bins)), 1)
     nseg_counts = [0 for i in xrange(num_bins)]
     for sec in secs:
         nseg_counts[int((sec.nseg - min_nseg) / delta_nseg)] += 1
