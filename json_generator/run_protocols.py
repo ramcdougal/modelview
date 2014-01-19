@@ -1,10 +1,14 @@
 """
 Some models need manual intervention:
 53869 -- press enter after the h.restart
-"""
 
-"""
+136715 -- contains additional instructions in the readme about changing parameters, which these instructions do not do
+
 Skipped for now: Traub et al 2005
+123897_2 crashes with "NEURON: procedure too big", also have to rename lib/U_Dvdt.hoc to fix case sensitive filename issue
+93321_* causes classic modelview to core dump
+143635 -- Amanda Casale's model only presents one parameter set when run with mosinit.hoc, but two others are available; should these be viewable in modelview?
+28316_1 -- classic modelview crashes due to point processes not being inserted in a section... still need to put in the rest of 28316_*, but seems no point for now
 """
 
 """
@@ -17,6 +21,20 @@ protocol = {
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
             'cleanup': ['cd ..', 'rm -fr synchro-ca1']
+        },
+    '135838':
+        {
+            'compile': ['cd Alle_et_al_2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr Alle_et_al_2009']
+        },
+    '143635':
+        {
+            'compile': ['cd CasaleEtAl2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.measure()'],
+            'cleanup': ['cd ..', 'rm -fr CasaleEtAl2011']
         },
     '87473':
         {
@@ -32,12 +50,140 @@ protocol = {
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.soma_inj()'],
             'cleanup': ['cd ..', 'rm -fr McCormickEtAl2007YuEtAl2008']
         },
+    '127992':
+        {
+            'compile': ['cd HHcn', 'nrnivmodl mod-files/', 'cp python/* .'],
+            'launch': ['nrngui -python'],
+            'run': ['execfile("HHneuron.py")'],
+            'cleanup': ['cd ..', 'rm -fr HHcn']
+        },
     '145836':
         {
             'compile': ['cd MoradiEtAl2012', 'nrnivmodl'],
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
             'cleanup': ['cd ..', 'rm -fr MoradiEtAl2012']
+        },
+    '28316_1':
+        {
+            'variant': '8A Long',
+            'compile': ['cd OLMmodel', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("initFig8Along")'],
+            'cleanup': ['cd ..', 'rm -fr OLMmodel']
+        },
+    '136715_1':
+        {
+            'variant': 'Fig 6B',
+            'compile': ['cd FleidervishEtAl2010', 'nrnivmodl MechanismsVer7.1/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("Fig6B.ses")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr FleidervishEtAl2010']
+        },
+    '136715_2':
+        {
+            'variant': 'Fig 4B 10APs',
+            'compile': ['cd FleidervishEtAl2010', 'nrnivmodl MechanismsVer7.1/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("Fig4B 10APs ver7a.ses")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr FleidervishEtAl2010']
+        },
+    '136715_3':
+        {
+            'variant': 'Fig 4B 100APs',
+            'compile': ['cd FleidervishEtAl2010', 'nrnivmodl MechanismsVer7.1/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("Fig4B 100APs ver7a.ses")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr FleidervishEtAl2010']
+        },
+    '136715_4':
+        {
+            'variant': 'Fig 3A',
+            'compile': ['cd FleidervishEtAl2010', 'nrnivmodl MechanismsVer7.1/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("Fig3A.ses")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr FleidervishEtAl2010']
+        },
+    '93321_1':
+        {
+            'variant': 'Fig 3A (top left)',
+            'compile': ['cd liuEtAl1998', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3topleft()'],
+            'cleanup': ['cd ..', 'rm -fr liuEtAl1998']
+        },
+    '93321_2':
+        {
+            'variant': 'Fig 3B (top right)',
+            'compile': ['cd liuEtAl1998', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3topright()'],
+            'cleanup': ['cd ..', 'rm -fr liuEtAl1998']
+        },
+    '93321_3':
+        {
+            'variant': 'Fig 3A middle (left)',
+            'compile': ['cd liuEtAl1998', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3middleleft()'],
+            'cleanup': ['cd ..', 'rm -fr liuEtAl1998']
+        },
+    '93321_4':
+        {
+            'variant': 'Fig 3B middle (right)',
+            'compile': ['cd liuEtAl1998', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'stopmidsim': False,
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3middleright()'],
+            'cleanup': ['cd ..', 'rm -fr liuEtAl1998']
+        },
+    '93321_5':
+        {
+            'variant': 'Fig 3 bottom',
+            'compile': ['cd liuEtAl1998', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3bottom()'],
+            'cleanup': ['cd ..', 'rm -fr liuEtAl1998']
+        },
+    '123897_1':
+        {
+            'variant': 'Pyramidal Cell',
+            'compile': ['cd HuEtAl2009', 'nrnivmodl mechanism/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.xopen("experiment/Pyramidal_Main.hoc")', 'h.freePlay()', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr HuEtAl2009']
+        },
+    '123897_2':
+        {
+            'variant': 'Uniform Axon',
+            'compile': ['cd HuEtAl2009', 'nrnivmodl mechanism/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.xopen("experiment/UniformAxon_Main.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr HuEtAl2009']
+        },
+    '123897_3':
+        {
+            'variant': 'Single Compartment (activation)',
+            'compile': ['cd HuEtAl2009', 'nrnivmodl mechanism/'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.xopen("experiment/SingleComp_Main.hoc")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr HuEtAl2009']
+        },
+    '19176_1':
+        {
+            'variant': 'Current Steps',
+            'compile': ['cd HCN2k', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.experiment1()'],
+            'cleanup': ['cd ..', 'rm -fr HCN2k']
+        },
+    '19176_2':
+        {
+            'variant': 'cAMP pulse',
+            'compile': ['cd HCN2k', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.experiment2()'],
+            'cleanup': ['cd ..', 'rm -fr HCN2k']
         },
     '124063':
         {

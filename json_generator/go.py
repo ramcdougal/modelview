@@ -56,7 +56,7 @@ def generate_json(*args, **kwargs):
     sys.exit()
     
 for i, command in enumerate(protocol['run']):
-    if i == len(protocol['run']) - 1:
+    if i == len(protocol['run']) - 1 and protocol.get('stopmidsim', True):
         h.CVode().extra_scatter_gather(0, generate_json)
     exec(command)
 
