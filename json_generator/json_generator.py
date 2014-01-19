@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup, Comment
 import os
 import sys
 import math
+
 try:
     from run_protocols import protocol
 except:
@@ -87,9 +88,7 @@ for link in modeldb_soup.find_all('a'):
         paper_doi = href[18 :]
     
 full_title = modeldb_soup.find_all('title')[0].text
-# TODO: Tom. Generalize.
-title, short_title = full_title.split('(')
-short_title = short_title[: -1]
+title, short_title = '('.join(full_title.split('(')[:-1]).strip(), full_title.split('(')[-1][:-1].strip()
 title = full_title
 
 
@@ -344,9 +343,9 @@ if 'children' in point_processes:
             child['text'] += ' (builtin: <a href="http://neuron.yale.edu/neuron/static/new_doc/modelspec/programmatic/mechanisms/mech.html#%s">ref</a>)' % name
         child['action'] = []
         for i, root in enumerate(root_sections):
-            print 'name:', name
-            print 'root:', root
-            print pointprocess_locs_by_root
+            #print 'name:', name
+            #print 'root:', root
+            #print pointprocess_locs_by_root
             action = {'kind': 'neuronviewer', 'id': i}
             try:
                 action['markers'] = pointprocess_locs_by_root[name][root]
@@ -375,7 +374,7 @@ for mech in mech_names:
             mname = mname[: -lensuffix]
         range_vars[mech].append(mname)
     if not range_vars[mech]: del range_vars[mech]
-print 'range_vars:', range_vars
+#print 'range_vars:', range_vars
 
 
 def mechs_present(secs):

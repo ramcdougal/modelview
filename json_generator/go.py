@@ -52,11 +52,12 @@ def generate_json(*args, **kwargs):
     os.system('rm -fr %s' % dir_name)
     sys.exit()
     
-h.CVode().extra_scatter_gather(0, generate_json)
-
-for command in protocol['run']:
+for i, command in enumerate(protocol['run']):
+    if i == len(protocol['run']) - 1:
+        h.CVode().extra_scatter_gather(0, generate_json)
     exec(command)
 
 print 'WARNING: Never actually did an fadvance.'
 print '         Attempting to generate JSON anyways.'
+h.t = 1
 generate_json()
