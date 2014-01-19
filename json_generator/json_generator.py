@@ -89,6 +89,9 @@ for link in modeldb_soup.find_all('a'):
     
 full_title = modeldb_soup.find_all('title')[0].text
 title, short_title = '('.join(full_title.split('(')[:-1]).strip(), full_title.split('(')[-1][:-1].strip()
+# trim out any leading ModelDB
+if full_title[:9] == 'ModelDB: ':
+    full_title = full_title[9:]
 title = full_title
 
 
@@ -332,7 +335,7 @@ if 'children' in point_processes:
     base = point_processes['children']
     if len(base):
         text = base[0]['text'].split()
-        if len(text) == 3 and text[1] == 'Point' and text[2] == 'Processes':
+        if len(text) == 3 and text[1] == 'Point' and text[2] == 'Processes' and 'children' in base[0]:
             base = base[0]['children']
     for child in base:
         name = child['text'].split()[1]

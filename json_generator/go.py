@@ -8,6 +8,8 @@ id = int(p.split('_')[0])
 
 protocol = protocol[p]
 
+initial_path = os.getcwd() + '/'
+
 #
 # download the zip file
 #
@@ -25,8 +27,9 @@ os.system('unzip zipfile.zip')
 os.system('cp json_generator.py %s/' % dir_name)
 os.chdir(dir_name)
 
-for command in protocol['compile']:
-    os.system(command)
+for i, command in enumerate(protocol['compile']):
+    if i > 0 or command[:3] != 'cd ':
+        os.system(command)
 
 #
 # load the model into NEURON
@@ -46,8 +49,8 @@ def generate_json(*args, **kwargs):
     # json_generator expects to be run from the terminal, so update sys.argv
     sys.argv = ['json_generator.py', id, 'norun', p]
     import json_generator
-    os.system('cp *.json ..')
-    os.chdir('..')
+    os.system('cp *.json ' + initial_path)
+    os.chdir(initial_path)
     os.remove('zipfile.zip')
     os.system('rm -fr %s' % dir_name)
     sys.exit()
