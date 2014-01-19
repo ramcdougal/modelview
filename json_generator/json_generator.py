@@ -53,24 +53,29 @@ if sys.argv < 3 or sys.argv[2].lower() != 'norun':
             h(command)
 
 # TODO: add this to modeldb, then read from there
-if model_id == 32992:
-    mech_types = {
+mech_types = {
+    32992: {
         'hd': 'I-h',
         'kad': 'K-A',
         'kap': 'K-A',
         'kdr': 'K-dr',
         'na3': 'Na',
         'nax':  'Na'
-    }
-elif model_id == 125857:
-    mech_types = {
+    },
+    125857: {
         'kahp': 'K-AHP',
         'nap': 'Na,p',
         'kc': 'K-Ca',
         'kdr': 'K-dr'
+    },
+    150240: {
+        'hh2': 'Na + K',
+        'it': 'T-type Ca',
+        'im': 'K (M current)'
     }
-else:
-    mech_types = {}
+}.get(model_id, {})
+
+h.define_shape()
 
 # load the modeldb entry
 modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d' % model_id).read()
@@ -302,8 +307,6 @@ for i in xrange(int(h.mt.count())):
     h.mt.select(i)
     h('mt.selected(mname)')
     pointprocess_names.append(h.mname)
-
-print 'pointprocess_names: ', pointprocess_names
 
 def pt_from_seg(seg):
     sec = seg.sec

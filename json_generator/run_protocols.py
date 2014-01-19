@@ -37,6 +37,12 @@ protocol = {
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("FRB_12_21")', 'h.run()'],
             'cleanup': ['cd ..', 'rm -fr FRB']
+        },
+    '150240':
+        {
+            'compile': ['cd TCconvergenceModel', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr TCconvergenceModel']
         }
-
 }
