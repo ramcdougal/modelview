@@ -865,6 +865,7 @@ make_noop([components])
 
 
 data = {
+    'modelview_version': 0,
     'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root), 'seg_names': seg_names_per_root(root)} for root in root_sections],
     'title': title, 
     'short_title': short_title,
