@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Loading ModelView...</title>
 	<link rel="stylesheet" href="neuronweb/static/css/styles-flot.css"/>
 
 	<link rel="stylesheet" href="neuronweb/static/css/jquery-ui.css"/>
@@ -29,6 +30,7 @@
             document.write("No model specified.");
         } else {
             $.getJSON(window.location.hash.substr(1) + '.json', function(json) {
+                $('#loading_modelview').hide();
                 modelview_data = json;
                 init_modelview();
             });
@@ -37,6 +39,9 @@
 </head>
 
 <body>
+    <div id='loading_modelview'>
+        Loading ModelView... This may take several seconds.
+    </div>
 </body>
 
 </html>
