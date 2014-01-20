@@ -502,3 +502,14 @@ protocol = {
             'cleanup': ['cd ..', 'rm -fr TCconvergenceModel']
         }
 }
+
+if __name__ == '__main__':
+    import json
+    multi = {}
+    for key in protocol:
+        split = key.split('_')
+        if len(split) > 1:
+            if split[0] not in multi:
+                multi[split[0]] = []
+            multi[split[0]].append([protocol[key]['variant'], key])
+    print json.dumps(multi)
