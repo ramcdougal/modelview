@@ -71,6 +71,7 @@ function process_level_(data) {
     return false;
 }
 
+
 function setup_modelview() {
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
@@ -260,30 +261,39 @@ function modelview_build_tree_(src_tree) {
                             
                             $('#' + placeholder).bind("plothover", function (event, pos, item) {
                                 if (item) {
-                                    var pt = neuron_data_[id][item.seriesIndex][item.dataIndex];
                                     var tooltip_text = '';
-                                    if (seg_names_[id] != undefined) {
-                                        tooltip_text += seg_names_[id][item.seriesIndex] + '<br/>';
-                                    }
-                                    tooltip_text += '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')';
-                                    if (action.colored_var != undefined && action.values != undefined) {
-                                        if (action.values[item.seriesIndex] != 'nan') {
-                                            tooltip_text += '<br/>' + action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6)
+                                    if (item.seriesIndex < neuron_data_[id].length) {
+                                        var pt = neuron_data_[id][item.seriesIndex][item.dataIndex];
+
+                                        if (seg_names_[id] != undefined) {
+                                            tooltip_text += seg_names_[id][item.seriesIndex] + '<br/>';
                                         }
-                                    }
-                                    if (action.hover_text != undefined) {
-                                        tooltip_text += '<br/>' + action.hover_text[item.seriesIndex];
-                                    }
-                                    $('#tooltip' + id).html(tooltip_text).css({left: item.pageX + 5, top: item.pageY + 5}).show();
-                                    if (flot_highlighted != undefined) {
-                                        plottedFlot['placeholder' + flot_fig].unhighlight(0, flot_highlighted);
-                                        flot_highlighted = undefined;
-                                    }
-                                    if (action.flotindices != undefined) {
-                                        flot_highlighted = action.flotindices[item.seriesIndex];
-                                        if (flot_highlighted != undefined && flot_highlighted >= 0) {
-                                            plottedFlot['placeholder' + flot_fig].highlight(0, flot_highlighted);
+                                        tooltip_text += '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')';
+                                        if (action.colored_var != undefined && action.values != undefined) {
+                                            if (action.values[item.seriesIndex] != 'nan') {
+                                                tooltip_text += '<br/>' + action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6)
+                                            }
                                         }
+                                        if (action.hover_text != undefined) {
+                                            tooltip_text += '<br/>' + action.hover_text[item.seriesIndex];
+                                        }
+                                        $('#tooltip' + id).html(tooltip_text).css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                        if (flot_highlighted != undefined) {
+                                            plottedFlot['placeholder' + flot_fig].unhighlight(0, flot_highlighted);
+                                            flot_highlighted = undefined;
+                                        }
+                                        if (action.flotindices != undefined) {
+                                            flot_highlighted = action.flotindices[item.seriesIndex];
+                                            if (flot_highlighted != undefined && flot_highlighted >= 0) {
+                                                plottedFlot['placeholder' + flot_fig].highlight(0, flot_highlighted);
+                                            }
+                                        }
+                                    } else if (item.seriesIndex == neuron_data_[id].length) {
+                                        // markers!
+                                        if (action.marker_mouseovers != undefined) {
+                                            tooltip_text += action.marker_mouseovers[item.dataIndex];
+                                        }                                        
+                                        $('#tooltip' + id).html(tooltip_text).css({left: item.pageX + 5, top: item.pageY + 5}).show();                                        
                                     }
 
                                 } else {

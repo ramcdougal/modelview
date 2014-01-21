@@ -322,14 +322,18 @@ def pt_from_seg(seg):
 
 
 pointprocess_locs_by_root = {}
+pointprocess_mouseovers_by_root = {}
 for name in pointprocess_names:
     pointprocess_locs_by_root[name] = {root: [] for root in root_sections}
+    pointprocess_mouseovers_by_root[name] = {root: [] for root in root_sections}
     ell = h.List(name)
     for i in xrange(int(ell.count())):
         obj = ell.o(i)
         if obj.has_loc():
             seg = obj.get_segment()
-            pointprocess_locs_by_root[name][get_root(seg.sec)].append(list(pt_from_seg(seg)))
+            pt = list(pt_from_seg(seg))
+            pointprocess_locs_by_root[name][get_root(seg.sec)].append(pt)
+            pointprocess_mouseovers_by_root[name][get_root(seg.sec)].append('%s at %s(%g)<br/>(%g, %g, %g)' % (name, seg.sec.name(), seg.x, pt[0], pt[1], pt[2]))
 
 if 'children' in point_processes:
     base = point_processes['children']
@@ -352,6 +356,7 @@ if 'children' in point_processes:
             action = {'kind': 'neuronviewer', 'id': i}
             try:
                 action['markers'] = pointprocess_locs_by_root[name][root]
+                action['marker_mouseovers'] = pointprocess_mouseovers_by_root[name][root]
             except:
                 pass
             child['action'].append(action)
