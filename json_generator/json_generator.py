@@ -124,16 +124,18 @@ for root, dirs, files in os.walk('.'):
                         if len(split_line) == 2 and split_line[0] in ('SUFFIX', 'POINT_PROCESS'):
                             mech_name = split_line[1]
                             mech_files[mech_name] = os.path.join(root, filename)[2:]
+                        if len(split_lower) and split_lower[0] == 'nonspecific_current':
+                            modulates.append('Nonspecific Current')
                         if len(split_lower) and split_lower[0] == 'useion':
                             ion_name = split_lower[1]
                             if 'read' in split_lower:
                                 values = re.search('READ (.*?)( WRITE| CHARGE| VALENCE|$)', line).groups()
                                 if values is not None and values[0] != '':
-                                    depends_on.append(values[0])
+                                    depends_on.append(values[0].strip())
                             if 'write' in split_lower: 
                                 values = re.search('WRITE (.*?)( READ| CHARGE| VALENCE|$)', line).groups()
                                 if values is not None and values[0] != '':
-                                    modulates.append(values[0])
+                                    modulates.append(values[0].strip())
 
                 if mech_name is not None:
                     mech_depends[mech_name] = depends_on
