@@ -103,6 +103,7 @@ top_level_folder = os.getcwd().split(os.path.sep)[-1]
 mech_files = {}
 mech_modulates = {}
 mech_depends = {}
+mech_counts = {}
 for root, dirs, files in os.walk('.'):
     # TODO: block the other architecture libraries too
     # TODO: of course, there's nothing inherently wrong with a mod file being in one of these
@@ -140,6 +141,11 @@ for root, dirs, files in os.walk('.'):
                 if mech_name is not None:
                     mech_depends[mech_name] = depends_on
                     mech_modulates[mech_name] = modulates
+                    count = 0
+                    for sec in h.allsec():
+                        if hasattr(sec(0.5), mech_name):
+                            count += 1
+                    mech_counts[mech_name] = count
                             
 
 
@@ -847,12 +853,15 @@ for row in mechs:
     mech_name = row['text'].split()[0]
     depends = mech_depends.get(mech_name, [])
     modulates = mech_modulates.get(mech_name, [])
-    if len(depends) or len(modulates):
+    count = mech_counts.get(mech_name, 0)    
+    if len(depends) or len(modulates) or count:
         row['children'] = []
     if len(depends):
         row['children'].append({'text': 'READs: %s' % ', '.join(depends)})
     if len(modulates):
         row['children'].append({'text': 'WRITEs: %s' % ', '.join(modulates)})
+    if count:
+        row['children'].append({'text': 'Present in %d sections' % count})
 mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 
 # density mechanisms
