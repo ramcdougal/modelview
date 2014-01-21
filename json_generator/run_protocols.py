@@ -11,14 +11,16 @@ Skipped for now: Traub et al 2005
 93321_* causes classic modelview to core dump
 143635 -- Amanda Casale's model only presents one parameter set when run with mosinit.hoc, but two others are available; should these be viewable in modelview?
 28316_1 -- classic modelview crashes due to point processes not being inserted in a section... still need to put in the rest of 28316_*, but seems no point for now
+
+127388 -- interesting model. no fadvance
 """
 
 """
 added today:
-112834, 127021, 147514, 87284_* (amyloid beta), 18198_*, 125378, 115356
+147538_*, 125689, 127388
 
 Next time:
-BCM-like synaptic plasticity with conductance-based models (Narayanan Johnston, 2010)
+
 """
 protocol = {
     '32992':
@@ -27,6 +29,36 @@ protocol = {
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
             'cleanup': ['cd ..', 'rm -fr synchro-ca1']
+        },
+    '125689':
+        {
+            'compile': ['cd CarvalhoBuonomano/Neuron2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.MULTI()'],
+            'cleanup': ['cd ../..', 'rm -fr CarvalhoBuonomano']
+        },
+    '127388':
+        {
+            'compile': ['cd BGnet', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run_sim()'],
+            'cleanup': ['cd ../..', 'rm -fr BGnet']
+        },
+    '147538_1':
+        {
+            'variant': 'Fig 2A',
+            'compile': ['cd NarayananJohnston2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.Fig2A()'],
+            'cleanup': ['cd ..', 'rm -fr NarayananJohnston2010']
+        },
+    '147538_2':
+        {
+            'variant': 'Fig 2B',
+            'compile': ['cd NarayananJohnston2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.Fig2B()'],
+            'cleanup': ['cd ..', 'rm -fr NarayananJohnston2010']
         },
     '112834':
         {
