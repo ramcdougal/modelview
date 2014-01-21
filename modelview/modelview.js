@@ -253,6 +253,11 @@ function modelview_build_tree_(src_tree) {
                             if (action.highlight != undefined) {
                                 set_neuron_highlights(id, action.highlight);
                             } else {
+                                if (action.colors != undefined) {
+                                    while (action.colors.length < neuron_data_[id].length) {
+                                        action.colors.push('black');
+                                    }
+                                }
                                 set_neuron_colors(id, action.colors);
                             }
                             set_colorbar(id, action.colorbar, action.colorbar_orientation, action.colorbar_low, action.colorbar_high);
@@ -270,8 +275,8 @@ function modelview_build_tree_(src_tree) {
                                         }
                                         tooltip_text += '(' + pt[0].toPrecision(4) + ', ' + pt[1].toPrecision(4) + ', ' + pt[2].toPrecision(4) + ')';
                                         if (action.colored_var != undefined && action.values != undefined) {
-                                            if (action.values[item.seriesIndex] != 'nan') {
-                                                tooltip_text += '<br/>' + action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6)
+                                            if (item.seriesIndex < action.values.length && action.values[item.seriesIndex] != 'nan') {
+                                                tooltip_text += '<br/>' + action.colored_var + ' = ' + Number(action.values[item.seriesIndex]).toPrecision(6);
                                             }
                                         }
                                         if (action.hover_text != undefined) {

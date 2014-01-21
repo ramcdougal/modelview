@@ -279,6 +279,9 @@ def get_pts_between(x, y, z, d, arc, lo, hi):
     right_z = numpy.interp(hi, arc, z, left=z[0], right=z[-1])
     right_d = numpy.interp(hi, arc, d, left=x[0], right=d[-1])
     in_between = [[x0, y0, z0, d0] for (x0, y0, z0, d0, a0) in zip(x, y, z, d, arc) if lo < a0 < hi]
+    if len(in_between) == 0:
+        # ensure there is at least one interior point
+        in_between = [[(left_x + right_x) * 0.5, (left_y + right_y) * 0.5, (left_z + right_z) * 0.5, (left_d + right_d) * 0.5]]
     return [[left_x, left_y, left_z, left_d]] + in_between + [[right_x, right_y, right_z, right_d]]
 
 def get_root(sec):
@@ -432,6 +435,17 @@ def morph_per_root(root):
         half_dx = 0.5 / sec.nseg
         for seg in sec:
             morph.append(get_pts_between(x, y, z, d, arc, (seg.x - half_dx) * length, (seg.x + half_dx) * length))
+    
+    # add end points
+    for end_pt in [0, 1]:
+        for sec in secs_with_root(root):
+            n3d = int(h.n3d(sec=sec))
+            pt1 = [h.x3d(0, sec=sec), h.y3d(0, sec=sec), h.z3d(0, sec=sec), h.diam3d(0, sec=sec)]
+            pt2 = [h.x3d(n3d - 1, sec=sec), h.y3d(n3d - 1, sec=sec), h.z3d(n3d - 1, sec=sec), h.diam3d(n3d - 1, sec=sec)]
+            if h.section_orientation(sec=sec) == 0:
+                morph.append([pt1] if end_pt == 0 else [pt2])
+            else:
+                morph.append([pt2] if end_pt == 0 else [pt1])
     return morph
 
 def seg_names_per_root(root):
@@ -439,6 +453,9 @@ def seg_names_per_root(root):
     for sec in secs_with_root(root):
         for seg in sec:
             names.append('%s(%g)' % (sec.name(), seg.x))
+    for end_pt in [0, 1]:
+        for sec in secs_with_root(root):
+            names.append('%s(%d)' % (sec.name(), end_pt))
     return names
     
 
