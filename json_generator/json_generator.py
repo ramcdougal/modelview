@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup, Comment
 import os
 import sys
 import math
+import re
 
 try:
     from run_protocols import protocol
@@ -125,8 +126,15 @@ for root, dirs, files in os.walk('.'):
                             mech_files[mech_name] = os.path.join(root, filename)[2:]
                         if len(split_lower) and split_lower[0] == 'useion':
                             ion_name = split_lower[1]
-                            if 'read' in split_lower: depends_on.append(ion_name)
-                            if 'write' in split_lower: modulates.append(ion_name)
+                            if 'read' in split_lower:
+                                values = re.search('READ (.*?)( WRITE| CHARGE| VALENCE|$)', line).groups()
+                                if values is not None and values[0] != '':
+                                    depends_on.append(values[0])
+                            if 'write' in split_lower: 
+                                values = re.search('WRITE (.*?)( READ| CHARGE| VALENCE|$)', line).groups()
+                                if values is not None and values[0] != '':
+                                    modulates.append(values[0])
+
                 if mech_name is not None:
                     mech_depends[mech_name] = depends_on
                     mech_modulates[mech_name] = modulates
@@ -840,9 +848,9 @@ for row in mechs:
     if len(depends) or len(modulates):
         row['children'] = []
     if len(depends):
-        row['children'].append({'text': 'Depends on: %s' % ', '.join(depends)})
+        row['children'].append({'text': 'READs: %s' % ', '.join(depends)})
     if len(modulates):
-        row['children'].append({'text': 'Modulates: %s' % ', '.join(modulates)})
+        row['children'].append({'text': 'WRITEs: %s' % ', '.join(modulates)})
 mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 
 # density mechanisms
