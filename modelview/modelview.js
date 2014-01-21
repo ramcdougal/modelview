@@ -310,7 +310,8 @@ function modelview_build_tree_(src_tree) {
                                 ensure_tooltip(flot_fig);
                                 $('#placeholder' + flot_fig).bind("plothover", function (event, pos, item) {
                                     if (item) {
-                                        $('#tooltip' + flot_fig).html('(' + item.datapoint[0].toPrecision(4) + ', ' + item.datapoint[1].toPrecision(4) + ')').css({left: item.pageX + 5, top: item.pageY + 5}).show();
+                                        var tooltip = '(' + item.datapoint[0].toPrecision(4) + ', ' + item.datapoint[1].toPrecision(4) + ')';
+                                        //        seg_names_[new_view_id] = neuron_data.seg_names;
                                         if (action.neuron_highlight_id != undefined) {
                                             clear_neuron_highlight_();
                                             var id = modelview_neuron_viewers[action.neuron_highlight_id];
@@ -318,7 +319,9 @@ function modelview_build_tree_(src_tree) {
                                             plottedFlot[placeholder].highlight(action.neuron_highlight_segs[item.dataIndex], 0);
                                             neuron_highlighted_ = plottedFlot[placeholder];
                                             neuron_highlighted_pt_ = action.neuron_highlight_segs[item.dataIndex];                                            
+                                            tooltip = seg_names_[id][item.dataIndex] + '<br/>' + tooltip;
                                         }
+                                        $('#tooltip' + flot_fig).html(tooltip).css({left: item.pageX + 5, top: item.pageY + 5}).show();
                                     } else {
                                         clear_neuron_highlight_();
                                         $('#tooltip' + flot_fig).hide();
