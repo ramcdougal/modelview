@@ -82,12 +82,16 @@ h.define_shape()
 # load the modeldb entry
 modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d' % model_id).read()
 modeldb_soup = BeautifulSoup(modeldb_html, 'html5lib')
-paper_doi = None
+paper_doi = []
 for link in modeldb_soup.find_all('a'):
     href = link.get('href')
-    if href is not None and 'http://dx.doi.org/' == href[ : 18]:
-        paper_doi = href[18 :]
-    
+    if href is not None and 'http://dx.doi.org/' == href[ : 18].lower():
+        paper_doi.append(href[18 :])
+
+print paper_doi
+import sys
+sys.exit()
+
 full_title = modeldb_soup.find_all('title')[0].text
 title, short_title = '('.join(full_title.split('(')[:-1]).strip(), full_title.split('(')[-1][:-1].strip()
 # trim out any leading ModelDB
@@ -745,32 +749,20 @@ if root_sections:
         # TODO: action: when clicking on a specific cell, display just that one
         real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
 
-if paper_doi is not None:
-    references = {
-        'text': 'References',
-        'children': [
-            {
-                'text': 'Paper: <a href="http://dx.doi.org/%s">doi:%s</a>' % (paper_doi, paper_doi),
-                'noop': True
-            },
-            {
-                'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
-                'noop': True
-            }
-        ],
-        'noop': True    
-    }	  
+if len(paper_doi):
+    children = [{'text': 'Paper: <a href="http://dx.doi.org/%s">doi:%s</a>' % (item, item), 'noop': True} for item in paper_doi]
 else:
-    references = {
-        'text': 'References',
-        'children': [
-            {
-                'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
-                'noop': True
-            }
-        ],
-        'noop': True    
-    }
+    children = []
+children.append({
+    'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
+    'noop': True
+})
+references = {
+    'text': 'References',
+    'children': children,
+    'noop': True
+}
+
 if len(sys.argv) > 3:
     # sys.argv[3] assumed to be the run protocol
     if sys.argv[3] in protocol:
