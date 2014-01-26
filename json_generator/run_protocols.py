@@ -737,4 +737,6 @@ if __name__ == '__main__':
             if split[0] not in multi:
                 multi[split[0]] = []
             multi[split[0]].append([protocol[key]['variant'], key])
+    for id in multi:
+        multi[id] = sorted(multi[id], key=lambda row: row[0])
     print json.dumps(multi)
