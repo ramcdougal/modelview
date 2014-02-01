@@ -23,11 +23,12 @@ Skipped for now: Traub et al 2005
 
 """
 added today:
-116096_*, 136803, 116830, 46839, 139418_*, 2937_*, 20015, 87546, 144401, 2796_*, 125152
+
+144541_*, 7509, 106551, 7386, 44050_*, 151949, 3507
 
 Next time:
 
-deal with 20212 (Poirazi?)
+deal with 20212 (Poirazi?) -- only have one so far
 remove 20212_2 since missing a variable definition? or make work?
 
     '20212_2':
@@ -48,7 +49,83 @@ protocol = {
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("Disperse_6_2.hoc")'],
             'cleanup': ['cd ../../..', 'rm -fr CA1_multi']
+        },
+    '44050_1':
+        {
+            'variant': 'Control',
+            'compile': ['cd gaspiriniEtAl2004', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.runc()'],
+            'cleanup': ['cd ..', 'rm -fr gaspiriniEtAl2004']
         },        
+    '44050_2':
+        {
+            'variant': 'AMPA',
+            'compile': ['cd gaspiriniEtAl2004', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.runa()'],
+            'cleanup': ['cd ..', 'rm -fr gaspiriniEtAl2004']
+        },        
+    '44050_3':
+        {
+            'variant': 'AMPA + NMDA',
+            'compile': ['cd gaspiriniEtAl2004', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.runm()'],
+            'cleanup': ['cd ..', 'rm -fr gaspiriniEtAl2004']
+        },        
+    '144541_1':
+        {
+            'variant': 'Control',
+            'compile': ['cd Ih_current', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("fig-5a.hoc")', 'h.loop()'],
+            'cleanup': ['cd ..', 'rm -fr Ih_current']
+        },        
+    '144541_2':
+        {
+            'variant': 'Control',
+            'compile': ['cd Ih_current', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("fig-5a.hoc")', 'h.zd()'],
+            'cleanup': ['cd ..', 'rm -fr Ih_current']
+        },
+    '151949':
+        {
+            'compile': ['cd SousaEtAl2014', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr SousaEtAl2014']
+        },
+    '7509':
+        {
+            'compile': ['cd magee2000'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr magee2000'],
+            'stopmidsim': False       # need this because an xpanel is open until after the sim completes
+        },
+    '106551':
+        {
+            'compile': ['cd nc-mri', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.runm()'],
+            'cleanup': ['cd ..', 'rm -fr nc-mri']
+        },
+    '3507':
+        {
+            'compile': ['cd fh', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr fh']
+        },
+    '7386':
+        {
+            'compile': ['cd boosting', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.runc()'],
+            'cleanup': ['cd ..', 'rm -fr boosting']
+        },
     '125152':
         {
             'compile': ['cd Uebachs-et-al_2010', 'nrnivmodl'],
