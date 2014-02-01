@@ -44,6 +44,38 @@ protocol = {
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run_sim()'],
             'cleanup': ['cd ../..', 'rm -fr BGnet']
         },
+    '116096_1':
+        {
+            'variant': 'Fig 2A',
+            'compile': ['cd badoual_stdp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.ampasyn.delta = -100', 'h.set_axis_limits(0.0014, 0.007, 0.7, 0.014)', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr badoual_stdp']
+        },        
+    '116096_2':
+        {
+            'variant': 'Fig 2B',
+            'compile': ['cd badoual_stdp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.ampasyn.delta = -10', 'h.set_axis_limits(0.0014, 0.007, 0.7, 0.35)', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr badoual_stdp']
+        },        
+    '116096_3':
+        {
+            'variant': 'Fig 2C',
+            'compile': ['cd badoual_stdp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.ampasyn.delta = 10', 'h.set_axis_limits(0.0045, 0.5, 0.9, 0.014)', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr badoual_stdp']
+        },
+    '116096_4':
+        {
+            'variant': 'Fig 2D',
+            'compile': ['cd badoual_stdp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.ampasyn.delta = 200', 'h.ampasyn.onset = 10', 'h.set_axis_limits(0.0016, 0.016, 0.7, 0.014)', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr badoual_stdp']
+        },
     '147538_1':
         {
             'variant': 'Fig 2A',

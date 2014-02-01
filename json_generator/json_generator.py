@@ -88,10 +88,6 @@ for link in modeldb_soup.find_all('a'):
     if href is not None and 'http://dx.doi.org/' == href[ : 18].lower():
         paper_doi.append(href[18 :])
 
-print paper_doi
-import sys
-sys.exit()
-
 full_title = modeldb_soup.find_all('title')[0].text
 title, short_title = '('.join(full_title.split('(')[:-1]).strip(), full_title.split('(')[-1][:-1].strip()
 # trim out any leading ModelDB
