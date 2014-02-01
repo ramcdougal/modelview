@@ -13,22 +13,146 @@ Skipped for now: Traub et al 2005
 28316_1 -- classic modelview crashes due to point processes not being inserted in a section... still need to put in the rest of 28316_*, but seems no point for now
 
 127388 -- interesting model. no fadvance
+
+144586 -- no sections. no modelview yet
+
+71312 -- skipped for now, not sure if 1 modelview or 16
+
+20212 -- to run, need to have . on path
 """
 
 """
 added today:
-147538_*, 125689, 127388
+116096_*, 136803, 116830, 46839, 139418_*, 2937_*, 20015, 87546, 144401, 2796_*, 125152
 
 Next time:
 
+deal with 20212 (Poirazi?)
+remove 20212_2 since missing a variable definition? or make work?
+
+    '20212_2':
+        {
+            'variant': 'Disperse Equal Sized',
+            'compile': ['cd CA1_multi/experiment/cluster-dispersion', 'nrnivmodl ../../mechanism', 'chmod +x newshiftsyn', 'export PATH=.:$PATH'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("Disperse_equal_sized.hoc")'],
+            'cleanup': ['cd ../../..', 'rm -fr CA1_multi']
+        },        
+
 """
 protocol = {
+    '20212_1':
+        {
+            'variant': 'Disperse 6_2',
+            'compile': ['cd CA1_multi/experiment/cluster-dispersion', 'nrnivmodl ../../mechanism', 'chmod +x newshiftsyn', 'export PATH=.:$PATH'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("Disperse_6_2.hoc")'],
+            'cleanup': ['cd ../../..', 'rm -fr CA1_multi']
+        },        
+    '125152':
+        {
+            'compile': ['cd Uebachs-et-al_2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run_sim_graph()'],
+            'cleanup': ['cd ..', 'rm -fr Uebachs-et-al_2010']
+        },
+    '2796_1':
+        {
+            'variant': 'Fig 1A',
+            'compile': ['cd ca1', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("fig_1a.hoc")', 'h.runu()'],
+            'cleanup': ['cd ..', 'rm -fr ca1']
+        },        
+    '2796_2':
+        {
+            'variant': 'Fig 1C',
+            'compile': ['cd ca1', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("fig_1c.hoc")', 'h.runu()'],
+            'cleanup': ['cd ..', 'rm -fr ca1']
+        },        
+    '144401':
+        {
+            'compile': ['cd VladimirovTuTraub2012', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr VladimirovTuTraub2012']
+        },
+    '87546':
+        {
+            'compile': ['cd olm-int', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr olm-int']
+        },
+    '20015':
+        {
+            'compile': ['cd k_interneurons', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("kinetics.hoc")', 'h.run()'],
+            'cleanup': ['cd ..', 'rm -fr k_interneurons']
+        },
     '32992':
         {
             'compile': ['cd synchro-ca1', 'nrnivmodl'],
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
             'cleanup': ['cd ..', 'rm -fr synchro-ca1']
+        },
+    '2937_1':
+        {
+            'variant': 'Fig 3',
+            'compile': ['cd slowinact', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run3()'],
+            'cleanup': ['cd ..', 'rm -fr slowinact']
+        },        
+    '2937_2':
+        {
+            'variant': 'Fig 4bc',
+            'compile': ['cd slowinact', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run4bc()'],
+            'cleanup': ['cd ..', 'rm -fr slowinact']
+        },        
+    '2937_3':
+        {
+            'variant': 'Fig 4bd',
+            'compile': ['cd slowinact', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run4bd()'],
+            'cleanup': ['cd ..', 'rm -fr slowinact']
+        },        
+    '139418_1':
+        {
+            'variant': 'Fig 11',
+            'compile': ['cd fietkiewicz2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("figure11.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr fietkiewicz2011']
+        },        
+    '139418_2':
+        {
+            'variant': 'Fig 13',
+            'compile': ['cd fietkiewicz2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("figure13.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr fietkiewicz2011']
+        },        
+    '46839':
+        {
+            'compile': ['cd GranuleCell', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr GranuleCell']
+        },
+    '116830':
+        {
+            'compile': ['cd b08dec23', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("init.hoc")'],
+            'cleanup': ['cd ..', 'rm -fr b08dec23']
         },
     '125689':
         {
@@ -43,6 +167,13 @@ protocol = {
             'launch': ['nrngui -python'],
             'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run_sim()'],
             'cleanup': ['cd ../..', 'rm -fr BGnet']
+        },
+    '136803':
+        {
+            'compile': ['cd JonesEtAl2009', 'nrnivmodl mod_files'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../..', 'rm -fr JonesEtAl2009']
         },
     '116096_1':
         {
