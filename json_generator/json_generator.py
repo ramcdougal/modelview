@@ -343,8 +343,13 @@ def pt_from_seg(seg):
 pointprocess_locs_by_root = {}
 pointprocess_mouseovers_by_root = {}
 for name in pointprocess_names:
-    pointprocess_locs_by_root[name] = {root: [] for root in root_sections}
-    pointprocess_mouseovers_by_root[name] = {root: [] for root in root_sections}
+    pointprocess_locs_by_root[name] = {}
+    pointprocess_mouseovers_by_root[name] = {}
+    for root in root_sections:
+        pointprocess_locs_by_root[name][root] = []
+        pointprocess_mouseovers_by_root[name][root] = []
+    #pointprocess_locs_by_root[name] = {root: [] for root in root_sections}
+    #pointprocess_mouseovers_by_root[name] = {root: [] for root in root_sections}
     ell = h.List(name)
     for i in xrange(int(ell.count())):
         obj = ell.o(i)
