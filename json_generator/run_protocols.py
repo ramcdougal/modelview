@@ -5,6 +5,13 @@ TODO: 146376: need to load morphometric file... not sure what it wants... need t
 TODO: 139656 -- large network
 TODO: 97917
 TODO: 93326 -- maybe this should be more than 1... depending on VClamp/IClamp?
+TODO: 147366 -- this is a lytton model... nonstandard setup
+TODO: 140881 -- another lytton model... no fadvances, json_generator fails
+TODO: 12631 -- another lytton model... no fadvances, json_generator fails
+TODO: 19366_1 -- doesn't actually run... need to click the "Plot" buttons, but not clear where they come from
+TODO: 22203 -- runs everything in a different process!
+
+TODO: confirm 52034 sets up a structure (it says it doesn't run... figure out why not)
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -31,12 +38,21 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035, 144490, 87535, 144976_*, 144392_*, 118986, 136176, 3263_*, 35358, 20007, 101629_*, 3332, 37857_*, 37856_*, 3509_*, 146376, 118098, 140462, 151458, 150551_*, 125745, 112086_*, 3800, 144520, 126467, 112685, 48332, 17664, 80769_*, 147578_*, 93326, 3434, 53435_*
 
 added from bottom up:
-64212
 
 Next time: put today's on the server
+
+
+***
+NEXT TIME
+***
+
+From top down: D2 dopamine receptor modulation of interneuronal activity (Maurice et al. 2004)
+From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
+
+
+
 
 deal with 20212 (Poirazi?) -- only have one so far
 remove 20212_2 since missing a variable definition? or make work?
@@ -52,6 +68,185 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '9853':
+        {
+            'compile': ['cd joyner80', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr joyner80']
+        },
+    '52034':
+        {
+            'compile': ['cd ctxnet', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run_fig6()")'],
+            'cleanup': ['cd ../', 'rm -fr ctxnet']
+        },
+    '138382_1':
+        {
+            'variant': 'Detailed Calcium dynamics model',
+            'compile': ['cd AnwarEtAl2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"runDM\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AnwarEtAl2010']
+        },
+    '138382_2':
+        {
+            'variant': 'Calcium transients using different buffering models',
+            'compile': ['cd AnwarEtAl2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"runCaTransients\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AnwarEtAl2010']
+        },
+    '138382_3':
+        {
+            'variant': 'Calcium spikes using single pool model',
+            'compile': ['cd AnwarEtAl2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"runCaSpikesSP\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AnwarEtAl2010']
+        },
+    '138382_4':
+        {
+            'variant': 'Calcium spikes using double pool model',
+            'compile': ['cd AnwarEtAl2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"runCaSpikesDP\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AnwarEtAl2010']
+        },
+    '138382_5':
+        {
+            'variant': 'Calcium spikes using detailed model',
+            'compile': ['cd AnwarEtAl2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"runCaSpikesDM\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AnwarEtAl2010']
+        },
+    '138382_6':
+        {
+            'variant': 'Calcium spikes using DCM',
+            'compile': ['cd AnwarEtAl2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"runCaSpikesDCM\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AnwarEtAl2010']
+        },
+    '114637':
+        {
+            'compile': ['cd SSC_model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr SSC_model']
+        },
+    '9851':
+        {
+            'compile': ['cd moore78', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr moore78']
+        },
+    '19366_1':
+        {
+            'variant': 'Fig.1. A-C',
+            'compile': ['cd korogod', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("Main(1)")'],
+            'cleanup': ['cd ../', 'rm -fr korogod']
+        },
+    '19366_2':
+        {
+            'variant': 'Fig.2. A',
+            'compile': ['cd korogod', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("Main(2)")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr korogod']
+        },
+    '19366_3':
+        {
+            'variant': 'Fig.2. B',
+            'compile': ['cd korogod', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("Main(3)")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr korogod']
+        },
+    '19366_4':
+        {
+            'variant': 'Fig.3. A-D',
+            'compile': ['cd korogod', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("Main(4)")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr korogod']
+        },
+    '19366_5':
+        {
+            'variant': 'Fig.3. E-H',
+            'compile': ['cd korogod', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("Main(5)")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr korogod']
+        },
+    '119283_1':
+        {
+            'variant': '(1-4) Gray - Control',
+            'compile': ['cd FerranteEtAl2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runi()")'],
+            'cleanup': ['cd ../', 'rm -fr FerranteEtAl2008']
+        },
+    '119283_2':
+        {
+            'variant': '(1) Black - Lamotrigine',
+            'compile': ['cd FerranteEtAl2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runii()")'],
+            'cleanup': ['cd ../', 'rm -fr FerranteEtAl2008']
+        },
+    '119283_3':
+        {
+            'variant': '(2) Black - Diazepam',
+            'compile': ['cd FerranteEtAl2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runiii()")'],
+            'cleanup': ['cd ../', 'rm -fr FerranteEtAl2008']
+        },
+    '119283_4':
+        {
+            'variant': '(3) Black - Flindokalner',
+            'compile': ['cd FerranteEtAl2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runiv()")'],
+            'cleanup': ['cd ../', 'rm -fr FerranteEtAl2008']
+        },
+    '119283_5':
+        {
+            'variant': '(4) Black - Lamotrigine+Flindokalner',
+            'compile': ['cd FerranteEtAl2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runv()")'],
+            'cleanup': ['cd ../', 'rm -fr FerranteEtAl2008']
+        },
+    '123927':
+        {
+            'compile': ['cd Wimmer-et-al2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run_sim_graph_coarse()")'],
+            'cleanup': ['cd ../', 'rm -fr Wimmer-et-al2009']
+        },
+    '143604_1':
+        {
+            'variant': 'spine inhibiton with bAP (compartmentalized inhibition)',
+            'compile': ['cd singleDendrite', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("spineinhib_bAP_demo()")'],
+            'cleanup': ['cd ../', 'rm -fr singleDendrite']
+        },
+    '143604_2':
+        {
+            'variant': '10x dend inhib with bAP (widespread inhib with smaller change in amplitude)',
+            'compile': ['cd singleDendrite', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("dend10x_bAP_demo()")'],
+            'cleanup': ['cd ../', 'rm -fr singleDendrite']
+        },
     '93326':
         {
             'compile': ['cd ngetting', 'nrnivmodl'],
@@ -530,6 +725,20 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '113446':
+        {
+            'compile': ['cd NEURON-2008b', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NEURON-2008b']
+        },
+    '117459':
+        {
+            'compile': ['cd CruzEtAlS_cellModel', 'nrnivmodl plus5HT/3cell'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CruzEtAlS_cellModel']
+        },
     '53435_1':
         {
             'variant': 'Real EPSP',
