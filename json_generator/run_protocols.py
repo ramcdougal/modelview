@@ -32,6 +32,9 @@ added today:
 
 143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035, 144490, 87535, 144976_*, 144392_*, 118986, 136176, 3263_*, 35358, 20007, 101629_*, 3332, 37857_*, 37856_*, 3509_*, 146376, 118098, 140462, 151458, 150551_*, 125745, 112086_*, 3800, 144520, 126467, 112685, 48332, 17664, 80769_*, 147578_*
 
+added from bottom up:
+64212
+
 Next time: put today's on the server
 
 deal with 20212 (Poirazi?) -- only have one so far
@@ -48,6 +51,13 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '64212':
+        {
+            'compile': ['cd VNO', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr VNO']
+        },
     '147578_1':
         {
             'variant': 'Compute Input Resistances Along Trunk',
