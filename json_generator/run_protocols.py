@@ -1,4 +1,7 @@
 """
+TODO: redo 3507... there are actually 3 figures there... well, maybe, the models are the same
+
+
 Some models need manual intervention:
 53869 -- press enter after the h.restart
 
@@ -24,9 +27,18 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-144541_*, 7509, 106551, 7386, 44050_*, 151949, 3507
+143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035
 
-Next time:
+Next time: put today's on the server
+
+deal with 144490 (bpaprun not found???)
+    '144490':
+        {
+            'compile': ['cd bpap', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.bpaprun()'],
+            'cleanup': ['cd ../', 'rm -fr bpap']
+        },
 
 deal with 20212 (Poirazi?) -- only have one so far
 remove 20212_2 since missing a variable definition? or make work?
@@ -41,7 +53,143 @@ remove 20212_2 since missing a variable definition? or make work?
         },        
 
 """
-protocol = {
+automatically_curated_protocols = {
+    '55035':
+        {
+            'compile': ['cd obliques', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runm()")'],
+            'cleanup': ['cd ../', 'rm -fr obliques']
+        },
+    '126776_1':
+        {
+            'variant': 'control',
+            'compile': ['cd rebound', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runc()")'],
+            'cleanup': ['cd ../', 'rm -fr rebound']
+        },
+    '126776_2':
+        {
+            'variant': '4-AP',
+            'compile': ['cd rebound', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run4ap()")'],
+            'cleanup': ['cd ../', 'rm -fr rebound']
+        },
+    '126776_3':
+        {
+            'variant': '4-AP+ZD',
+            'compile': ['cd rebound', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run4apzd()")'],
+            'cleanup': ['cd ../', 'rm -fr rebound']
+        },
+    '19696_1':
+        {
+            'variant': 'full model (black)',
+            'compile': ['cd sc-pp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runf()")'],
+            'cleanup': ['cd ../', 'rm -fr sc-pp']
+        },
+    '19696_2':
+        {
+            'variant': 'uniform KA (red)',
+            'compile': ['cd sc-pp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runa()")'],
+            'cleanup': ['cd ../', 'rm -fr sc-pp']
+        },
+    '19696_3':
+        {
+            'variant': 'uniform KA and I-h (blue)',
+            'compile': ['cd sc-pp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runh()")'],
+            'cleanup': ['cd ../', 'rm -fr sc-pp']
+        },
+    '112546_1':
+        {
+            'variant': 'fig.4(i)',
+            'compile': ['cd km', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runi()")'],
+            'cleanup': ['cd ../', 'rm -fr km']
+        },
+    '112546_2':
+        {
+            'variant': 'fig.4(ii)',
+            'compile': ['cd km', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runii()")'],
+            'cleanup': ['cd ../', 'rm -fr km']
+        },
+    '112546_3':
+        {
+            'variant': 'fig.4(iii)',
+            'compile': ['cd km', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runiii()")'],
+            'cleanup': ['cd ../', 'rm -fr km']
+        },
+    '112546_4':
+        {
+            'variant': 'fig.4(iv)',
+            'compile': ['cd km', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runiv()")'],
+            'cleanup': ['cd ../', 'rm -fr km']
+        },
+    '116983':
+        {
+            'compile': ['cd theta', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runm()")'],
+            'cleanup': ['cd ../', 'rm -fr theta']
+        },
+    '148094':
+        {
+            'compile': ['cd kv72-R213QW-mutations', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr kv72-R213QW-mutations']
+        },
+    '9769_distal':
+        {
+            'variant': 'distal',
+            'compile': ['cd lamotrigine', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("rund()")'],
+            'cleanup': ['cd ../', 'rm -fr lamotrigine']
+        },
+    '9769_proximal':
+        {
+            'variant': 'proximal',
+            'compile': ['cd lamotrigine', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runp()")'],
+            'cleanup': ['cd ../', 'rm -fr lamotrigine']
+        }
+
+}
+
+manually_curated_protocols = {
+    '138205':
+        {
+            'compile': ['cd Schizophr', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("display_cell()")'],
+            'cleanup': ['cd ../', 'rm -fr Schizophr']
+        },
+    '143719':
+        {
+            'compile': ['cd Ca1_Bianchi/experiment', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../../', 'rm -fr Ca1_Bianchi']
+        },
+
     '20212_1':
         {
             'variant': 'Disperse 6_2',
@@ -967,6 +1115,9 @@ protocol = {
             'cleanup': ['cd ..', 'rm -fr TCconvergenceModel']
         }
 }
+
+protocol = dict(automatically_curated_protocols)
+protocol.update(manually_curated_protocols)
 
 if __name__ == '__main__':
     import json
