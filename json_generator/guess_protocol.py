@@ -3,6 +3,9 @@ import os
 import urllib2
 import subprocess
 
+if len(sys.argv) < 2:
+    print 'did you forget to specify a model id?'
+    sys.exit()
 id = int(sys.argv[1])
 
 initial_path = os.getcwd() + '/'
@@ -61,6 +64,9 @@ for button in xbuttons:
         # strip out the filename
         print repr(button)
         button = button[button.index(':') + 1:].strip()
+        if '//' in button:
+            if button.index('//') < button.index('xbutton'):
+                continue
         assert(button[:8] == 'xbutton(')
         button = button[8:]
         comma = button.index(',')
