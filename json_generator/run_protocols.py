@@ -4,6 +4,7 @@ TODO: redo 3507... there are actually 3 figures there... well, maybe, the models
 TODO: 146376: need to load morphometric file... not sure what it wants... need to manually curate
 TODO: 139656 -- large network
 TODO: 97917
+TODO: 93326 -- maybe this should be more than 1... depending on VClamp/IClamp?
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -30,7 +31,7 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035, 144490, 87535, 144976_*, 144392_*, 118986, 136176, 3263_*, 35358, 20007, 101629_*, 3332, 37857_*, 37856_*, 3509_*, 146376, 118098, 140462, 151458, 150551_*, 125745, 112086_*, 3800, 144520, 126467, 112685, 48332, 17664, 80769_*, 147578_*
+143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035, 144490, 87535, 144976_*, 144392_*, 118986, 136176, 3263_*, 35358, 20007, 101629_*, 3332, 37857_*, 37856_*, 3509_*, 146376, 118098, 140462, 151458, 150551_*, 125745, 112086_*, 3800, 144520, 126467, 112685, 48332, 17664, 80769_*, 147578_*, 93326, 3434, 53435_*
 
 added from bottom up:
 64212
@@ -51,6 +52,20 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '93326':
+        {
+            'compile': ['cd ngetting', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr ngetting']
+        },
+    '3434':
+        {
+            'compile': ['cd cdlab', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr cdlab']
+        },
     '64212':
         {
             'compile': ['cd VNO', 'nrnivmodl'],
@@ -515,6 +530,22 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '53435_1':
+        {
+            'variant': 'Real EPSP',
+            'compile': ['cd anyas2005/model_bf_real_EPSP', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../../', 'rm -fr anyas2005']
+        },
+    '53435_2':
+        {
+            'variant': 'HPP',
+            'compile': ['cd anyas2005/model_bf_HPP', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../../', 'rm -fr anyas2005']
+        },
     '112086_1':
         {
             'variant': 'Metal electrode',

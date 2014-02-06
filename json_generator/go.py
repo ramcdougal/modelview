@@ -45,6 +45,7 @@ from neuron import h
 # first fadvance occurs
 #
 def generate_json(*args, **kwargs):
+    global dir_name
     if h.t <= 0: return
     # json_generator expects to be run from the terminal, so update sys.argv
     sys.argv = ['json_generator.py', id, 'norun', p]
@@ -52,6 +53,7 @@ def generate_json(*args, **kwargs):
     os.system('cp *.json ' + initial_path)
     os.chdir(initial_path)
     os.remove('zipfile.zip')
+    if '/' in dir_name: dir_name = dir_name[:dir_name.index('/')] # linux-specific
     os.system('rm -fr %s' % dir_name)
     if not good:
         print 'WARNING: Never actually did an fadvance'
