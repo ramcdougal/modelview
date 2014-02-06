@@ -2,6 +2,8 @@
 TODO: redo 3507... there are actually 3 figures there... well, maybe, the models are the same
 
 TODO: 146376: need to load morphometric file... not sure what it wants... need to manually curate
+TODO: 139656 -- large network
+TODO: 97917
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -28,7 +30,7 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035, 144490, 87535, 144976_*, 144392_*, 118986, 136176, 3263_*, 35358, 20007, 101629_*, 3332, 37857_*, 37856_*, 3509_*
+143719, 9769_*, 148094, 116983, 112546_*, 19696_*, 126776_*, 138205, 55035, 144490, 87535, 144976_*, 144392_*, 118986, 136176, 3263_*, 35358, 20007, 101629_*, 3332, 37857_*, 37856_*, 3509_*, 146376, 118098, 140462, 151458, 150551_*, 125745, 112086_*, 3800, 144520, 126467, 112685, 48332, 17664, 80769_*, 147578_*
 
 Next time: put today's on the server
 
@@ -46,6 +48,179 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '147578_1':
+        {
+            'variant': 'Compute Input Resistances Along Trunk',
+            'compile': ['cd MultiChirp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("RN_Trunk()")'],
+            'cleanup': ['cd ../', 'rm -fr MultiChirp']
+        },
+    '147578_2':
+        {
+            'variant': 'Save Local Chirp Responses for Locations Along Trunk',
+            'compile': ['cd MultiChirp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("Chirp_Trunk()")'],
+            'cleanup': ['cd ../', 'rm -fr MultiChirp']
+        },
+    '80769_1':
+        {
+            'variant': 'Off On Off original protocol',
+            'compile': ['cd AkemannKnopfelPurkinje_cell_model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"OFF_ON_OFF_protocol\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AkemannKnopfelPurkinje_cell_model']
+        },
+    '80769_2':
+        {
+            'variant': 'Short demo run simulation',
+            'compile': ['cd AkemannKnopfelPurkinje_cell_model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("restart(\\"shortRun\\")")'],
+            'cleanup': ['cd ../', 'rm -fr AkemannKnopfelPurkinje_cell_model']
+        },
+    '17664':
+        {
+            'compile': ['cd prknj', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr prknj']
+        },
+    '48332':
+        {
+            'compile': ['cd purkinje', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr purkinje']
+        },
+    '112685':
+        {
+            'compile': ['cd Golgi_cell', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Golgi_cell']
+        },
+    '126467':
+        {
+            'compile': ['cd NegroniLascano', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr NegroniLascano']
+        },
+    '144520':
+        {
+            'compile': ['cd DiFrancescoNoble1985', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr DiFrancescoNoble1985']
+        },
+    '3800':
+        {
+            'compile': ['cd cardiac1998', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr cardiac1998']
+        },
+    '125745':
+        {
+            'compile': ['cd fink2000', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr fink2000']
+        },
+    '150551_1':
+        {
+            'variant': 'Figure 4F-G',
+            'compile': ['cd AshhadNarayanan2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("{ load_file(\\"Fig4F-G.hoc\\") }")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr AshhadNarayanan2013']
+        },
+    '150551_2':
+        {
+            'variant': 'Figure 6C-F',
+            'compile': ['cd AshhadNarayanan2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("{ load_file(\\"Fig6C-F.hoc\\") }")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr AshhadNarayanan2013']
+        },
+    '108458':
+        {
+            'compile': ['cd KampaStuart2006', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr KampaStuart2006']
+        },
+    '151458':
+        {
+            'compile': ['cd Nakano_FICN_model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run()")'],
+            'cleanup': ['cd ../', 'rm -fr Nakano_FICN_model']
+        },
+    '140462':
+        {
+            'compile': ['cd MasurkarChen2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig7c()'],
+            'cleanup': ['cd ../', 'rm -fr MasurkarChen2011']
+        },
+    '118098':
+        {
+            'compile': ['cd ca3-summ', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("runl()")'],
+            'cleanup': ['cd ../', 'rm -fr ca3-summ']
+        },
+    '76879_1':
+        {
+            'variant': 'No drive (slow)',
+            'compile': ['cd WC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run1(1)")'],
+            'cleanup': ['cd ../', 'rm -fr WC']
+        },
+    '76879_2':
+        {
+            'variant': 'Driven (slow)',
+            'compile': ['cd WC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run1(2)")'],
+            'cleanup': ['cd ../', 'rm -fr WC']
+        },
+    '76879_3':
+        {
+            'variant': 'As set (slow)',
+            'compile': ['cd WC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run1(3)")'],
+            'cleanup': ['cd ../', 'rm -fr WC']
+        },
+    '76879_4':
+        {
+            'variant': 'No drive (fast)',
+            'compile': ['cd WC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run1(4)")'],
+            'cleanup': ['cd ../', 'rm -fr WC']
+        },
+    '76879_5':
+        {
+            'variant': 'Driven (fast)',
+            'compile': ['cd WC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run1(5)")'],
+            'cleanup': ['cd ../', 'rm -fr WC']
+        },
+    '76879_6':
+        {
+            'variant': 'As set (fast)',
+            'compile': ['cd WC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run1(6)")'],
+            'cleanup': ['cd ../', 'rm -fr WC']
+        },
     '3509_1':
         {
             'variant': 'rate',
@@ -330,6 +505,31 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '112086_1':
+        {
+            'variant': 'Metal electrode',
+            'compile': ['cd giuglianoEtAl2007', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("metal()")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr giuglianoEtAl2007']
+        },
+    '112086_2':
+        {
+            'variant': 'Metal electrode',
+            'compile': ['cd giuglianoEtAl2007', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("cntel()")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr giuglianoEtAl2007']
+        },
+    '112086_3':
+        {
+            'variant': 'Metal electrode',
+            'compile': ['cd giuglianoEtAl2007', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("cntel2()")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr giuglianoEtAl2007']
+        },
+
     '37856_1':
         {
             'variant': 'Fig 2',

@@ -53,7 +53,7 @@ os.system(compile_instructions)
 
 from neuron import h
 
-xbuttons = subprocess.Popen('grep -r xbutton', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n')
+xbuttons = subprocess.Popen('grep -r xbutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n')
 xbutton_labels = []
 xbutton_commands = []
 for button in xbuttons:

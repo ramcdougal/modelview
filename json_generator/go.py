@@ -53,8 +53,11 @@ def generate_json(*args, **kwargs):
     os.chdir(initial_path)
     os.remove('zipfile.zip')
     os.system('rm -fr %s' % dir_name)
+    if not good:
+        print 'WARNING: Never actually did an fadvance'
     sys.exit()
-    
+
+good = True    
 for i, command in enumerate(protocol['run']):
     if i == len(protocol['run']) - 1 and protocol.get('stopmidsim', True):
         h.CVode().extra_scatter_gather(0, generate_json)
@@ -63,4 +66,7 @@ for i, command in enumerate(protocol['run']):
 print 'WARNING: Never actually did an fadvance.'
 print '         Attempting to generate JSON anyways.'
 h.t = 1
+good = False
 generate_json()
+print 'WARNING: Never actually did an fadvance.'
+
