@@ -72,8 +72,8 @@ for button in xbuttons:
         comma = button.index(',')
         xbutton_labels.append(button[1 : comma - 1])
         right_part = button[comma : ]
-        right_part = right_part[right_part.index('"') + 1 : -2]
-        xbutton_commands.append('h("' + right_part + '")')
+        right_part = right_part[right_part.index('"') + 1 : -2].strip()
+        xbutton_commands.append('h.' + right_part)
 
 load_neuron = 'nrngui -python'
 load_model = ['from neuron import h', 'h.load_file("mosinit.hoc")']

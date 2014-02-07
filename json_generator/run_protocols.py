@@ -45,7 +45,7 @@ Skipped for now: Traub et al 2005
 
 """
 added today:
-
+123453, 148253
 
 added from bottom up:
 
@@ -74,6 +74,20 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '148253':
+        {
+            'compile': ['cd Chloride_Model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Chloride_Model']
+        },
+    '123453':
+        {
+            'compile': ['cd AkemannEtAl2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("run_model( prot )")'],
+            'cleanup': ['cd ../', 'rm -fr AkemannEtAl2009']
+        },
     '64296_1':
         {
             'variant': 'Figure 2A Top Trace',
