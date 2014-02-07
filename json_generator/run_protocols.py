@@ -3,7 +3,7 @@ TODO: redo 3507... there are actually 3 figures there... well, maybe, the models
 
 TODO: 146376: need to load morphometric file... not sure what it wants... need to manually curate
 TODO: 139656 -- large network
-TODO: 97917
+TODO: 97917_*
 TODO: 93326 -- maybe this should be more than 1... depending on VClamp/IClamp?
 TODO: 147366 -- this is a lytton model... nonstandard setup
 TODO: 140881 -- another lytton model... no fadvances, json_generator fails
@@ -18,11 +18,17 @@ TODO: 147460 -- buried code, no mosinit... shouldn't be that hard, looks like on
 TODO: 53437 -- possibly no sections?
 TODO: 140038 -- push buttons, needs a manual setup
 TODO: 144511 -- python... no mosinit.hoc (shouldn't be hard, but needs a manual setup)
+TODO: 138379 -- no sections (lytton model)
+TODO: 117207_* -- button pressing troubles (e.g. 'hoc.HocObject' object has no attribute 'RunBestFit')
+TODO: 76879_* -- no sections (ermentrout)
+TODO: 151404 -- runs with a script instead of mosinit... need to figure out what to do herer
+TODO: 84589 -- no mosinit.hoc, but seems like it should have one (emailed Tom)
 
 TODO: confirm 52034 sets up a structure (it says it doesn't run... figure out why not)
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
+143114_* -- press enter after h.load_file
 
 136715 -- contains additional instructions in the readme about changing parameters, which these instructions do not do
 
@@ -33,6 +39,7 @@ Skipped for now: Traub et al 2005
 93321_* causes classic modelview to core dump
 143635 -- Amanda Casale's model only presents one parameter set when run with mosinit.hoc, but two others are available; should these be viewable in modelview?
 28316_1 -- classic modelview crashes due to point processes not being inserted in a section... still need to put in the rest of 28316_*, but seems no point for now
+141273 -- no mosinit.hoc; not clear what's going on
 
 127388 -- interesting model. no fadvance
 
@@ -45,7 +52,6 @@ Skipped for now: Traub et al 2005
 
 """
 added today:
-123453, 148253
 
 added from bottom up:
 
@@ -54,7 +60,7 @@ added from bottom up:
 NEXT TIME
 ***
 
-From top down: Effect of voltage sensitive fluorescent proteins on neuronal excitability (Akemann et al. 2009)
+From top down: Facilitation by residual calcium (Stockbridge, Hines 1982)
 From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
 
 
@@ -74,6 +80,97 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '3167':
+        {
+            'compile': ['cd timing', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.runu()'],
+            'cleanup': ['cd ../', 'rm -fr timing']
+        },
+    '3676_1':
+        {
+            'variant': 'Fig 2',
+            'compile': ['cd ephaptic', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.xopen("fig2.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr ephaptic']
+        },
+    '3676_2':
+        {
+            'variant': 'Fig 3B',
+            'compile': ['cd ephaptic', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.xopen("fig3.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr ephaptic']
+        },
+    '123815':
+        {
+            'compile': ['cd Hipp_paper_code', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Hipp_paper_code']
+        },
+    '120910':
+        {
+            'compile': ['cd ElectricallycoupledRetziusneurons', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr ElectricallycoupledRetziusneurons']
+        },
+    '116981_1':
+        {
+            'variant': 'Fig. 5--exc central vs. peripheral tree',
+            'compile': ['cd rall1964', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig5()'],
+            'cleanup': ['cd ../', 'rm -fr rall1964']
+        },
+    '116981_2':
+        {
+            'variant': 'Fig. 5 inset--brief excitation',
+            'compile': ['cd rall1964', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig5inset()'],
+            'cleanup': ['cd ../', 'rm -fr rall1964']
+        },
+    '116981_3':
+        {
+            'variant': 'Fig. 6--effect of location of excitatory input',
+            'compile': ['cd rall1964', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig6()'],
+            'cleanup': ['cd ../', 'rm -fr rall1964']
+        },
+    '116981_4':
+        {
+            'variant': 'Fig. 7--effect of activation sequence',
+            'compile': ['cd rall1964', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig7()'],
+            'cleanup': ['cd ../', 'rm -fr rall1964']
+        },
+    '116981_5':
+        {
+            'variant': 'Fig. 8--effect of inh location',
+            'compile': ['cd rall1964', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig8()'],
+            'cleanup': ['cd ../', 'rm -fr rall1964']
+        },
+    '151126':
+        {
+            'compile': ['cd BianchiEtAl2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr BianchiEtAl2013']
+        },
+    '121060':
+        {
+            'compile': ['cd MSN2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.Exec()'],
+            'cleanup': ['cd ../', 'rm -fr MSN2009']
+        },
     '148253':
         {
             'compile': ['cd Chloride_Model', 'nrnivmodl'],
@@ -1110,6 +1207,52 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '62266':
+        {
+            'compile': ['cd b1', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr b1']
+        },
+    '138379':
+        {
+            'compile': ['cd fdemo', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.mytstop=20e3', 'h.finish_run()'],
+            'cleanup': ['cd ../', 'rm -fr fdemo']
+        },
+    '18197_1':
+        {
+            'variant': 'fig 1A (Glutamate)',
+            'compile': ['cd Neural_Computation', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("demo_glutamate_neuralcomputation")'],
+            'cleanup': ['cd ../', 'rm -fr Neural_Computation']
+        },
+    '18197_2':
+        {
+            'variant': 'fig 1D (GABA)',
+            'compile': ['cd Neural_Computation', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.restart("demo_gaba_neuralcomputation")'],
+            'cleanup': ['cd ../', 'rm -fr Neural_Computation']
+        },
+    '143114_1':
+        {
+            'variant': 'Synaptic Input',
+            'compile': ['cd ZhouColburn2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("LSO_synaptic_input.hoc")', 'h.rerun()'],
+            'cleanup': ['cd ../', 'rm -fr ZhouColburn2010']
+        },
+    '143114_2':
+        {
+            'variant': 'Current Input',
+            'compile': ['cd ZhouColburn2010', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("LSO_current_input.hoc")', 'h.rerun()'],
+            'cleanup': ['cd ../', 'rm -fr ZhouColburn2010']
+        },
     '3798_1':
         {
             'variant': 'A',
