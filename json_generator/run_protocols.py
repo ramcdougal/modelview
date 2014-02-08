@@ -1979,7 +1979,7 @@ manually_curated_protocols = {
             'variant': 'Figure 3',
             'compile': ['cd CA1_abeta', 'nrnivmodl'],
             'launch': ['nrngui -python'],
-            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3()'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig3()', 'h.run()'],
             'cleanup': ['cd ..', 'rm -fr CA1_abeta']
         },
     '87284_3':

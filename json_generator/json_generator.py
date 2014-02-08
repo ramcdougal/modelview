@@ -83,10 +83,13 @@ h.define_shape()
 modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d' % model_id).read()
 modeldb_soup = BeautifulSoup(modeldb_html, 'html5lib')
 paper_doi = []
-for link in modeldb_soup.find_all('a'):
-    href = link.get('href')
-    if href is not None and 'http://dx.doi.org/' == href[ : 18].lower():
-        paper_doi.append(href[18 :])
+paper_links = []
+for link_ref in modeldb_soup.find_all(id='reference'):
+    for link in link_ref.find_all('a'):
+        if link.text.lower().strip() != 'pubmed':
+            href = link.get('href')
+            if href is not None:
+                paper_links.append('<a href="%s">%s</a>' % (href, link.text))
 
 full_title = modeldb_soup.find_all('title')[0].text
 title, short_title = '('.join(full_title.split('(')[:-1]).strip(), full_title.split('(')[-1][:-1].strip()
@@ -750,8 +753,8 @@ if root_sections:
         # TODO: action: when clicking on a specific cell, display just that one
         real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
 
-if len(paper_doi):
-    children = [{'text': 'Paper: <a href="http://dx.doi.org/%s">doi:%s</a>' % (item, item), 'noop': True} for item in paper_doi]
+if len(paper_links):
+    children = [{'text': 'Paper in %s' % item, 'noop': True} for item in paper_links]
 else:
     children = []
 children.append({
@@ -966,6 +969,6 @@ else:
     with open('%s.json' % sys.argv[3], 'w') as f:
         f.write(json.dumps(data))
     
-if paper_doi is None:
-    print 'No DOI found. Consider updating ModelDB and rerunning'    
+if len(paper_links) == 0:
+    print 'No paper link found.'
     
