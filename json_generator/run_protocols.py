@@ -54,7 +54,7 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-19022, 128079, 8284
+19022, 128079, 8284, 113435 (97747)
 
 added from bottom up:
 
@@ -83,6 +83,13 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '113435':
+        {
+            'compile': ['cd fs_internrn_neuron', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr fs_internrn_neuron']
+        },
     '8284_1':
         {
             'variant': 'HT',

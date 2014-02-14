@@ -13,7 +13,15 @@ initial_path = os.getcwd() + '/'
 #
 # download the zip file
 #
+# TODO: a better way to do this would be to find the link with the downloadzip id in the ShowModel page
+#       BUT: that would require loading the ShowModel page
 zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
+if zip_file == 'File not found!':
+    # attribute 311 instead of 23 if an "alternate" version of the model
+    zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
+    if zip_file == 'File not found!':
+        print 'could not access the zip file; is the model id correct?'
+        sys.exit()
 
 if 'temp_files_guess_protocol' in os.listdir('.'):
     os.system('rm -fr temp_files_guess_protocol')
