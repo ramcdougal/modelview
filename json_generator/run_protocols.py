@@ -54,7 +54,7 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-21984
+19022
 
 added from bottom up:
 
@@ -83,6 +83,13 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '19022':
+        {
+            'compile': ['cd geigerEtAl1997', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("fig8d.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr geigerEtAl1997']
+        },
     '3167':
         {
             'compile': ['cd timing', 'nrnivmodl'],

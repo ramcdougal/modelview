@@ -74,6 +74,9 @@ for button in xbuttons:
             xbutton_labels.append(button[1 : comma - 1])
             right_part = button[comma : ]
             right_part = right_part[right_part.index('"') + 1 : -2].strip()
+            # unescape quotation marks
+            # TODO: not strictly correct, but right most of the time
+            right_part = right_part.replace(r'\"', '"')
             xbutton_commands.append('h.' + right_part)
 
 load_neuron = 'nrngui -python'
