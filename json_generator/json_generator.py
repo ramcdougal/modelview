@@ -84,12 +84,19 @@ modeldb_html = urlopen('http://senselab.med.yale.edu/modeldb/ShowModel.asp?model
 modeldb_soup = BeautifulSoup(modeldb_html, 'html5lib')
 paper_doi = []
 paper_links = []
+pubmed_links = []
 for link_ref in modeldb_soup.find_all(id='reference'):
     for link in link_ref.find_all('a'):
         if link.text.lower().strip() != 'pubmed':
             href = link.get('href')
             if href is not None:
                 paper_links.append('<a href="%s">%s</a>' % (href, link.text))
+        else:
+            href = link.get('href')
+            if href is not None:
+                pubmed_links.append('<a href="%s">%s</a>' % (href, link.text))
+if len(paper_links) == 0:
+    paper_links = pubmed_links
 
 full_title = modeldb_soup.find_all('title')[0].text
 title, short_title = '('.join(full_title.split('(')[:-1]).strip(), full_title.split('(')[-1][:-1].strip()
