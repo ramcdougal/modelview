@@ -69,11 +69,12 @@ for button in xbuttons:
                 continue
         assert(button[:8] == 'xbutton(')
         button = button[8:]
-        comma = button.index(',')
-        xbutton_labels.append(button[1 : comma - 1])
-        right_part = button[comma : ]
-        right_part = right_part[right_part.index('"') + 1 : -2].strip()
-        xbutton_commands.append('h.' + right_part)
+        if ',' in button:
+            comma = button.index(',')
+            xbutton_labels.append(button[1 : comma - 1])
+            right_part = button[comma : ]
+            right_part = right_part[right_part.index('"') + 1 : -2].strip()
+            xbutton_commands.append('h.' + right_part)
 
 load_neuron = 'nrngui -python'
 load_model = ['from neuron import h', 'h.load_file("mosinit.hoc")']

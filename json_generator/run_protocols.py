@@ -23,8 +23,9 @@ TODO: 117207_* -- button pressing troubles (e.g. 'hoc.HocObject' object has no a
 TODO: 76879_* -- no sections (ermentrout)
 TODO: 151404 -- runs with a script instead of mosinit... need to figure out what to do herer
 TODO: 84589 -- no mosinit.hoc, but seems like it should have one (emailed Tom)
-
 TODO: confirm 52034 sets up a structure (it says it doesn't run... figure out why not)
+TODO: 21984 -- no sections
+
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -52,6 +53,8 @@ Skipped for now: Traub et al 2005
 
 """
 added today:
+
+21984
 
 added from bottom up:
 
