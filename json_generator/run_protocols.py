@@ -25,7 +25,10 @@ TODO: 151404 -- runs with a script instead of mosinit... need to figure out what
 TODO: 84589 -- no mosinit.hoc, but seems like it should have one (emailed Tom)
 TODO: confirm 52034 sets up a structure (it says it doesn't run... figure out why not)
 TODO: 21984 -- no sections
-
+TODO: 140299_* -- should also have mixed diameter buttons but the files were missing when the run protocols were generated
+TODO: 98017 -- useless mosinit, readme... no way of knowing how to run, lots of hoc files
+TODO: 97985 -- shell scripts
+TODO: 113435 -- modelview available, but only for 113435 which is an alternate of the xpp model 97747... database issues
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -54,7 +57,6 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-19022, 128079, 8284, 113435 (97747)
 
 added from bottom up:
 
@@ -63,7 +65,7 @@ added from bottom up:
 NEXT TIME
 ***
 
-From top down: Facilitation by residual calcium (Stockbridge, Hines 1982)
+From top down: GPi/GPe neuron models (Johnson and McIntyre 2008)
 From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
 
 
@@ -83,6 +85,107 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '146509':
+        {
+            'compile': ['cd Branch_Point_Tapering', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run_simulation()'],
+            'cleanup': ['cd ../', 'rm -fr Branch_Point_Tapering']
+        },
+    '139654_1':
+        {
+            'variant': 'Phasic model T8 step',
+            'compile': ['cd 2VN', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("stim_type = 1")', 'h("amp = 1")', 'h("cell_type = 1")', 'h("cell_nr = 8")',  'h.restart()', 'h.load_file(1, "control.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr 2VN']
+        },
+    '139654_2':
+        {
+            'variant': 'Phasic model T8 ZAP',
+            'compile': ['cd 2VN', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("stim_type = 2")', 'h("amp = 1")', 'h("cell_type = 1")', 'h("cell_nr = 8")',  'h.restart()', 'h.load_file(1, "control.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr 2VN']
+        },
+    '139654_3':
+        {
+            'variant': 'Tonic model T1 step',
+            'compile': ['cd 2VN', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("stim_type = 1")', 'h("amp = 0.6")', 'h("cell_type = 2")', 'h("cell_nr = 1")',  'h.restart()', 'h.load_file(1, "control.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr 2VN']
+        },
+    '139654_4':
+        {
+            'variant': 'Tonic model T1 ZAP',
+            'compile': ['cd 2VN', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("stim_type = 2")', 'h("amp = 0.5")', 'h("cell_type = 2")', 'h("cell_nr = 1")',  'h.restart()', 'h.load_file(1, "control.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr 2VN']
+        },
+    '139654_5':
+        {
+            'variant': 'Synaptic train stimulation, with inhibition',
+            'compile': ['cd 2VN', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("ton_inhib = 1")', 'h("cell_nr = 7")',  'h.restart()', 'h.load_file(1, "traincontrol.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr 2VN']
+        },
+    '139654_6':
+        {
+            'variant': 'Synaptic train stimulation, no inhibition',
+            'compile': ['cd 2VN', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h("ton_inhib = 0")', 'h("cell_nr = 7")',  'h.restart()', 'h.load_file(1, "traincontrol.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr 2VN']
+        },
+    '140299_1':
+        {
+            'variant': 'BE17BNoActive',
+            'compile': ['cd KubotaEtAl2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.loadModel("BE17B_length_adjusted_NoActive.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr KubotaEtAl2011']
+        },
+    '140299_2':
+        {
+            'variant': 'BE59DNoActive',
+            'compile': ['cd KubotaEtAl2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.loadModel("BE59D_length_adjusted_NoActive.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr KubotaEtAl2011']
+        },
+    '140299_3':
+        {
+            'variant': 'BE77CNoActive',
+            'compile': ['cd KubotaEtAl2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.loadModel("BE77C_length_adjusted_NoActive.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr KubotaEtAl2011']
+        },
+    '140299_4':
+        {
+            'variant': 'LV38ENoActive',
+            'compile': ['cd KubotaEtAl2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.loadModel("LV38E_length_adjusted_NoActive.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr KubotaEtAl2011']
+        },
+    '116956':
+        {
+            'compile': ['cd vs4_modelDB', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.fig10e()'],
+            'cleanup': ['cd ../', 'rm -fr vs4_modelDB']
+        },
+    '8115':
+        {
+            'compile': ['cd fluct', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.run()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr fluct']
+        },
     '113435':
         {
             'compile': ['cd fs_internrn_neuron', 'nrnivmodl'],
@@ -1240,6 +1343,53 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '136026_1':
+        {
+            'variant': 'Passive tuft, control',
+            'compile': ['cd djurisic2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("init_spiketuft.hoc")', 'h.setparams(h.BOTHCONTROL)', 'h.doit()'],
+            'cleanup': ['cd ../', 'rm -fr djurisic2008']
+        },
+    '136026_2':
+        {
+            'variant': 'Passive tuft, cm = 2*control',
+            'compile': ['cd djurisic2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("init_spiketuft.hoc")', 'h.setparams(h.CMx2)', 'h.doit()'],
+            'cleanup': ['cd ../', 'rm -fr djurisic2008']
+        },
+    '136026_3':
+        {
+            'variant': 'Passive tuft, Ra = 2*control',
+            'compile': ['cd djurisic2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("init_spiketuft.hoc")', 'h.setparams(h.RAx2)', 'h.doit()'],
+            'cleanup': ['cd ../', 'rm -fr djurisic2008']
+        },
+    '136026_4':
+        {
+            'variant': 'Passive tuft, both 2*control',
+            'compile': ['cd djurisic2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("init_spiketuft.hoc")', 'h.setparams(h.BOTHx2)', 'h.doit()'],
+            'cleanup': ['cd ../', 'rm -fr djurisic2008']
+        },
+    '136026_5':
+        {
+            'variant': 'Active tuft',
+            'compile': ['cd djurisic2008', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.load_file("init_active.hoc")', 'h.doit()'],
+            'cleanup': ['cd ../', 'rm -fr djurisic2008']
+        },
+    '7399':
+        {
+            'compile': ['cd lytton98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h', 'h.load_file("mosinit.hoc")', 'h.sim_panel()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr na8st']
+        },
     '128079':
         {
             'compile': ['cd na8st', 'nrnivmodl mod/'],
