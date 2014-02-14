@@ -54,7 +54,7 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-19022
+19022, 128079
 
 added from bottom up:
 
@@ -1217,6 +1217,13 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '128079':
+        {
+            'compile': ['cd na8st', 'nrnivmodl mod/'],
+            'launch': ['nrngui -python'],
+            'run': ['execfile("ap.py")'],
+            'cleanup': ['cd ../', 'rm -fr na8st']
+        },
     '62266':
         {
             'compile': ['cd b1', 'nrnivmodl'],

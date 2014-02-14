@@ -59,6 +59,9 @@ def generate_json(*args, **kwargs):
         print 'WARNING: Never actually did an fadvance'
     sys.exit()
 
+# add the cwd to the path (needed for Python models)
+sys.path = [os.getcwd()] + sys.path
+
 good = True    
 for i, command in enumerate(protocol['run']):
     if i == len(protocol['run']) - 1 and protocol.get('stopmidsim', True):
