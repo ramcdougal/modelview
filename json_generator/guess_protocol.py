@@ -95,7 +95,7 @@ for button in xbuttons:
                 xbutton_commands.append('h.' + right_part)
 
 load_neuron = 'nrngui -python'
-load_model = ['from neuron import h', 'h.load_file("mosinit.hoc")']
+load_model = ['from neuron import h, gui', 'h.load_file("mosinit.hoc")']
 
 def print_results_and_exit():
     print "    '%d':" % id
