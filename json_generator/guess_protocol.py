@@ -10,6 +10,8 @@ id = int(sys.argv[1])
 
 initial_path = os.getcwd() + '/'
 
+warnings = []
+
 #
 # download the zip file
 #
@@ -75,17 +77,22 @@ for button in xbuttons:
         if '//' in button:
             if button.index('//') < button.index('xbutton'):
                 continue
-        assert(button[:8] == 'xbutton(')
-        button = button[8:]
-        if ',' in button:
-            comma = button.index(',')
-            xbutton_labels.append(button[1 : comma - 1])
-            right_part = button[comma : ]
-            right_part = right_part[right_part.index('"') + 1 : -2].strip()
-            # unescape quotation marks
-            # TODO: not strictly correct, but right most of the time
-            right_part = right_part.replace(r'\"', '"')
-            xbutton_commands.append('h.' + right_part)
+        if button[:8] != 'xbutton(':
+            warnings.append('xbutton not at beginning of line ignored: ' + button)
+        else:
+            button = button[8:]
+            if ',' in button:
+                comma = button.index(',')
+                xbutton_labels.append(button[1 : comma - 1])
+                right_part = button[comma : ]
+                if '"' in right_part:
+                    right_part = right_part[right_part.index('"') + 1 : -2].strip()
+                else:
+                    warnings.append('No " in xbutton command: ' + button)
+                # unescape quotation marks
+                # TODO: not strictly correct, but right most of the time
+                right_part = right_part.replace(r'\"', '"')
+                xbutton_commands.append('h.' + right_part)
 
 load_neuron = 'nrngui -python'
 load_model = ['from neuron import h', 'h.load_file("mosinit.hoc")']
@@ -133,4 +140,11 @@ else:
         print "            'run': %r," % (load_model + [command])
         print "            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name)
         print "        },"
-        
+
+
+if len(warnings):
+    print
+    print '*** WARNING%s ***' % ('S' if len(warnings) > 1 else '')
+    for warning in warnings:
+        print warning
+
