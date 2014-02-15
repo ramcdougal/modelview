@@ -33,6 +33,9 @@ TODO: 3658: lots of options, needs manual setup
 TODO: 135902 -- can't figure out how to run
 TODO: 114355 -- needs manual setup; many cell choices (see runme: main file is main.hoc)
 TODO: 144549 -- no sections
+TODO: 151282 -- extra_scatter_gather not allowed with multiple threads
+TODO: 114359 -- methods paper. not sure what's going on here
+TODO: 33728 -- pure artificial cells?
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -61,8 +64,6 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-114735, 114047, 7400, 144376_*, 113997_*, 123623_*, 2798_*
-
 added from bottom up:
 
 
@@ -70,7 +71,7 @@ added from bottom up:
 NEXT TIME
 ***
 
-From top down: Ih levels roles in bursting and regular-spiking subiculum pyramidal neurons (van Welie et al 2006)
+From top down: KV1 channel governs cerebellar output to thalamus (Ovsepian et al. 2013)
 From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
 
 
@@ -90,6 +91,135 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '106891':
+        {
+            'compile': ['cd b07dec27_20091025', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.runeg()'],
+            'cleanup': ['cd ../', 'rm -fr b07dec27_20091025']
+        },
+    '82784':
+        {
+            'compile': ['cd DynBasIrregSpNMDA', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("runThis.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr DynBasIrregSpNMDA']
+        },
+    '151825':
+        {
+            'compile': ['cd Demo', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Demo']
+        },
+    '97756':
+        {
+            'compile': ['cd Ga_demo', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.xopen("ga_run.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr Ga_demo']
+        },
+    '135787_1':
+        {
+            'variant': 'spike initialization',
+            'compile': ['cd ShuEtAl20062007', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("best_full_axon_spike_init.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr ShuEtAl20062007']
+        },
+    '135787_2':
+        {
+            'variant': 'axon potential decay',
+            'compile': ['cd ShuEtAl20062007', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("best_full_axon_decay.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr ShuEtAl20062007']
+        },
+    '83590':
+        {
+            'compile': ['cd Arsiero_et_al2007', 'nrnivmodl mechanisms'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr Arsiero_et_al2007']
+        },
+    '139150':
+        {
+            'compile': ['cd Poleg-PolskyDiamond2011', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.visrun()'],
+            'cleanup': ['cd ../', 'rm -fr Poleg-PolskyDiamond2011']
+        },
+    '94321':
+        {
+            'compile': ['cd chain_1d', 'nrnivmodl mechanisms'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.execute_simulation()'],
+            'cleanup': ['cd ../', 'rm -fr chain_1d']
+        },
+    '147867_1':
+        {
+            'variant': '0% Atrophy',
+            'compile': ['cd CA3Atrophy', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.proc_load(1)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CA3Atrophy']
+        },
+    '147867_2':
+        {
+            'variant': '25% Atrophy',
+            'compile': ['cd CA3Atrophy', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.proc_load(2)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CA3Atrophy']
+        },
+    '147867_3':
+        {
+            'variant': '35% Atrophy',
+            'compile': ['cd CA3Atrophy', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.proc_load(3)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CA3Atrophy']
+        },
+    '147867_4':
+        {
+            'variant': '75% Atrophy',
+            'compile': ['cd CA3Atrophy', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.proc_load(4)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CA3Atrophy']
+        },
+    '82364_1':
+        {
+            'variant': 'regular - 20 Hz',
+            'compile': ['cd Welie-Wadman-JPhysiol-subiculum', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.reg_20()'],
+            'cleanup': ['cd ../', 'rm -fr Welie-Wadman-JPhysiol-subiculum']
+        },
+    '82364_2':
+        {
+            'variant': 'regular - 50 Hz',
+            'compile': ['cd Welie-Wadman-JPhysiol-subiculum', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.reg_50()'],
+            'cleanup': ['cd ../', 'rm -fr Welie-Wadman-JPhysiol-subiculum']
+        },
+    '82364_3':
+        {
+            'variant': 'burster - 20 Hz',
+            'compile': ['cd Welie-Wadman-JPhysiol-subiculum', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.burst_20()'],
+            'cleanup': ['cd ../', 'rm -fr Welie-Wadman-JPhysiol-subiculum']
+        },
+    '82364_4':
+        {
+            'variant': 'burster - 50 Hz',
+            'compile': ['cd Welie-Wadman-JPhysiol-subiculum', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.burst_50()'],
+            'cleanup': ['cd ../', 'rm -fr Welie-Wadman-JPhysiol-subiculum']
+        },
     '2798_1':
         {
             'variant': 'before training',
@@ -1450,6 +1580,20 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+#    '151282':
+#        {
+#            'compile': ['cd ca3ihdemo', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'import sys', 'sys.argv = ["python", "sim.py", "8000"]', 'execfile("sim.py")'],
+#            'cleanup': ['cd ../', 'rm -fr ca3ihdemo']
+#        },
+    '144502':
+        {
+            'compile': ['cd package', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'execfile("cluster_hyp.py")'],
+            'cleanup': ['cd ../', 'rm -fr package']
+        },
     '123623_1':
         {
             'variant': 'Regular-spiking pyramidal cell',
