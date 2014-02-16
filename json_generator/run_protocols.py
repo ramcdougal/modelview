@@ -36,6 +36,12 @@ TODO: 144549 -- no sections
 TODO: 151282 -- extra_scatter_gather not allowed with multiple threads
 TODO: 114359 -- methods paper. not sure what's going on here
 TODO: 33728 -- pure artificial cells?
+TODO: 139421 -- extra_scatter_gather not allowed with multiple threads
+TODO: 144007 -- generates a large number of HOC files dynamically to run sweeps
+TODO: 51196 -- two options selectable by a radio button somewhere, but too tired to find
+TODO: 144570 -- mitral cell model from Shepherd lab... not sure how to create... modelview showed no sections
+TODO: 144450 -- needs manual setup, not sure how to run
+TODO: 33975 -- all but the outer two simulations crash
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -64,6 +70,8 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
+150024_*, 50207, 18500_*, 150538, 139653_*, 116094_*, 144089, 64261, 3807, 33975_*, 279_*
+
 added from bottom up:
 
 
@@ -71,7 +79,7 @@ added from bottom up:
 NEXT TIME
 ***
 
-From top down: KV1 channel governs cerebellar output to thalamus (Ovsepian et al. 2013)
+From top down: MEC layer II stellate cell: Synaptic mechanisms of grid cells (Schmidt-Hieber & Hausser 2013)
 From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
 
 
@@ -91,6 +99,105 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '279_1':
+        {
+            'variant': 'Burst behavior in single-compartment model',
+            'compile': ['cd dendtc', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("tc1_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendtc']
+        },
+    '279_2':
+        {
+            'variant': 'Burst behavior in 3-compartment model',
+            'compile': ['cd dendtc', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("tc3_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendtc']
+        },
+    '279_3':
+        {
+            'variant': 'Burst behavior in detailed cell model',
+            'compile': ['cd dendtc', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("tc200_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendtc']
+        },
+    '279_4':
+        {
+            'variant': 'Voltage-clamp in detailed cell model',
+            'compile': ['cd dendtc', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("tc200_vc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendtc']
+        },
+    '279_5':
+        {
+            'variant': 'Voltage-clamp in dissociated cell model',
+            'compile': ['cd dendtc', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("tcD_vc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendtc']
+        },
+    '3807':
+        {
+            'compile': ['cd baccus98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig6()'],
+            'cleanup': ['cd ../', 'rm -fr baccus98']
+        },
+    '64261':
+        {
+            'compile': ['cd bfstdp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr bfstdp']
+        },
+    '144089':
+        {
+            'compile': ['cd PFCcell', 'nrnivmodl mechanism'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run_sim()'],
+            'cleanup': ['cd ../', 'rm -fr PFCcell']
+        },
+    '139653_1':
+        {
+            'variant': 'Fig 4A. (BAC_firing.hoc)',
+            'compile': ['cd L5bPCmodelsEH', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("BAC_firing")'],
+            'cleanup': ['cd ../', 'rm -fr L5bPCmodelsEH']
+        },
+    '139653_2':
+        {
+            'variant': 'Fig 4B. Upper trace. (Step_current_firing.hoc)',
+            'compile': ['cd L5bPCmodelsEH', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Step_current_firing")'],
+            'cleanup': ['cd ../', 'rm -fr L5bPCmodelsEH']
+        },
+    '139653_3':
+        {
+            'variant': 'Fig 5A. (critical_frequency.hoc)',
+            'compile': ['cd L5bPCmodelsEH', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("critical_frequency")'],
+            'cleanup': ['cd ../', 'rm -fr L5bPCmodelsEH']
+        },
+    '150538':
+        {
+            'compile': ['cd XiEtal2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.circ_run()'],
+            'cleanup': ['cd ../', 'rm -fr XiEtal2013']
+        },
+    '50207':
+        {
+            'compile': ['cd NMDA_Mg', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NMDA_Mg']
+        },
     '106891':
         {
             'compile': ['cd b07dec27_20091025', 'nrnivmodl'],
@@ -1587,6 +1694,174 @@ manually_curated_protocols = {
 #            'run': ['from neuron import h, gui', 'import sys', 'sys.argv = ["python", "sim.py", "8000"]', 'execfile("sim.py")'],
 #            'cleanup': ['cd ../', 'rm -fr ca3ihdemo']
 #        },
+    '33975_1':
+        {
+            'variant': 'Fig 1',
+            'compile': ['cd locstepperf', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig1()'],
+            'cleanup': ['cd ../', 'rm -fr locstepperf']
+        },
+    '33975_2':
+        {
+            'variant': 'Fig 5 Ring Performance',
+            'compile': ['cd locstepperf', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.ringperf()'],
+            'cleanup': ['cd ../', 'rm -fr locstepperf']
+        },
+    '116094_1':
+        {
+            'variant': 'Long Dendrite - Fig1bde',
+            'compile': ['cd DendroDendriticInhibition/LongDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig1")', 'h.run_fig1bde()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_2':
+        {
+            'variant': 'Long Dendrite - Fig1fg',
+            'compile': ['cd DendroDendriticInhibition/LongDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig1")', 'h.run_fig1fg()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_3':
+        {
+            'variant': 'Long Dendrite - Fig2ace',
+            'compile': ['cd DendroDendriticInhibition/LongDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig2ace")', 'h.run_fig2()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_4':
+        {
+            'variant': 'Short Dendrite - Fig1cde',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig1cde")', 'h.run_fig1cde()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_5':
+        {
+            'variant': 'Short Dendrite - Fig1fg',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig1fg")', 'h.run_fig1fg()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_6':
+        {
+            'variant': 'Short Dendrite - Fig2bf',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig2bdf")', 'h.run_fig2bdf()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_7':
+        {
+            'variant': 'Short Dendrite - Fig3',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig3")', 'h.run_fig3()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_8':
+        {
+            'variant': 'Short Dendrite - Fig4abcd',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig4")', 'h.run_fig4abcd()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_9':
+        {
+            'variant': 'Short Dendrite - Fig4ef',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig4")', 'h.run_fig4ef()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_10':
+        {
+            'variant': 'Short Dendrite - Fig5',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig5")', 'h.run_fig5()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '116094_11':
+        {
+            'variant': 'Short Dendrite - Fig6',
+            'compile': ['cd DendroDendriticInhibition/ShortDendrite', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("init.hoc")', 'h.run_experiment("fig6")', 'h.run_fig6()'],
+            'cleanup': ['cd ../../', 'rm -fr DendroDendriticInhibition']
+        },
+    '18500_1':
+        {
+            'variant': 'AMPA/Kainate glutamatergic receptors',
+            'compile': ['cd Channels_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("demo_ampa.oc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Channels_NEW']
+        },
+    '18500_2':
+        {
+            'variant': 'NMDA glutamatergic receptors',
+            'compile': ['cd Channels_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("demo_nmda.oc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Channels_NEW']
+        },
+    '18500_3':
+        {
+            'variant': 'GABA-A receptors',
+            'compile': ['cd Channels_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("demo_gabaa.oc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Channels_NEW']
+        },
+    '18500_4':
+        {
+            'variant': 'GABA-B receptors',
+            'compile': ['cd Channels_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("demo_gabab.oc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Channels_NEW']
+        },
+    '150024_1':
+        {
+            'variant': 'Fig 9A,B',
+            'compile': ['cd CNModel_May2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("DCN_spontact_loop_main.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr CNModel_May2013']
+        },
+    '150024_2':
+        {
+            'variant': 'Fig 9C,D',
+            'compile': ['cd CNModel_May2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("DCN_rebound_main.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr CNModel_May2013']
+        },
+    '150024_3':
+        {
+            'variant': 'Fig 9E',
+            'compile': ['cd CNModel_May2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("DCN_cip_fi_main.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr CNModel_May2013']
+        },
+    '150024_4':
+        {
+            'variant': 'Fig 9F',
+            'compile': ['cd CNModel_May2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("DCN_cip_axis_main.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr CNModel_May2013']
+        },
     '144502':
         {
             'compile': ['cd package', 'nrnivmodl'],
