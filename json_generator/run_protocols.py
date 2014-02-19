@@ -70,7 +70,7 @@ Skipped for now: Traub et al 2005
 """
 added today:
 
-150024_*, 50207, 18500_*, 150538, 139653_*, 116094_*, 144089, 64261, 3807, 33975_*, 279_*
+150239, 113732_*, 3454_*, 97863, 93398_*, 128559
 
 added from bottom up:
 
@@ -79,7 +79,7 @@ added from bottom up:
 NEXT TIME
 ***
 
-From top down: MEC layer II stellate cell: Synaptic mechanisms of grid cells (Schmidt-Hieber & Hausser 2013)
+From top down: 
 From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
 
 
@@ -99,6 +99,99 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '128559':
+        {
+            'compile': ['cd WDR-Model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr WDR-Model']
+        },
+    '93398_1':
+        {
+            'variant': 'Original GA settings',
+            'compile': ['cd StiefelSejnowskiCode', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("GA")'],
+            'cleanup': ['cd ../', 'rm -fr StiefelSejnowskiCode']
+        },
+    '93398_2':
+        {
+            'variant': 'Short run test',
+            'compile': ['cd StiefelSejnowskiCode', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("shortRun")'],
+            'cleanup': ['cd ../', 'rm -fr StiefelSejnowskiCode']
+        },
+    '97863':
+        {
+            'compile': ['cd beelerReuter', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr beelerReuter']
+        },
+    '3454_1':
+        {
+            'variant': '100 hz',
+            'compile': ['cd kv31model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.NetStim[0].interval=10', 'h.run(10)'],
+            'cleanup': ['cd ../', 'rm -fr kv31model']
+        },
+    '3454_2':
+        {
+            'variant': '200 hz',
+            'compile': ['cd kv31model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.NetStim[0].interval=5', 'h.run(5)'],
+            'cleanup': ['cd ../', 'rm -fr kv31model']
+        },
+    '3454_3':
+        {
+            'variant': '300 hz',
+            'compile': ['cd kv31model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.NetStim[0].interval=3.3', 'h.run(3.3)'],
+            'cleanup': ['cd ../', 'rm -fr kv31model']
+        },
+    '3454_4':
+        {
+            'variant': '400 hz',
+            'compile': ['cd kv31model', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.NetStim[0].interval=2.5', 'h.run(2.5)'],
+            'cleanup': ['cd ../', 'rm -fr kv31model']
+        },
+    '113732_1':
+        {
+            'variant': 'Wiring configuration for the supra-threshold evoked response',
+            'compile': ['cd SS-cortex', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.suprathresh()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr SS-cortex']
+        },
+    '113732_2':
+        {
+            'variant': 'Wiring configuration for the non-perceived evoked response',
+            'compile': ['cd SS-cortex', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.nonperceived()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr SS-cortex']
+        },
+    '113732_3':
+        {
+            'variant': 'Wiring configuration for the perceived evoked response',
+            'compile': ['cd SS-cortex', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.perceived()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr SS-cortex']
+        },
+    '150239':
+        {
+            'compile': ['cd grid', 'nrnivmodl nrn/mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr grid']
+        },
     '279_1':
         {
             'variant': 'Burst behavior in single-compartment model',
