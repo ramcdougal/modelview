@@ -71,6 +71,9 @@ Skipped for now: Traub et al 2005
 added today:
 
 150239, 113732_*, 3454_*, 97863, 93398_*, 128559
+20756_*, 138321, 
+
+bad: 53876 (Medial vestibular neuron models (Quadroni and Knopfel 1994))
 
 added from bottom up:
 
@@ -99,6 +102,124 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+#    '53876':
+#        {
+#            'compile': ['cd mvns', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+#            'cleanup': ['cd ../', 'rm -fr mvns']
+#        },
+   '138321':
+        {
+            'compile': ['cd pashut2011', 'nrnivmodl OneDimension/Neuron'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr pashut2011']
+        },
+    '20756_1':
+        {
+            'variant': 'Figure 2 ( left )',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 21 )', 'h.setFig2()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_2':
+        {
+            'variant': 'Figure 2 ( right )',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 22 )', 'h.setFig2()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_3':
+        {
+            'variant': 'Figure 4 Injection 2.5 nA',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 41 )', 'h.setFig4()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_4':
+        {
+            'variant': 'Figure 4 Injection 1.5 nA',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 42 )', 'h.setFig4()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_5':
+        {
+            'variant': 'Figure 4 Injection 1.1 nA',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 43 )', 'h.setFig4()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_6':
+        {
+            'variant': 'Figure 4 Injection 0.6 nA',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 44 )', 'h.setFig4()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_7':
+        {
+            'variant': 'Figure 5 B1',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 51 )', 'h.setFig5()',  'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_8':
+        {
+            'variant': 'Figure 5 B2',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 52 )', 'h.setFig5()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_9':
+        {
+            'variant': 'Figure 6 B1',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 61 )', 'h.setFig6()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_10':
+        {
+            'variant': 'Figure 6 B2',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 62 )', 'h.setFig6()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_11':
+        {
+            'variant': 'Figure 7 g_NaP x 0.0',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 71 )', 'h.setFig7()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_12':
+        {
+            'variant': 'Figure 7 g_NaP x 0.7',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 72 )', 'h.setFig7()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
+    '20756_13':
+        {
+            'variant': 'Figure 7 g_NaP x 1.0',
+            'compile': ['cd Traub2003', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.pyr3_ = h.pyr3( 73 )', 'h.setFig7()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Traub2003']
+        },
     '128559':
         {
             'compile': ['cd WDR-Model', 'nrnivmodl'],
