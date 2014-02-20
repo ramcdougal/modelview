@@ -71,9 +71,7 @@ Skipped for now: Traub et al 2005
 added today:
 
 150239, 113732_*, 3454_*, 97863, 93398_*, 128559
-20756_*, 138321, 
-
-bad: 53876 (Medial vestibular neuron models (Quadroni and Knopfel 1994))
+20756_*, 138321, 53876_*, 120798_*
 
 added from bottom up:
 
@@ -102,13 +100,30 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
-#    '53876':
-#        {
-#            'compile': ['cd mvns', 'nrnivmodl'],
-#            'launch': ['nrngui -python'],
-#            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
-#            'cleanup': ['cd ../', 'rm -fr mvns']
-#        },
+    '120798_1':
+        {
+            'variant': 'Fig. 5B',
+            'compile': ['cd PalmerStuart2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig5b()'],
+            'cleanup': ['cd ../', 'rm -fr PalmerStuart2009']
+        },
+    '120798_2':
+        {
+            'variant': 'Fig. 5',
+            'compile': ['cd PalmerStuart2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig5cd()'],
+            'cleanup': ['cd ../', 'rm -fr PalmerStuart2009']
+        },
+    '120798_3':
+        {
+            'variant': 'Suppl. Fig. 2 c',
+            'compile': ['cd PalmerStuart2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.suppl_fig2c()'],
+            'cleanup': ['cd ../', 'rm -fr PalmerStuart2009']
+        },
    '138321':
         {
             'compile': ['cd pashut2011', 'nrnivmodl OneDimension/Neuron'],
@@ -1908,6 +1923,54 @@ manually_curated_protocols = {
 #            'run': ['from neuron import h, gui', 'import sys', 'sys.argv = ["python", "sim.py", "8000"]', 'execfile("sim.py")'],
 #            'cleanup': ['cd ../', 'rm -fr ca3ihdemo']
 #        },
+    '53876_1':
+        {
+            'variant': '2 A1 B1',
+            'compile': ['cd mvns', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2a1b1")'],
+            'cleanup': ['cd ../', 'rm -fr mvns']
+        },
+    '53876_2':
+        {
+            'variant': '2 A2 B2',
+            'compile': ['cd mvns', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2a2b2")'],
+            'cleanup': ['cd ../', 'rm -fr mvns']
+        },
+    '53876_3':
+        {
+            'variant': '2 C',
+            'compile': ['cd mvns', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2c")'],
+            'cleanup': ['cd ../', 'rm -fr mvns']
+        },
+    '53876_4':
+        {
+            'variant': '2 D',
+            'compile': ['cd mvns', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2d")'],
+            'cleanup': ['cd ../', 'rm -fr mvns']
+        },
+    '53876_5':
+        {
+            'variant': '3',
+            'compile': ['cd mvns', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig3")'],
+            'cleanup': ['cd ../', 'rm -fr mvns']
+        },
+    '53876_6':
+        {
+            'variant': '4 A',
+            'compile': ['cd mvns', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig4a")'],
+            'cleanup': ['cd ../', 'rm -fr mvns']
+        },
     '33975_1':
         {
             'variant': 'Fig 1',

@@ -148,7 +148,7 @@ if len(warnings):
     for warning in warnings:
         print warning
 
-xradiobuttons = subprocess.Popen('grep -r xradiobutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n')
+xradiobuttons = [item for item in subprocess.Popen('grep -r xradiobutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n') if item.strip() != '']
 
 if len(xradiobuttons):
     print
