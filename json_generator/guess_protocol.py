@@ -155,3 +155,11 @@ if len(xradiobuttons):
     print '*** there were xradiobuttons ***'
     for line in xradiobuttons:
         print '    ', line
+
+xstatebuttons = [item for item in subprocess.Popen('grep -r xstatebutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n') if item.strip() != '']
+
+if len(xstatebuttons):
+    print
+    print '*** there were xstatebuttons ***'
+    for line in xstatebuttons:
+        print '    ', line

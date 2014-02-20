@@ -42,6 +42,10 @@ TODO: 51196 -- two options selectable by a radio button somewhere, but too tired
 TODO: 144570 -- mitral cell model from Shepherd lab... not sure how to create... modelview showed no sections
 TODO: 144450 -- needs manual setup, not sure how to run
 TODO: 33975 -- all but the outer two simulations crash
+TODO: 151817 -- supports batch simulation, not quite sure what's going on, also radiobuttons
+TODO: 144589 -- crashes NEURON's modelview
+TODO: 150284 -- runs with scripts
+TODO: 3808 -- MyFirstNEURON -- complicated NEURON demo, nearly infinite number of options
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -71,7 +75,7 @@ Skipped for now: Traub et al 2005
 added today:
 
 150239, 113732_*, 3454_*, 97863, 93398_*, 128559
-20756_*, 138321, 53876_*, 120798_*
+20756_*, 138321, 53876_*, 120798_*, 6763, 122329_*, 136310, 119266, 85112, 7659_*, 116835, 9848_*
 
 added from bottom up:
 
@@ -100,6 +104,99 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '116835':
+        {
+            'compile': ['cd GrC', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr GrC']
+        },
+    '7659_1':
+        {
+            'variant': 'S1 and S2 prox (black)',
+            'compile': ['cd window', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.runp()'],
+            'cleanup': ['cd ../', 'rm -fr window']
+        },
+    '7659_2':
+        {
+            'variant': 'S1 prox, S2 dist (red)',
+            'compile': ['cd window', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.runm()'],
+            'cleanup': ['cd ../', 'rm -fr window']
+        },
+    '7659_3':
+        {
+            'variant': 'S1 and S2 dist (blue)',
+            'compile': ['cd window', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.rund()'],
+            'cleanup': ['cd ../', 'rm -fr window']
+        },
+    '7659_4':
+        {
+            'variant': 'S1 prox, S2 dist, + Ih (green)',
+            'compile': ['cd window', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.rundh()'],
+            'cleanup': ['cd ../', 'rm -fr window']
+        },
+
+#    '144589':
+#        {
+#            'compile': ['cd BerzThetaGamm2013', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file(1,"netwOPb.hoc")', 'h.xfield()', 'h.run()'],
+#            'cleanup': ['cd ../', 'rm -fr BerzThetaGamm2013']
+#        },
+    '85112':
+        {
+            'compile': ['cd baker05', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.xopen("fig8.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr baker05']
+        },
+    '119266':
+        {
+            'compile': ['cd CA1_Aged', 'nrnivmodl mechanism'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CA1_Aged']
+        },
+    '136310':
+        {
+            'variant': '=> 1. Calculate impedances',
+            'compile': ['cd LFP', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.calc_filter()', 'h.draw_filter()', 'h.runfft()', 'h.draw_fft()', 'h.calc_extracellular()', 'h.draw_extracellular()'],
+            'cleanup': ['cd ../', 'rm -fr LFP']
+        },
+    '122329_1':
+        {
+            'variant': 'with SK soma',
+            'compile': ['cd GPSingleCompartment', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("withSKsoma.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr GPSingleCompartment']
+        },
+    '122329_2':
+        {
+            'variant': 'no SK soma',
+            'compile': ['cd GPSingleCompartment', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("noSKsoma.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr GPSingleCompartment']
+        },
+    '6763':
+        {
+            'variant': 'Init & Run',
+            'compile': ['cd canavier1999', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr canavier1999']
+        },
     '120798_1':
         {
             'variant': 'Fig. 5B',
@@ -1916,6 +2013,30 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '9848_1':
+        {
+            'variant': 'Figure 1',
+            'compile': ['cd brill77', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig1")'],
+            'cleanup': ['cd ../', 'rm -fr brill77']
+        },
+    '9848_2':
+        {
+            'variant': 'Figure 2A',
+            'compile': ['cd brill77', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2a")'],
+            'cleanup': ['cd ../', 'rm -fr brill77']
+        },
+    '9848_3':
+        {
+            'variant': 'Figure 2BB',
+            'compile': ['cd brill77', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2b")'],
+            'cleanup': ['cd ../', 'rm -fr brill77']
+        },
 #    '151282':
 #        {
 #            'compile': ['cd ca3ihdemo', 'nrnivmodl'],
