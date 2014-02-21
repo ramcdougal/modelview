@@ -50,6 +50,8 @@ TODO: 97868 -- Sam model, weird errors from NQS
 TODO: 136309 -- many cells to choose from, no GUI
 TOFINISH: 83319_3 and 83319_4 -- no sections
 TODO: 97874 -- NQS no demo
+TODO: 149000 -- Loading morphology confusion
+TODO: 105507 -- Lytton model
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -80,14 +82,14 @@ added today:
 126440, 116491, 7988_*, 114394, 105385_*, 3660, 82849, 10360, 83319_*, 148644, 145672_*, 112359_*, 146565, 18742_*
 
 added from bottom up:
-
+144566 3812 3682 93325 96444 20014 53569 62285
 
 ***
 NEXT TIME
 ***
 
 From top down: 
-From bottom up: Voltage-based STDP synapse (Clopath et al. 2010)
+From bottom up: Tight junction model of CNS myelinated axons (Devaux and Gow 2008)
 
 
 
@@ -106,6 +108,113 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '62285':
+        {
+            'compile': ['cd b', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr b']
+        },
+    '53569':
+        {
+            'compile': ['cd lamina1', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr lamina1']
+        },
+    '20014_1':
+        {
+            'variant': 'Fig.2. A-D',
+            'compile': ['cd kkt98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.Main(1)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr kkt98']
+        },
+    '20014_2':
+        {
+            'variant': 'Fig.2. E-H',
+            'compile': ['cd kkt98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.Main(2)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr kkt98']
+        },
+    '20014_3':
+        {
+            'variant': 'Fig.3. A',
+            'compile': ['cd kkt98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.Main(3)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr kkt98']
+        },
+    '20014_4':
+        {
+            'variant': 'Fig.3.',
+            'compile': ['cd kkt98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.Main(4)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr kkt98']
+        },
+    '20014_5':
+        {
+            'variant': 'Fig.3. C',
+            'compile': ['cd kkt98', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.Main(5)', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr kkt98']
+        },
+    '96444_1':
+        {
+            'variant': 'Ring (Serial)',
+            'compile': ['cd HinesCarnevaleJNM2007', 'nrnivmodl random'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.launch("ring", "ringser.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr HinesCarnevaleJNM2007']
+        },
+    '96444_2':
+        {
+            'variant': 'Ring (Parallel)',
+            'compile': ['cd HinesCarnevaleJNM2007', 'nrnivmodl random'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.launch("ring", "ringpar.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr HinesCarnevaleJNM2007']
+        },
+    '96444_3':
+        {
+            'variant': 'Random (Serial)',
+            'compile': ['cd HinesCarnevaleJNM2007', 'nrnivmodl random'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.launch("random", "ran3ser.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr HinesCarnevaleJNM2007']
+        },
+    '96444_4':
+        {
+            'variant': 'Random (Parallel)',
+            'compile': ['cd HinesCarnevaleJNM2007', 'nrnivmodl random'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.launch("random", "ran3par.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr HinesCarnevaleJNM2007']
+        },
+    '93325':
+        {
+            'compile': ['cd nfrost', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr nfrost']
+        },
+    '3682':
+        {
+            'compile': ['cd synmap', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr synmap']
+        },
+    '3812':
+        {
+            'compile': ['cd anderson', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr anderson']
+        },
     '146565':
         {
             'compile': ['cd LavzinEtAl2012', 'nrnivmodl'],
@@ -2169,6 +2278,13 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '144566':
+        {
+            'compile': ['cd modeldb_package', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'execfile("claudia_pairing.py")'],
+            'cleanup': ['cd ../', 'rm -fr modeldb_package']
+        },
     '18742_1':
         {
             'variant': '6A',
