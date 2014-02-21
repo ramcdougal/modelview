@@ -46,6 +46,10 @@ TODO: 151817 -- supports batch simulation, not quite sure what's going on, also 
 TODO: 144589 -- crashes NEURON's modelview
 TODO: 150284 -- runs with scripts
 TODO: 3808 -- MyFirstNEURON -- complicated NEURON demo, nearly infinite number of options
+TODO: 97868 -- Sam model, weird errors from NQS
+TODO: 136309 -- many cells to choose from, no GUI
+TOFINISH: 83319_3 and 83319_4 -- no sections
+TODO: 97874 -- NQS no demo
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -73,9 +77,7 @@ Skipped for now: Traub et al 2005
 
 """
 added today:
-
-150239, 113732_*, 3454_*, 97863, 93398_*, 128559
-20756_*, 138321, 53876_*, 120798_*, 6763, 122329_*, 136310, 119266, 85112, 7659_*, 116835, 9848_*
+126440, 116491, 7988_*, 114394, 105385_*, 3660, 82849, 10360, 83319_*, 148644, 145672_*, 112359_*, 146565, 18742_*
 
 added from bottom up:
 
@@ -104,6 +106,160 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '146565':
+        {
+            'compile': ['cd LavzinEtAl2012', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr LavzinEtAl2012']
+        },
+    '112359_1':
+        {
+            'variant': 'Control',
+            'compile': ['cd modeldb-etoh', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.control()'],
+            'cleanup': ['cd ../', 'rm -fr modeldb-etoh']
+        },
+    '112359_2':
+        {
+            'variant': '50mM',
+            'compile': ['cd modeldb-etoh', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.etohh()'],
+            'cleanup': ['cd ../', 'rm -fr modeldb-etoh']
+        },
+    '112359_3':
+        {
+            'variant': '100mM',
+            'compile': ['cd modeldb-etoh', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.etoh()'],
+            'cleanup': ['cd ../', 'rm -fr modeldb-etoh']
+        },
+    '145672_1':
+        {
+            'variant': 'Figure11C CSI',
+            'compile': ['cd Fineberg_et_al_2012', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("Figure11C CSI.hoc")', 'h.runu()'],
+            'cleanup': ['cd ../', 'rm -fr Fineberg_et_al_2012']
+        },
+    '145672_2':
+        {
+            'variant': 'Figure11D',
+            'compile': ['cd Fineberg_et_al_2012', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Fineberg_et_al_2012']
+        },
+    '145672_3':
+        {
+            'variant': 'Figure11E',
+            'compile': ['cd Fineberg_et_al_2012', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Fineberg_et_al_2012']
+        },
+    '145672_4':
+        {
+            'variant': 'Figure11C CSI+OSI',
+            'compile': ['cd Fineberg_et_al_2012', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("Figure11C CSIOSI.hoc")', 'h.runu()'],
+            'cleanup': ['cd ../', 'rm -fr Fineberg_et_al_2012']
+        },
+    '148644':
+        {
+            'compile': ['cd ParekhAscoli2013', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.runm()'],
+            'cleanup': ['cd ../', 'rm -fr ParekhAscoli2013']
+        },
+    '83319_1':
+        {
+            'variant': 'CobaHH',
+            'compile': ['cd destexhe_benchmarks/NEURON', 'nrnivmodl coba cuba cubadv'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.mosinvl = 10', 'h.launch("cobahh", h.intrin)'],
+            'cleanup': ['cd ../../', 'rm -fr destexhe_benchmarks']
+        },
+    '83319_2':
+        {
+            'variant': 'Coba',
+            'compile': ['cd destexhe_benchmarks/NEURON', 'nrnivmodl coba cuba cubadv'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.mosinvl = 10', 'h.launch("coba", h.intrin)'],
+            'cleanup': ['cd ../../', 'rm -fr destexhe_benchmarks']
+        },
+#    '83319_3':
+#        {
+#            'variant': 'Cuba',
+#            'compile': ['cd destexhe_benchmarks/NEURON', 'nrnivmodl coba cuba cubadv'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.launch("cuba", h.intrin)'],
+#            'cleanup': ['cd ../../', 'rm -fr destexhe_benchmarks']
+#        },
+#    '83319_4':
+#        {
+#            'variant': 'CubaDV',
+#            'compile': ['cd destexhe_benchmarks/NEURON', 'nrnivmodl coba cuba cubadv'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.launch("cubadv", h.intrin)'],
+#            'cleanup': ['cd ../../', 'rm -fr destexhe_benchmarks']
+#        },
+    '10360':
+        {
+            'variant': 'Init & Run',
+            'compile': ['cd lindgren89', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr lindgren89']
+        },
+    '82849':
+        {
+            'compile': ['cd pcell', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("fig2A.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr pcell']
+        },
+    '3660':
+        {
+            'compile': ['cd ka_kdr_neoLI', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr ka_kdr_neoLI']
+        },
+    '114394':
+        {
+            'compile': ['cd NN_kole', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NN_kole']
+        },
+    '7988_1':
+        {
+            'variant': 'NR2A',
+            'compile': ['cd murphy01', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.nrn2a_model()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr murphy01']
+        },
+    '7988_2':
+        {
+            'variant': 'NR2B',
+            'compile': ['cd murphy01', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.nrn2b_model()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr murphy01']
+        },
+    '126640':
+        {
+            'compile': ['cd withdrawal', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr withdrawal']
+        },
     '116835':
         {
             'compile': ['cd GrC', 'nrnivmodl'],
@@ -2013,6 +2169,54 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '18742_1':
+        {
+            'variant': '6A',
+            'compile': ['cd nainact', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig6A")'],
+            'cleanup': ['cd ../', 'rm -fr nainact']
+        },
+    '18742_2':
+        {
+            'variant': '6B',
+            'compile': ['cd nainact', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig6B")'],
+            'cleanup': ['cd ../', 'rm -fr nainact']
+        },
+    '18742_3':
+        {
+            'variant': '7A',
+            'compile': ['cd nainact', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig7A")'],
+            'cleanup': ['cd ../', 'rm -fr nainact'],
+            'stopmidsim': False
+        },
+    '105385_1':
+        {
+            'variant': 'Figure 9',
+            'compile': ['cd gp', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.loadfig9()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr gp']
+        },
+    '105385_2':
+        {
+            'variant': 'Figure 10',
+            'compile': ['cd gp', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.loadfig10()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr gp']
+        },
+    '116491':
+        {
+            'compile': ['cd nrnpython', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['execfile("ch6_model.py")'],
+            'cleanup': ['cd ../', 'rm -fr nrnpython']
+        },
     '9848_1':
         {
             'variant': 'Figure 1',
@@ -2031,7 +2235,7 @@ manually_curated_protocols = {
         },
     '9848_3':
         {
-            'variant': 'Figure 2BB',
+            'variant': 'Figure 2B',
             'compile': ['cd brill77', 'nrnivmodl'],
             'launch': ['nrngui -python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("fig2b")'],
