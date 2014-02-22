@@ -52,6 +52,7 @@ TOFINISH: 83319_3 and 83319_4 -- no sections
 TODO: 97874 -- NQS no demo
 TODO: 149000 -- Loading morphology confusion
 TODO: 105507 -- Lytton model
+TODO: 116838 -- Lytton model
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -82,7 +83,7 @@ added today:
 126440, 116491, 7988_*, 114394, 105385_*, 3660, 82849, 10360, 83319_*, 148644, 145672_*, 112359_*, 146565, 18742_*
 
 added from bottom up:
-144566 3812 3682 93325 96444 20014 53569 62285
+144566 3812 3682 93325 96444 20014 53569 62285 122442
 
 ***
 NEXT TIME
@@ -108,6 +109,22 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '122442_1':
+        {
+            'variant': 'Double Cable Model (DCM)',
+            'compile': ['cd Gow_Devaux_2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("DCM_0.6um_axon.ses")'],
+            'cleanup': ['cd ../', 'rm -fr Gow_Devaux_2009']
+        },
+    '122442_2':
+        {
+            'variant': 'Tight Junction Model (TJM)',
+            'compile': ['cd Gow_Devaux_2009', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("TJM_0.6um_axon.ses")'],
+            'cleanup': ['cd ../', 'rm -fr Gow_Devaux_2009']
+        },
     '62285':
         {
             'compile': ['cd b', 'nrnivmodl'],
