@@ -57,13 +57,21 @@ with open('mosinit.hoc') as f:
     for first_line in f:
         break
 
-if first_line[: 9] == '//moddir ':
-    compile_instructions = 'nrnivmodl ' + first_line[9:].strip()
+mod_files = subprocess.Popen('find . -name "*.mod"', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n')
+
+if len([m for m in mod_files if m != '']):
+    print 'mod_files:', mod_files
+    if first_line[: 9] == '//moddir ':
+        compile_instructions = 'nrnivmodl ' + first_line[9:].strip()
+    else:
+        compile_instructions = 'nrnivmodl'
+
+    os.system(compile_instructions)
 else:
-    compile_instructions = 'nrnivmodl'
-
-os.system(compile_instructions)
-
+    print 'mod_files:', mod_files
+    print 'none'
+    compile_instructions = None
+    
 from neuron import h
 
 xbuttons = subprocess.Popen('grep -r xbutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n')
@@ -97,10 +105,17 @@ for button in xbuttons:
 load_neuron = 'nrngui -python'
 load_model = ['from neuron import h, gui', 'h.load_file("mosinit.hoc")']
 
+def print_compile_instructions():
+    if compile_instructions is not None:
+        print "            'compile': ['%s', '%s']," % (chdir_command, compile_instructions)
+    else:
+        print "            'compile': ['%s']," % (chdir_command)
+
+
 def print_results_and_exit():
     print "    '%d':" % id
     print "        {"
-    print "            'compile': ['%s', '%s']," % (chdir_command, compile_instructions)
+    print_compile_instructions()
     print "            'launch': ['%s']," % load_neuron
     print "            'run': %r," % load_model
     print "            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name)
@@ -135,7 +150,7 @@ else:
         print "    '%d_%d':" % (id, i)
         print "        {"
         print "            'variant': '%s'," % label.strip()
-        print "            'compile': ['%s', '%s']," % (chdir_command, compile_instructions)
+        print_compile_instructions()
         print "            'launch': ['%s']," % load_neuron
         print "            'run': %r," % (load_model + [command])
         print "            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name)
