@@ -80,6 +80,7 @@ TODO: 150621 -- there are messages about changing parameters before running; sho
 TODO: 83523 -- no simulation; just mod files
 TODO: 147141 -- runs via script
 TODO: 144054 -- mitral cell model. requires selecting a cell
+TODO: 53893 -- no sections?
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -103,6 +104,12 @@ Skipped for now: Traub et al 2005
 71312 -- skipped for now, not sure if 1 modelview or 16
 
 20212 -- to run, need to have . on path
+
+
+
+Weird quirks:
+19920 says it didn't fadvance, but it seems to
+116862 says it didn't fadvance, but it seems to
 """
 
 """
@@ -110,7 +117,7 @@ added today:
 (ran at work)
 126440, 116491, 7988_*, 114394, 105385_*, 3660, 82849, 10360, 83319_*, 148644, 145672_*, 112359_*, 146565, 18742_*, 102288, 2730_*, 149415, 2487_*, 3342, 3648, 3665, 127995, 50210_*, 97263, 146030, 43039_*, 87454, 143100, 149100, 2488_*, 3677_*, 144482
 
-3673, 135898, 150245_*, 140471, 128446, 3264_*, 29942, 64228_*, 150556, 9852_*, 87585, 120692_*, 62673, 110560_*, 53451_*, 62284, 8210_*, 143442, 3805_*, 3810, 3493, 18502_*, 116769, 39949, 50391, 144523, 108459_*, 64259, 64195_*, 150621_*, 121253_*, 150446_*, 139657_*, 136095, 19591_*, 124043, 3815_*, 19747, 129067_*
+3673, 135898, 150245_*, 140471, 128446, 3264_*, 29942, 64228_*, 150556, 9852_*, 87585, 120692_*, 62673, 110560_*, 53451_*, 62284, 8210_*, 143442, 3805_*, 3810, 3493, 18502_*, 116769, 39949, 50391, 144523, 108459_*, 64259, 64195_*, 150621_*, 121253_*, 150446_*, 139657_*, 136095, 19591_*, 124043, 3815_*, 19747, 129067_*, 19920, 9849, 116862, 9889, 3684, 3533, 3670_*
 
 (ran at home)
 74298, 64216, 139883_*, 84655, 151443, 3511, 127507_*, 83547, 97860, 147539_*, 118631, 3488, 3457, 3491, 3483, 3802, 144533_*, 50997_*, 95870
@@ -142,6 +149,112 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '3670_1':
+        {
+            'variant': 'Fig. 5a',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig5A")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_2':
+        {
+            'variant': 'Fig. 5b',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig5B")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_3':
+        {
+            'variant': 'Fig. 6a',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig6A")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_4':
+        {
+            'variant': 'Fig. 6b',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig6B")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_5':
+        {
+            'variant': 'Fig. 6c',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig6C")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_6':
+        {
+            'variant': 'Fig. 6d',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig6D")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_7':
+        {
+            'variant': 'Fig. 13a',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig13A")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3670_8':
+        {
+            'variant': 'Fig. 13b',
+            'compile': ['cd NTW_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fig13B")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr NTW_NEW']
+        },
+    '3533':
+        {
+            'compile': ['cd IcaT', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr IcaT']
+        },
+    '3684':
+        {
+            'compile': ['cd h_tc', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr h_tc']
+        },
+    '9889':
+        {
+            'compile': ['cd lytton97', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr lytton97']
+        },
+    '116862':
+        {
+            'compile': ['cd b09jan13', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr b09jan13']
+        },
+    '9849':
+        {
+            'compile': ['cd westerfield78'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr westerfield78']
+        },
+    '19920':
+        {
+            'compile': ['cd CaT', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr CaT']
+        },
     '19747':
         {
             'compile': ['cd CoHCNS2000', 'nrnivmodl'],
@@ -5904,8 +6017,10 @@ protocol.update(manually_curated_protocols)
 if __name__ == '__main__':
     import json
     multi = {}
+    all_ids = {}
     for key in protocol:
         split = key.split('_')
+        all_ids[split[0]] = 0
         if len(split) > 1:
             if split[0] not in multi:
                 multi[split[0]] = []
@@ -5913,3 +6028,8 @@ if __name__ == '__main__':
     for id in multi:
         multi[id] = sorted(multi[id], key=lambda row: row[0])
     print json.dumps(multi)
+    print
+    print
+    print 'Protocols for %d models' % len(all_ids.keys())
+    print 'Number of models with multiple protocols: %d' % len(multi.keys())
+    print 'Total number of protocols: %d' % len(protocol.keys())
