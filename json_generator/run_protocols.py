@@ -81,6 +81,8 @@ TODO: 83523 -- no simulation; just mod files
 TODO: 147141 -- runs via script
 TODO: 144054 -- mitral cell model. requires selecting a cell
 TODO: 53893 -- no sections?
+TODO: 116838 -- repeated prompts
+TODO: 53965 -- 3 choices of models, buttons for each
 
 Some models need manual intervention:
 53869 -- press enter after the h.restart
@@ -117,7 +119,7 @@ added today:
 (ran at work)
 126440, 116491, 7988_*, 114394, 105385_*, 3660, 82849, 10360, 83319_*, 148644, 145672_*, 112359_*, 146565, 18742_*, 102288, 2730_*, 149415, 2487_*, 3342, 3648, 3665, 127995, 50210_*, 97263, 146030, 43039_*, 87454, 143100, 149100, 2488_*, 3677_*, 144482
 
-3673, 135898, 150245_*, 140471, 128446, 3264_*, 29942, 64228_*, 150556, 9852_*, 87585, 120692_*, 62673, 110560_*, 53451_*, 62284, 8210_*, 143442, 3805_*, 3810, 3493, 18502_*, 116769, 39949, 50391, 144523, 108459_*, 64259, 64195_*, 150621_*, 121253_*, 150446_*, 139657_*, 136095, 19591_*, 124043, 3815_*, 19747, 129067_*, 19920, 9849, 116862, 9889, 3684, 3533, 3670_*
+3673, 135898, 150245_*, 140471, 128446, 3264_*, 29942, 64228_*, 150556, 9852_*, 87585, 120692_*, 62673, 110560_*, 53451_*, 62284, 8210_*, 143442, 3805_*, 3810, 3493, 18502_*, 116769, 39949, 50391, 144523, 108459_*, 64259, 64195_*, 150621_*, 121253_*, 150446_*, 139657_*, 136095, 19591_*, 124043, 3815_*, 19747, 129067_*, 19920, 9849, 116862, 9889, 3684, 3533, 3670_*, 17663_*, 3343_*, 37819, 122442_*
 
 (ran at home)
 74298, 64216, 139883_*, 84655, 151443, 3511, 127507_*, 83547, 97860, 147539_*, 118631, 3488, 3457, 3491, 3483, 3802, 144533_*, 50997_*, 95870
@@ -149,6 +151,133 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '122442_1':
+        {
+            'variant': 'Double Cable Model (DCM)',
+            'compile': ['cd Gow_Devaux_2009'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("DCM_0.6um_axon.ses")'],
+            'cleanup': ['cd ../', 'rm -fr Gow_Devaux_2009']
+        },
+    '122442_2':
+        {
+            'variant': 'Tight Junction Model (TJM)',
+            'compile': ['cd Gow_Devaux_2009'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.load_file("TJM_0.6um_axon.ses")'],
+            'cleanup': ['cd ../', 'rm -fr Gow_Devaux_2009']
+        },
+    '37819':
+        {
+            'compile': ['cd thal_aug_resp', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr thal_aug_resp']
+        },
+    '3343_1':
+        {
+            'variant': 'Spindle oscillations - short run',
+            'compile': ['cd DLGN_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fspin")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr DLGN_NEW']
+        },
+    '3343_2':
+        {
+            'variant': 'Spindle oscillations - long run',
+            'compile': ['cd DLGN_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("FspinL")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr DLGN_NEW']
+        },
+    '3343_3':
+        {
+            'variant': 'Bicuculline-induced oscillations - short run',
+            'compile': ['cd DLGN_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fbic")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr DLGN_NEW']
+        },
+    '3343_4':
+        {
+            'variant': 'Bicuculline-induced oscillations - long run',
+            'compile': ['cd DLGN_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("FbicL")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr DLGN_NEW']
+        },
+    '3343_5':
+        {
+            'variant': 'Delta oscillations - short run',
+            'compile': ['cd DLGN_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("Fdelta")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr DLGN_NEW']
+        },
+    '3343_6':
+        {
+            'variant': 'Delta oscillations - long run',
+            'compile': ['cd DLGN_NEW', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("FdeltaL")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr DLGN_NEW']
+        },
+   '17663_1':
+        {
+            'variant': 'Burst behavior in single-compartment model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("re1_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
+    '17663_2':
+        {
+            'variant': 'Burst behavior in 3-compartment model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("re3_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
+    '17663_3':
+        {
+            'variant': 'Voltage-clamp in 3-compartment cell model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("re3_vc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
+    '17663_4':
+        {
+            'variant': 'Burst behavior in detailed cell model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("re80_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
+    '17663_5':
+        {
+            'variant': 'Voltage-clamp in detailed cell model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("re80_vc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
+    '17663_6':
+        {
+            'variant': 'Burst behavior in dissociated cell model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("reD_cc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
+    '17663_7':
+        {
+            'variant': 'Voltage-clamp in dissociated cell model',
+            'compile': ['cd dendre', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.restart("reD_vc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr dendre']
+        },
     '3670_1':
         {
             'variant': 'Fig. 5a',
