@@ -54,11 +54,22 @@ from neuron import h
 # act as if we're going to run it, but generate the json and exit when the
 # first fadvance occurs
 #
-def generate_json(*args, **kwargs):
-    with open('model_stats.csv', 'a') as f:
+def generate_stats(*args, **kwargs):
+    global dir_name
+    with open(initial_path + 'model_stats.csv', 'a') as f:
         total_secs = sum(sec.nseg for sec in h.allsec())
         total_3dpts = sum(h.n3d(sec=sec) for sec in h.allsec())
-        f.write('%s, %d, %d\n' % (p, total_secs, total_3dpts))
+        num_cells = len([1 for sec in h.allsec() if not h.SectionRef(sec=sec).has_parent()])
+        try:
+            pts_per_cell = total_3dpts / num_cells
+        except:
+            pts_per_cell = 0
+        f.write('%s, %d, %d, %d, %g\n' % (p, num_cells, total_secs, total_3dpts, pts_per_cell))
+    os.chdir(initial_path)
+    os.remove('zipfile.zip')
+    if '/' in dir_name: dir_name = dir_name[:dir_name.index('/')] # linux-specific
+    os.system('rm -fr %s' % dir_name)
+    
     sys.exit()
 
 # add the cwd to the path (needed for Python models)
@@ -67,13 +78,13 @@ sys.path = [os.getcwd()] + sys.path
 good = True    
 for i, command in enumerate(protocol['run']):
     if i == len(protocol['run']) - 1 and protocol.get('stopmidsim', True):
-        h.CVode().extra_scatter_gather(0, generate_json)
+        h.CVode().extra_scatter_gather(0, generate_stats)
     exec(command)
 
 print 'WARNING: Never actually did an fadvance.'
 print '         Attempting to do statistics anyways.'
 h.t = 1
 good = False
-generate_json()
+generate_stats()
 print 'WARNING: Never actually did an fadvance.'
 
