@@ -12,10 +12,6 @@ all_models_soup = BeautifulSoup(all_models_html, 'html5lib')
 
 
 def download_zip(model_id):
-    if model_id in (116313, 123086, 147929, 53894, 127878, 83575):
-        # 53894, 123086, 147929, 127878, 83575 should be fine, but have a bad zip
-        # 116313 shouldn't have a zip, but does (and it's bad)
-        raise Exception('no zip')
     zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % model_id).read()
     if zip_file == 'File not found!':
         # attribute 311 instead of 23 if an "alternate" version of the model
