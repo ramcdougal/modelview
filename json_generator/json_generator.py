@@ -246,17 +246,28 @@ def highlight_if_sec(secs, match_sec):
         i += sec.nseg
     return result
 
+def highlight_if_secs(secs, match_secs):
+    """return a list of segments comprising a set of sections"""
+    result = []
+    i = 0
+    match_secs = set(match_secs)
+    for sec in secs:
+        if sec in match_secs:
+            result += range(i, i + sec.nseg)
+        i += sec.nseg
+    return result
+
 def all_segs_have(sec, name, val):
     """returns True iff all segments in the section have the same property value
     
-    We compare their representations with %g rather than their exact values.
+    We compare their exact values, not representations
     """
     if name in ('cm', 'Ra'):
-        return '%g' % sec.__getattribute__(name) == '%g' % val
+        return sec.__getattribute__(name) == val
     for seg in sec:
         if not hasattr(seg, name):
             return False
-        if '%g' % seg.__getattribute__(name) != '%g' % val:
+        if abs(seg.__getattribute__(name) - val) > h.float_epsilon:
             return False
     return True
         
@@ -819,12 +830,22 @@ for cell_id, root in enumerate(root_sections):
         uniques[root.name()]['action'] = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': list(all_uniques)}]
 
 def parm_subset_properties(node):
-    """reads the tree to construct a dictionary of parameter values"""
+    """reads the tree to construct a dictionary of parameter values
+    
+    The actual values are taken from the sections instead of from the text.
+    """
     result = {}
+    subset_id = int(node['text'].split('[')[1].split(']')[0])
+    num_secs = int(node['text'].split('(')[1].split()[0])
+    # grab a section
+    mvps = h.ModelViewParmSubset[subset_id]
+    allseclist = [sec for sec in mvps.realcell.allseclist]
+    secs = [allseclist[int(mvps.subset[i])] for i in xrange(int(mvps.subset.size()))]
+    
     for row in node.get('children', []):
         text = row['text'].split()
-        result[text[0]] = float(text[-1])
-    return result
+        result[text[0]] = sec.__getattribute__(text[0])
+    return result, secs
 
 # process constant_parms to add highlighting
 for cell_id, root in enumerate(root_sections):
@@ -833,9 +854,9 @@ for cell_id, root in enumerate(root_sections):
         delete_rows = []
         for i, row in enumerate(constant_parms[root.name()]['children']):
             # TODO: the problem with this approach is that it ignores inserted mechanisms with no parameters (e.g. ds in 32992), but the tree we're scraping does not ignore that
-            parms = parm_subset_properties(row)
+            parms, secs = parm_subset_properties(row)
             if parms:
-                highlight = highlight_if_sec_parms(secs_with_root(root), parms)
+                highlight = highlight_if_secs(secs_with_root(root), secs)
                 all_constants = all_constants.union(highlight)
                 action = [{'kind': 'neuronviewer', 'id': cell_id, 'highlight': highlight}]
                 row['action'] = action
