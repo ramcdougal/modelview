@@ -841,10 +841,11 @@ def parm_subset_properties(node):
     mvps = h.ModelViewParmSubset[subset_id]
     allseclist = [sec for sec in mvps.realcell.allseclist]
     secs = [allseclist[int(mvps.subset[i])] for i in xrange(int(mvps.subset.size()))]
-    
+
     for row in node.get('children', []):
         text = row['text'].split()
-        result[text[0]] = sec.__getattribute__(text[0])
+        result[text[0]] = 0 # secs[0].__getattribute__(text[0]) # doesn't work with e.g. xraxial[0], but doesn't matter since no longer needed
+
     return result, secs
 
 # process constant_parms to add highlighting
