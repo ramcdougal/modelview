@@ -346,7 +346,7 @@ function modelview_build_tree_(src_tree) {
                 f = modelview_hide_all_;
             }
         }
-        result.push([row.text, {children: children, callback: f, noop: row.noop}]);
+        result.push([row.text, {children: children, callback: f, noop: row.noop, mouseover: row.mouseover}]);
     });
     return result;
 }

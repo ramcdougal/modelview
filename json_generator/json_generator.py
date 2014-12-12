@@ -208,8 +208,10 @@ for row in classic_rows:
     # NOTE: the row contains all its children in the same format as in the JSON
     if len(words) == 3 and words[1] == 'LinearMechanism':
         linear_mechanisms = row
+        linear_mechanisms['mouseover'] = 'Linear mechanisms are linear equations added to support non-neuronal dynamics; for example, they can be used to model electrical instrumentation.'
     if len(words) >= 3 and words[1] == 'artificial':
         artificial_cells = row
+        artificial_cells['mouseover'] = 'Artificial cells are spiking cells created by e.g. NMODL that have no associated morphology.'
     if len(words) >= 3 and words[1] == 'real' and words[2] == 'cells':
         for root in row['children']:
             if root['text'][:5] != 'root ':
@@ -224,6 +226,7 @@ for row in classic_rows:
                 global_param_for_density = child_row
             if child_row['text'] == 'KSChan definitions for density mechanisms':
                 kschan_defs = child_row
+                kschan_defs['mouseover'] = 'KSChan is one method of specifying ion channel dynamics at runtime instead of writing them in NMODL and compiling them in advance.'
             if child_row['text'] == 'Homogeneous Parameters':
                 homogeneous_parameters = child_row
             if child_row['text'] == 'Heterogeneous Parameters':
@@ -233,6 +236,7 @@ for row in classic_rows:
     row_split = row['text'].split()
     if len(row_split) >= 3 and row_split[1] == 'point' and row_split[2] == 'processes':
         point_processes = row
+        point_processes['mouseover'] = 'Point processes are dynamics that exist only at specific points (e.g. synapses).'
 
 # TODO: make a general highlight_if that takes a function to do matching
 
@@ -556,6 +560,7 @@ def nseg_analysis(secs, cell_id, root_name):
         'color': 'black',
         'title': 'nseg frequency distribution'
     })
+    result['mouseover'] = 'nseg is the number of segments (discretized nodes) in a given section.'
     
     if result['text'] == '1 distinct values of nseg':
         result['text'] = '1 distinct value of nseg'
@@ -725,6 +730,7 @@ def cell_tree(root):
         result = [
             {
                 'text': sec_seg(secs),
+                'mouseover': 'A section is an unbranched cable; a segment is a the smallest discretized unit of a section.',
                 'action': [{'kind': 'neuronviewer', 'id': cell_id}]
             },
             nseg_analysis(secs, cell_id, root.name()),
@@ -758,6 +764,7 @@ summary = {
 # TODO: action: display all cells
 real_cells = {
     'text': '%d real cell%s' % (len(root_sections), 's' if len(root_sections) != 1 else ''),
+    'mouseover': 'cells with spatial extent',
     'action': [
         {
             'kind': 'neuronviewer',
