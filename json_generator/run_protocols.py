@@ -1,4 +1,5 @@
 """
+TODO: 151817... so many options, not sure how to run
 TODO: redo 3507... there are actually 3 figures there... well, maybe, the models are the same
 
 TODO: 146376: need to load morphometric file... not sure what it wants... need to manually curate
@@ -3854,6 +3855,150 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+#    '168314':
+#        {
+#            'compile': ['cd HummosEtAl2014', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+#            'cleanup': ['cd ../', 'rm -fr HummosEtAl2014']
+#        },
+#    '156780':
+#        {
+#            'compile': ['cd models', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("microcircuit.hoc")'],
+#            'cleanup': ['cd ../', 'rm -fr models']
+#        },
+#    '155705':
+#        {
+#            'compile': ['cd AvellaEtAl2014/Two_netsPaper/main', 'nrnivmodl ../mods/all_mods/'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("Control_execute_network_bgk.hoc")'],
+#            'cleanup': ['cd ../', 'rm -fr AvellaEtAl2014']
+#        },
+#    155602 is probably fine... except it has way too many cells to deal with quickly
+#    '155602_1':
+#        {
+#            'variant': 'Control -74',
+#            'compile': ['cd YuEtAl2013', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("fixed rseed Control -74 spill_ tonic 10uS with mossy kill.hoc")', 'h.custom_init()', 'h.rrun()'],
+#            'cleanup': ['cd ../', 'rm -fr YuEtAl2013']
+#        },
+#    '155602_2':
+#        {
+#            'variant': 'Pilo -54',
+#            'compile': ['cd YuEtAl2013', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("fixed rseed Pilo -54 spill_ tonic 10uS with mossy kill.hoc")'],
+#            'cleanup': ['cd ../', 'rm -fr YuEtAl2013']
+#        },
+    '151482_1':
+        {
+            'variant': 'Fig. 3B',
+            'compile': ['cd SPN_ModelDB', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.xopen("hoc_code/Model_fit_code/I-V.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr SPN_ModelDB']
+        },
+    '151482_2':
+        {
+            'variant': 'Fig. 3Ab',
+            'compile': ['cd SPN_ModelDB', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.xopen("hoc_code/Model_fit_code/I-F.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr SPN_ModelDB']
+        },
+    '151731':
+        {
+            'variant': 'run sim',
+            'compile': ['cd CavarrettaEtAl2014', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.sim()'],
+            'cleanup': ['cd ../', 'rm -fr CavarrettaEtAl2014']
+        },
+    '151825':
+        {
+            'compile': ['cd Demo', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Demo']
+        },
+    '151949':
+        {
+            'compile': ['cd SousaEtAl2014', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr SousaEtAl2014']
+        },
+# 153280 is probably fine, except it's a large network model and spends 112 seconds just creating the cells       
+#    '153280':
+#        {
+#            'compile': ['cd superdeep', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'h.load_file("superdeep.hoc")'],
+#            'cleanup': ['cd ../', 'rm -fr superdeep']
+#        },
+# 153196 works except that it doesn't... it's hardcoded to run in an ipython notebook, but all that has to be done is remove the %pylab directive
+#    '153196':
+#        {
+#            'compile': ['cd FoutzEtAl2012', 'nrnivmodl'],
+#            'launch': ['nrngui -python'],
+#            'run': ['from neuron import h, gui', 'execfile("Optical Stimulation.py")'],
+#            'cleanup': ['cd ../', 'rm -fr FoutzEtAl2012']
+#        },
+    '155796_1':
+        {
+            'variant': 'Fig 1',
+            'compile': ['cd ChambersEtAl2013', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.hide_xpanel()', 'h.load_file("fig1.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr ChambersEtAl2013']
+        },
+    '155796_2':
+        {
+            'variant': 'Fig 2',
+            'compile': ['cd ChambersEtAl2013', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.hide_xpanel()', 'h.load_file("fig2.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr ChambersEtAl2013']
+        },
+    '155796_3':
+        {
+            'variant': 'Fig 3',
+            'compile': ['cd ChambersEtAl2013', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")',  'h.hide_xpanel()', 'h.load_file("fig3.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr ChambersEtAl2013']
+        },
+    '156039':
+        {
+            'compile': ['cd AllkenEtAl2014', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'execfile("mosinit.py")'],
+            'cleanup': ['cd ../', 'rm -fr AllkenEtAl2014']
+        },
+    '156120':
+        {
+            'compile': ['cd HAE_LAE_Netk', 'nrnivmodl mods/other_mods mods/synapse'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr HAE_LAE_Netk']
+        },
+    '168148':
+        {
+            'compile': ['cd stadler2014_layerV', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run_simulation()'],
+            'cleanup': ['cd ../', 'rm -fr stadler2014_layerV']
+        },
+    '168310':
+        {
+            'compile': ['cd KonstantoudakiEtAl2014', 'nrnivmodl experiment'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr KonstantoudakiEtAl2014']
+        },
     '168414_1':
         {
             'variant': 'WindUp',
