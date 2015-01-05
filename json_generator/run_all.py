@@ -6,6 +6,8 @@ import json
 with open('stochastic_list.txt', 'w') as f:
     pass
 
+failed_list = []
+
 for key in protocol:
     os.system('python go.py %s' % key)
     os.system('mv %s.json %s.old' % (key, key))
@@ -23,4 +25,10 @@ for key in protocol:
                 f.write('%s\n' % key)
         os.remove('%s.old' % key)
     except OSError:
-        pass
+        failed_list.append(key)
+
+if len(failed_list):
+    print 'some modelviews failed:'
+    print failed_list
+else:
+    print 'all modelviews generated successfully'
