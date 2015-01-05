@@ -33,9 +33,13 @@ with open('zipfile.zip', 'wb') as f:
 #
 assert(protocol['compile'][0][: 3] == 'cd ')
 dir_name = protocol['compile'][0][3:]
+if dir_name[0] == dir_name[-1] == '"':
+    dir_name_sh = dir_name[1:-1]
+else:
+    dir_name_sh = dir_name
 os.system('unzip zipfile.zip')
 os.system('cp json_generator.py %s/' % dir_name)
-os.chdir(dir_name)
+os.chdir(dir_name_sh)
 
 for i, command in enumerate(protocol['compile']):
     if i > 0 or command[:3] != 'cd ':
@@ -55,7 +59,7 @@ from neuron import h
 # first fadvance occurs
 #
 def generate_json(*args, **kwargs):
-    global dir_name
+    global dir_name_sh
     if h.t <= 0: return
     # json_generator expects to be run from the terminal, so update sys.argv
     sys.argv = ['json_generator.py', id, 'norun', p]
@@ -63,8 +67,8 @@ def generate_json(*args, **kwargs):
     os.system('cp *.json ' + initial_path)
     os.chdir(initial_path)
     os.remove('zipfile.zip')
-    if '/' in dir_name: dir_name = dir_name[:dir_name.index('/')] # linux-specific
-    os.system('rm -fr %s' % dir_name)
+    if '/' in dir_name_sh: dir_name_sh = dir_name_sh[:dir_name_sh.index('/')] # linux-specific
+    os.system('rm -fr %s' % dir_name_sh)
     if not good:
         print 'WARNING: Never actually did an fadvance'
     sys.exit()
@@ -74,8 +78,10 @@ sys.path = [os.getcwd()] + sys.path
 
 good = True    
 for i, command in enumerate(protocol['run']):
+    print i, command
     if i == len(protocol['run']) - 1 and protocol.get('stopmidsim', True):
         h.CVode().extra_scatter_gather(0, generate_json)
+        print 'added the extra scatter gather catch'
     exec(command)
 
 print 'WARNING: Never actually did an fadvance.'

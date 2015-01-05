@@ -3854,6 +3854,46 @@ automatically_curated_protocols = {
 }
 
 manually_curated_protocols = {
+    '168414_1':
+        {
+            'variant': 'WindUp',
+            'compile': ['cd ZhangEtAl2014/WindUp', r'cp ../Critical\ Mod\ Files/*.mod .', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("Shell_NoSurround.hoc")'],
+            'cleanup': ['cd ../..', 'rm -fr ZhangEtAl2014']
+        },
+    '168414_2':
+        {
+            'variant': 'Fiber, No EP',
+            'compile': [r'cd "ZhangEtAl2014/A Fiber Inhibition"', r'cp ../Critical\ Mod\ Files/*.mod .', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("Shell_NoEP.hoc")'],
+            'cleanup': ['cd ../..', 'rm -fr ZhangEtAl2014']
+        },
+    '168414_3':
+        {
+            'variant': 'Foreman SCS',
+            'compile': [r'cd "ZhangEtAl2014/Foreman SCS"', r'cp ../Critical\ Mod\ Files/*.mod .', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("Shell.hoc")'],
+            'cleanup': ['cd ../..', 'rm -fr ZhangEtAl2014']
+        },
+    '168874_1':
+        {
+            'variant': 'Fig 11 AMPA 0',
+            'compile': ['cd ca1dDemo', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'import sys', 'sys.argv[0] = "AMPA0.cfg"', 'execfile("cawave.py")'],
+            'cleanup': ['cd ..', 'rm -fr ca1dDemo']
+        },
+    '168874_2':
+        {
+            'variant': 'Fig 11 AMPA 150',
+            'compile': ['cd ca1dDemo', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'import sys', 'sys.argv[0] = "AMPA150.cfg"', 'execfile("cawave.py")'],
+            'cleanup': ['cd ..', 'rm -fr ca1dDemo']
+        },
     '129067_1':
         {
             'variant': 'Fig 9A',
