@@ -15,7 +15,7 @@
 	<script type="text/javascript" src="neuronweb/flot/jquery.flot.resize.js"></script>
 	<script type="text/javascript" src="neuronweb/flot/jquery.flot.axislabels.js"></script>
     <script type="text/javascript" src="neuronweb/flot/jquery.flot.aspectratio.js"></script>
-    
+	
 	<!-- Imports for jQuery/JavaScript/Flot that Robert and Nicole wrote -->
 	<script type="text/javascript" src="neuronweb/myjQuery/myDialog.js"></script>
 	<script type="text/javascript" src="neuronweb/myjQuery/myFlot.js"></script>
@@ -38,6 +38,8 @@
                 $('#loading_modelview').hide();
                 modelview_data = json;
                 init_modelview();
+            }).fail(function() {
+                $('#loading_modelview').text('Unable to load the ModelView data. If you got here from a link on ModelDB, please report this error and the page URL to the ModelDB administrator.');
             });
         }
     </script>
