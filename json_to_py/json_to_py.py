@@ -7,20 +7,16 @@ January 2015
 Note: This script necessarily makes a number of assumptions on how to interpret
       the JSON. No guarantees are made about the "inversion."
 
-Some known assumptions:
+Some known assumptions/limitations:
 - If endpoints occupy the same point, they are assumed to be connected
 - all ion mechanisms are assumed to be inserted by mod files
 - connections to the root are assumed to occur at either end; I'm not sure how common this is in practice, but it's true for e.g. 87284
 - all connections to the child are assumed to occur at child(0)
+- point processes are ignored (usually no big deal because these are often for synaptic connections/other input)
+- linear mechanisms, kschan mechanisms are ignored
 """
 
 cell_template = """# converted by json_to_py from {json_file}
-
-def _set_section_morphology(sec, xyzdiams):
-    from neuron import h
-    h.pt3dclear(sec=sec)
-    for pt in xyzdiams:
-        h.pt3dadd(*tuple(pt), sec=sec)
 
 class {class_name}:
     def __init__(self, name=None, x=0, y=0, z=0):
@@ -40,6 +36,14 @@ class {class_name}:
         self._discretize_model()
         self._set_mechanism_parameters()
 
+    def _set_section_morphology(self, sec, xyzdiams):
+        '''sets the shape and position for a section, shifting it by the offset position'''
+        from neuron import h
+        h.pt3dclear(sec=sec)
+        for pt in xyzdiams:
+            x, y, z, diam = pt
+            h.pt3dadd(x + self._x, y + self._y, z + self._z, diam, sec=sec)
+            
     def _setup_morphology(self):
         self._create_sections()
         self._shape_sections()
@@ -181,7 +185,7 @@ def json_to_py(json_file, py_file, cell_num=0):
     for sec in sorted(section_indices.keys()):
         indices = section_indices[sec]
         pts = list(itertools.chain.from_iterable(morphology[i] for i in indices))
-        shape_code += separator + ('_set_section_morphology(self.%s, %r)\n' % (sec, pts)) 
+        shape_code += separator + ('self._set_section_morphology(self.%s, %r)\n' % (sec, pts)) 
     # remove any leading or trailing white space
     shape_code = shape_code.strip()
     
