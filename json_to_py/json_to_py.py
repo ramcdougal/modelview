@@ -10,6 +10,8 @@ Note: This script necessarily makes a number of assumptions on how to interpret
 Some known assumptions:
 - If endpoints occupy the same point, they are assumed to be connected
 - all ion mechanisms are assumed to be inserted by mod files
+- connections to the root are assumed to occur at either end; I'm not sure how common this is in practice, but it's true for e.g. 87284
+- all connections to the child are assumed to occur at child(0)
 """
 
 cell_template = """# converted by json_to_py from {json_file}
@@ -73,6 +75,7 @@ if __name__ == '__main__':
 
 def json_to_py(json_file, py_file, cell_num=0):
     import json
+    import collections
     import itertools
     with open(json_file) as f:
         data = json.load(f)
@@ -173,9 +176,6 @@ def json_to_py(json_file, py_file, cell_num=0):
     # remove any leading or trailing whitespace
     section_code = section_code.strip()
     
-    print 'len(morphology) = %d' % len(morphology)
-    print morphology[0]
-    
     # code for identifying the shape of sections
     shape_code = ''
     for sec in sorted(section_indices.keys()):
@@ -231,6 +231,28 @@ def json_to_py(json_file, py_file, cell_num=0):
         for child in parm_subset['children']:
             parameter_code += separator + '    sec.' + child['text'] + '\n'
     
+    # code for locating shared endpoints (and hence: connections)
+    connection_code = ''
+    connection_pts = collections.defaultdict(list)
+    for name, coords in ends0.iteritems():
+        connection_pts[tuple(coords)].append(name + '(0)')
+    for name, coords in ends1.iteritems():
+        connection_pts[tuple(coords)].append(name + '(1)')
+    # ensure the root node is connected to the rest of the tree (well... this guarantees it's connected to something; it doesn't guarantee it's connected to everything)
+    root_ends = [tuple(ends0[root_node]), tuple(ends1[root_node])]
+    parse_assert(len(connection_pts[root_ends[0]]) + len(connection_pts[root_ends[1]]) > 2)
+    # now write the connection code
+    for connection_pt in sorted(connection_pts.keys()):
+        nodes = connection_pts[connection_pt]
+        if len(nodes) < 2: continue
+        parent = [node for node in nodes if '(1)' in node] + [node for node in nodes if node == root_node + '(0)']
+        parse_assert(len(parent) == 1)
+        parent = parent[0]
+        for node in sorted(nodes):
+            if node != parent:
+                connection_code += '%sself.%s.connect(self.%s, 0)\n' % (separator, node.split('(')[0], parent)
+    connection_code = connection_code.strip()        
+    
     # code for supporting the unique parameters
     for sec_data in unique_parameters:
         sec = sec_data['text']
@@ -247,8 +269,6 @@ def json_to_py(json_file, py_file, cell_num=0):
                 parameter_code += separator + 'self.' + sec.strip() + '.' + param_rule + '\n'
     parameter_code = parameter_code.strip()
     
-    connection_code = 'pass'
-    
     with open(py_file, 'w') as f:
         f.write(cell_template.format(json_file=json_file,
                                      class_name=class_name,
@@ -259,11 +279,7 @@ def json_to_py(json_file, py_file, cell_num=0):
                                      shape_code=shape_code,
                                      parameter_code=parameter_code
         ))
-    
-    print sec_names
-    print sec_arrays
-    print class_name
-    print ends0
+
 
 if __name__ == '__main__':
     import sys
