@@ -1,3 +1,17 @@
+"""
+Convert ModelDB's ModelView JSON to Python runnable with NEURON.
+
+Robert A. McDougal
+January 2015
+
+Note: This script necessarily makes a number of assumptions on how to interpret
+      the JSON. No guarantees are made about the "inversion."
+
+Some known assumptions:
+- If endpoints occupy the same point, they are assumed to be connected
+
+"""
+
 cell_template = """# converted by json_to_py from {json_file}
 
 def _set_section_morphology(sec, xyzdiams):
@@ -36,7 +50,6 @@ class {class_name}:
         {section_code}
     
     def _shape_sections(self):
-        from neuron import h
         {shape_code}
     
     def _connect_sections(self):
@@ -83,6 +96,13 @@ def json_to_py(json_file, py_file, cell_num=0):
     morphology = neuron['morphology']
     seg_names = neuron['seg_names']
     neuron_properties = data['tree'][2]['children'][cell_num]
+    
+    root_node_line = neuron_properties['text'].split()
+    parse_assert(len(root_node_line) == 2 and root_node_line[0] == 'root')
+    
+    root_node = root_node_line[1]
+    
+    print root_node
     
     # get maps of sec names, segment indices, positions, etc
     sec_names = set()
@@ -141,15 +161,21 @@ def json_to_py(json_file, py_file, cell_num=0):
         shape_code += separator + ('_set_section_morphology(self.%s, %r)\n' % (sec, pts)) 
     # remove any leading or trailing white space
     shape_code = shape_code.strip()
+    
+    # code for identifying nseg
+    nseg_code = separator.join('self.{sec}.nseg = {nseg}\n'.format(sec=sec, nseg=len(section_indices[sec])) for sec in sec_names)
+    for array_name in sorted(sec_arrays.keys()):
+        length = sec_arrays[array_name]
+        distinct_nseg = set(len(section_indices['%s[%d]' % (array_name, i)]) for i in xrange(length))
+        for nseg in distinct_nseg:
+            nseg_code += separator + 'for i in %r:\n' % ([i for i in xrange(length) if len(section_indices['%s[%d]' % (array_name, i)]) == nseg])
+            nseg_code += separator + '    self.%s[i].nseg = %d\n' % (array_name, nseg)
         
-        
-        
-        
+    nseg_code = nseg_code.strip()
     
     
     mechanism_code = 'pass'
     connection_code = 'pass'
-    nseg_code = 'pass'
     
     with open(py_file, 'w') as f:
         f.write(cell_template.format(json_file=json_file,
