@@ -742,6 +742,7 @@ def cell_tree(root):
         result = [
             {
                 'text': sec_seg(secs),
+                'mouseover': 'A section is an unbranched cable; a segment is a the smallest discretized unit of a section.',
                 'action': [{'kind': 'neuronviewer', 'id': cell_id}]
             },
             cell_mech_analysis(secs, cell_id)
@@ -757,14 +758,15 @@ def cell_tree(root):
 
 # summary
 summary = {
-    'text': sec_seg(list(h.allsec()))
+    'text': sec_seg(list(h.allsec())),
+    'mouseover': 'A section is an unbranched cable; a segment is a the smallest discretized unit of a section.'    
 }
 
 # real cells
 # TODO: action: display all cells
 real_cells = {
-    'text': '%d real cell%s' % (len(root_sections), 's' if len(root_sections) != 1 else ''),
-    'mouseover': 'cells with spatial extent',
+    'text': '%d cell%s with morphology' % (len(root_sections), 's' if len(root_sections) != 1 else ''),
+    'mouseover': 'These cells have an associated spatial shape (in NEURON, this means they are comprised of sections); the shape may or may not be realistic.',
     'action': [
         {
             'kind': 'neuronviewer',
@@ -776,7 +778,7 @@ if root_sections:
     real_cells['children'] = []
     for cell_id, root in enumerate(root_sections):
         # TODO: action: when clicking on a specific cell, display just that one
-        real_cells['children'].append({'text': 'root %s' % root.name(), 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
+        real_cells['children'].append({'text': 'root %s' % root.name(), 'mouseover': 'The root is the section that the rest of the neuron tree is built from. This is in principle arbitrary, but is typically chosen to be the soma.', 'children': cell_tree(root), 'action': [{'kind': 'neuronviewer', 'id': cell_id}]})
 
 if len(paper_links):
     children = [{'text': 'Paper in %s' % item, 'noop': True} for item in paper_links]
@@ -899,6 +901,7 @@ mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 # density mechanisms
 density_mechanisms = {
     'text': 'Density Mechanisms',
+    'mouseover': 'Density Mechanisms are processes (e.g. ion channels) described in terms of density over the surface of the cell instead of as individual instances.',
     'children': [
         mech_in_use,
         colorize_homogeneous(homogeneous_parameters),
@@ -921,7 +924,7 @@ def process_values(name, values):
 
 # NetCon (based on ncview.hoc)
 netcon_list = h.List('NetCon')
-netcons = {'text': '%d NetCon objects' % netcon_list.count()}
+netcons = {'text': '%d NetCon objects' % netcon_list.count(), 'mouseover': 'A NetCon is a network connection object; these are typically used to define synapses, but may also be used for other purposes, such as to record spike trains.'}
 if netcon_list.count():
     weights = []
     delays = []
