@@ -24,17 +24,21 @@ class {class_name}:
         
         Parameters:
             x, y, z -- position offset
-            name -- a name for the cell (used for the cell= argument of Section)
             
         Note: if name is not specified, self is used instead
         '''
         self._x, self._y, self._z = x, y, z
-        self._name = name if name is not None else self
-
+        self._name = name
         self._setup_morphology()
         self._insert_mechanisms()
         self._discretize_model()
         self._set_mechanism_parameters()
+    
+    def __str__(self):
+        if self._name is not None:
+            return self._name
+        else:
+            return "{class_name}_instance"
 
     def _set_section_morphology(self, sec, xyzdiams):
         '''sets the shape and position for a section, shifting it by the offset position'''
@@ -174,9 +178,9 @@ def json_to_py(json_file, py_file, cell_num=0):
     # we sort to ensure consistency
     sec_names = sorted(sec_names)
     # start with those that aren't arrays
-    section_code = separator.join('self.{sec} = h.Section(cell=self._name, name="{sec}")\n'.format(sec=sec) for sec in sec_names)
+    section_code = separator.join('self.{sec} = h.Section(cell=self, name="{sec}")\n'.format(sec=sec) for sec in sec_names)
     # now the arrays
-    section_code += ''.join(separator + 'self.{array} = [h.Section(cell=self._name, name="{array}[%d]" % i) for i in xrange({length})]\n'.format(array=array_name, length=sec_arrays[array_name]) for array_name in sorted(sec_arrays.keys()))
+    section_code += ''.join(separator + 'self.{array} = [h.Section(cell=self, name="{array}[%d]" % i) for i in xrange({length})]\n'.format(array=array_name, length=sec_arrays[array_name]) for array_name in sorted(sec_arrays.keys()))
     # remove any leading or trailing whitespace
     section_code = section_code.strip()
     
