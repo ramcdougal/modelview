@@ -34,16 +34,20 @@ class {class_name}:
         self._name = name if name is not None else self
 
         self._setup_morphology()
-        self._setup_mechanisms()
+        self._insert_mechanisms()
         self._discretize_model()
+        self._set_mechanism_parameters()
 
     def _setup_morphology(self):
         self._create_sections()
         self._shape_sections()
         self._connect_sections()
     
-    def _setup_mechanisms(self):
+    def _insert_mechanisms(self):
         {mechanism_code}
+    
+    def _set_mechanism_parameters(self):
+        {parameter_code}
     
     def _create_sections(self):
         from neuron import h
@@ -106,6 +110,15 @@ def json_to_py(json_file, py_file, cell_num=0):
     inserted_mechanisms_line = inserted_mechanisms['text'].split()
     parse_assert(len(inserted_mechanisms_line) == 3 and inserted_mechanisms_line[1] == 'inserted' and inserted_mechanisms_line[2] == 'mechanisms')
     inserted_mechanisms = inserted_mechanisms['children']
+    
+    # TODO: use the strategy used for constant_parameters for inserted_mechanisms (i.e. don't hardcode position)
+    constant_parameters = [child for child in neuron_properties['children'] if 'subsets with constant parameters' in child['text']]
+    parse_assert(len(constant_parameters) == 1)
+    constant_parameters = constant_parameters[0]['children']
+
+    unique_parameters = [child for child in neuron_properties['children'] if 'sections with unique parameters' in child['text']]
+    parse_assert(len(unique_parameters) == 1)
+    unique_parameters = unique_parameters[0]['children']
     
     # get maps of sec names, segment indices, positions, etc
     sec_names = set()
@@ -177,6 +190,10 @@ def json_to_py(json_file, py_file, cell_num=0):
         
     nseg_code = nseg_code.strip()
     
+    # code for identifying mechanisms
+    # TODO: clean this up so that there's no need to assign sec_lists to
+    #       variables; just insert everything that exists in exactly that
+    #       sec_list in one pass
     mechanism_code = 'from neuron import h\n'
     sec_lists = {}
     for mechanism in inserted_mechanisms:
@@ -199,6 +216,31 @@ def json_to_py(json_file, py_file, cell_num=0):
             mechanism_code += separator + '    sec.insert("%s")\n' % mechanism_name
     mechanism_code = mechanism_code.strip()
     
+    # code for supporting constant parameters
+    parameter_code = ''
+    for parm_subset in constant_parameters:
+        secs = sorted(set(seg_names[i].split('(')[0] for i in parm_subset['action'][0]['highlight']))
+        sec_list = '[%s]' % ', '.join('self.%s' % sec for sec in secs)
+        parameter_code += separator + 'for sec in %s:\n' % sec_list
+        for child in parm_subset['children']:
+            parameter_code += separator + '    sec.' + child['text'] + '\n'
+    
+    # code for supporting the unique parameters
+    for sec_data in unique_parameters:
+        sec = sec_data['text']
+        for child in sec_data['children']:
+            param_rule = child['text']
+            rhs = param_rule.split('=')[1].strip()
+            if ' ' in rhs:
+                lhs = param_rule.split('=')[0].strip()
+                # specified on a per-segment basis
+                parameter_code += separator + 'for seg, value in zip(self.%s, [%s]):\n' % (sec.strip(), ', '.join(rhs.split()))
+                parameter_code += separator + '    seg.%s = value\n' % lhs
+            else:
+                # constant for the whole section
+                parameter_code += separator + 'self.' + sec.strip() + '.' + param_rule + '\n'
+    parameter_code = parameter_code.strip()
+    
     connection_code = 'pass'
     
     with open(py_file, 'w') as f:
@@ -208,7 +250,8 @@ def json_to_py(json_file, py_file, cell_num=0):
                                      nseg_code=nseg_code,
                                      section_code=section_code,
                                      connection_code=connection_code,
-                                     shape_code=shape_code
+                                     shape_code=shape_code,
+                                     parameter_code=parameter_code
         ))
     
     print sec_names
