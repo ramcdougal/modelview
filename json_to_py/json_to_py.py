@@ -1,5 +1,11 @@
 cell_template = """# converted by json_to_py from {json_file}
 
+def _set_section_morphology(sec, xyzdiams):
+    from neuron import h
+    h.pt3dclear(sec=sec)
+    for pt in xyzdiams:
+        h.pt3dadd(*tuple(pt), sec=sec)
+
 class {class_name}:
     def __init__(self, name=None, x=0, y=0, z=0):
         '''Instantiate {class_name}.
@@ -15,10 +21,11 @@ class {class_name}:
 
         self._setup_morphology()
         self._setup_mechanisms()
+        self._discretize_model()
 
     def _setup_morphology(self):
         self._create_sections()
-        self._setup_nseg()
+        self._shape_sections()
         self._connect_sections()
     
     def _setup_mechanisms(self):
@@ -28,10 +35,14 @@ class {class_name}:
         from neuron import h
         {section_code}
     
+    def _shape_sections(self):
+        from neuron import h
+        {shape_code}
+    
     def _connect_sections(self):
         {connection_code}
     
-    def _setup_nseg(self):
+    def _discretize_model(self):
         {nseg_code}
 
 if __name__ == '__main__':
@@ -39,11 +50,13 @@ if __name__ == '__main__':
     # NB: this won't do anything interesting by itself and is best used with
     #     NEURON's GUI tools
     
+    from neuron import h, gui
     cell = {class_name}(name='neuron')
 """
 
 def json_to_py(json_file, py_file, cell_num=0):
     import json
+    import itertools
     with open(json_file) as f:
         data = json.load(f)
     
@@ -71,22 +84,35 @@ def json_to_py(json_file, py_file, cell_num=0):
     seg_names = neuron['seg_names']
     neuron_properties = data['tree'][2]['children'][cell_num]
     
-    def get_section_names(seg_names):
-        sec_names = set()
-        sec_arrays = {}
-        for seg in seg_names:
-            sec_name = seg.split('(')[0]
-            if '[' in sec_name:
-                parts = sec_name.split('[')
-                sec_array = parts[0]
-                index = int(parts[1].split(']')[0])
-                sec_arrays[sec_array] = max(index + 1, sec_arrays.get(sec_array, 0))
+    # get maps of sec names, segment indices, positions, etc
+    sec_names = set()
+    sec_arrays = {}
+    index_lookup = {}
+    section_indices = {}
+    section_positions = {}
+    positions = []
+    for i, seg in enumerate(seg_names):
+        index_lookup[seg] = i
+        parts = seg.split('(')
+        position = float(parts[1].split(')')[0])
+        positions.append(position)
+        sec_name = parts[0]
+        if position not in (0, 1):
+            if sec_name not in section_indices:
+                section_indices[sec_name] = [i]
+                section_positions[sec_name] = [position]
             else:
-               sec_names.add(sec_name)
+                section_indices[sec_name].append(i)
+                section_positions[sec_name].append(position)
+                parse_assert(position == max(section_positions[sec_name]))
+        if '[' in sec_name:
+            parts = sec_name.split('[')
+            sec_array = parts[0]
+            index = int(parts[1].split(']')[0])
+            sec_arrays[sec_array] = max(index + 1, sec_arrays.get(sec_array, 0))
+        else:
+           sec_names.add(sec_name)
 
-        return sec_names, sec_arrays
-    
-    sec_names, sec_arrays = get_section_names(seg_names)
 
     # the name of the NEURON class we will build
     class_name = data['short_title'].replace(' ', '_').replace('.', '')
@@ -104,6 +130,20 @@ def json_to_py(json_file, py_file, cell_num=0):
     # remove any leading or trailing whitespace
     section_code = section_code.strip()
     
+    print 'len(morphology) = %d' % len(morphology)
+    print morphology[0]
+    
+    # code for identifying the shape of sections
+    shape_code = ''
+    for sec in sorted(section_indices.keys()):
+        indices = section_indices[sec]
+        pts = list(itertools.chain.from_iterable(morphology[i] for i in indices))
+        shape_code += separator + ('_set_section_morphology(self.%s, %r)\n' % (sec, pts)) 
+    # remove any leading or trailing white space
+    shape_code = shape_code.strip()
+        
+        
+        
         
     
     
@@ -117,7 +157,8 @@ def json_to_py(json_file, py_file, cell_num=0):
                                      mechanism_code=mechanism_code,
                                      nseg_code=nseg_code,
                                      section_code=section_code,
-                                     connection_code=connection_code
+                                     connection_code=connection_code,
+                                     shape_code=shape_code
         ))
     
     print sec_names
