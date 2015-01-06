@@ -280,7 +280,9 @@ function modelview_build_tree_(src_tree) {
                                             }
                                         }
                                         if (action.hover_text != undefined) {
-                                            tooltip_text += '<br/>' + action.hover_text[item.seriesIndex];
+                                            if (action.hover_text[item.seriesIndex] != undefined) {
+                                                tooltip_text += '<br/>' + action.hover_text[item.seriesIndex];
+                                            }
                                         }
                                         $('#tooltip' + id).html(tooltip_text).css({left: item.pageX + 5, top: item.pageY + 5}).show();
                                         if (flot_highlighted != undefined) {
