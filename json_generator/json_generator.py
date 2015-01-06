@@ -308,7 +308,12 @@ def highlight_if_mech_present(secs, mech):
     return result
 
 
-
+def round3(pt_list):
+    n = 3
+    for i, pt in enumerate(pt_list):
+        x, y, z, d = tuple(pt)
+        pt_list[i] = [round(x, n), round(y, n), round(z, n), round(d, n)]
+        
 
 def get_pts_between(x, y, z, d, arc, lo, hi):
     left_x = numpy.interp(lo, arc, x, left=x[0], right=x[-1])
@@ -323,7 +328,9 @@ def get_pts_between(x, y, z, d, arc, lo, hi):
     if len(in_between) == 0:
         # ensure there is at least one interior point
         in_between = [[(left_x + right_x) * 0.5, (left_y + right_y) * 0.5, (left_z + right_z) * 0.5, (left_d + right_d) * 0.5]]
-    return [[left_x, left_y, left_z, left_d]] + in_between + [[right_x, right_y, right_z, right_d]]
+    result = [[left_x, left_y, left_z, left_d]] + in_between + [[right_x, right_y, right_z, right_d]]
+    round3(result)
+    return result
 
 def get_root(sec):
     return h.SectionRef(sec=sec).root().sec
