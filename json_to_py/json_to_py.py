@@ -120,20 +120,26 @@ def json_to_py(json_file, py_file, cell_num=0):
     parse_assert(len(unique_parameters) == 1)
     unique_parameters = unique_parameters[0]['children']
     
-    # get maps of sec names, segment indices, positions, etc
+    # get maps of sec names, segment indices, positions, endpoints, etc
     sec_names = set()
     sec_arrays = {}
     index_lookup = {}
     section_indices = {}
     section_positions = {}
     positions = []
+    ends0 = {}
+    ends1 = {}
     for i, seg in enumerate(seg_names):
         index_lookup[seg] = i
         parts = seg.split('(')
         position = float(parts[1].split(')')[0])
         positions.append(position)
         sec_name = parts[0]
-        if position not in (0, 1):
+        if position == 0:
+            ends0[sec_name] = morphology[i][0][0 : 3]
+        elif position == 1:
+            ends1[sec_name] = morphology[i][0][0 : 3]
+        else:
             if sec_name not in section_indices:
                 section_indices[sec_name] = [i]
                 section_positions[sec_name] = [position]
@@ -257,6 +263,7 @@ def json_to_py(json_file, py_file, cell_num=0):
     print sec_names
     print sec_arrays
     print class_name
+    print ends0
 
 if __name__ == '__main__':
     import sys

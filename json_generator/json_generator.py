@@ -496,9 +496,11 @@ def morph_per_root(root):
             pt1 = [h.x3d(0, sec=sec), h.y3d(0, sec=sec), h.z3d(0, sec=sec), h.diam3d(0, sec=sec)]
             pt2 = [h.x3d(n3d - 1, sec=sec), h.y3d(n3d - 1, sec=sec), h.z3d(n3d - 1, sec=sec), h.diam3d(n3d - 1, sec=sec)]
             if h.section_orientation(sec=sec) == 0:
-                morph.append([pt1] if end_pt == 0 else [pt2])
+                morph_to_append = [pt1] if end_pt == 0 else [pt2]
             else:
-                morph.append([pt2] if end_pt == 0 else [pt1])
+                morph_to_append = [pt2] if end_pt == 0 else [pt1]
+            round3(morph_to_append)
+            morph.append(morph_to_append)
     return morph
 
 def seg_names_per_root(root):
