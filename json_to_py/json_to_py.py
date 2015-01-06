@@ -9,7 +9,7 @@ Note: This script necessarily makes a number of assumptions on how to interpret
 
 Some known assumptions:
 - If endpoints occupy the same point, they are assumed to be connected
-
+- all ion mechanisms are assumed to be inserted by mod files
 """
 
 cell_template = """# converted by json_to_py from {json_file}
@@ -102,7 +102,10 @@ def json_to_py(json_file, py_file, cell_num=0):
     
     root_node = root_node_line[1]
     
-    print root_node
+    inserted_mechanisms = neuron_properties['children'][2]
+    inserted_mechanisms_line = inserted_mechanisms['text'].split()
+    parse_assert(len(inserted_mechanisms_line) == 3 and inserted_mechanisms_line[1] == 'inserted' and inserted_mechanisms_line[2] == 'mechanisms')
+    inserted_mechanisms = inserted_mechanisms['children']
     
     # get maps of sec names, segment indices, positions, etc
     sec_names = set()
@@ -133,6 +136,7 @@ def json_to_py(json_file, py_file, cell_num=0):
         else:
            sec_names.add(sec_name)
 
+    num_secs = len(section_indices)
 
     # the name of the NEURON class we will build
     class_name = data['short_title'].replace(' ', '_').replace('.', '')
@@ -173,8 +177,28 @@ def json_to_py(json_file, py_file, cell_num=0):
         
     nseg_code = nseg_code.strip()
     
+    mechanism_code = 'from neuron import h\n'
+    sec_lists = {}
+    for mechanism in inserted_mechanisms:
+        # skip the mechanisms that are present by default
+        mechanism_name = mechanism['text'].split()[0]
+        if mechanism_name in ('Ra', 'cm'): continue
+        # skip the ion mechanisms that are (usually) inserted by mod files
+        if mechanism_name[-4:] == '_ion': continue
+        mechanism_secs = sorted(set(seg_names[i].split('(')[0] for i in mechanism['action'][0]['highlight']))
+        if mechanism_secs:
+            if len(mechanism_secs) == num_secs:
+                mechanism_code += separator + 'for sec in h.allsec():\n'
+            else:
+                sec_list = '[%s]' % ', '.join('self.%s' % sec for sec in mechanism_secs)
+                if sec_list not in sec_lists:
+                    sec_lists[sec_list] = len(sec_lists)
+                    mechanism_code += separator + 'sec_list%d = %s\n' % (len(sec_lists) - 1, sec_list)
+                sec_list = 'sec_list%d' % sec_lists[sec_list]
+                mechanism_code += separator + 'for sec in %s:\n' % sec_list
+            mechanism_code += separator + '    sec.insert("%s")\n' % mechanism_name
+    mechanism_code = mechanism_code.strip()
     
-    mechanism_code = 'pass'
     connection_code = 'pass'
     
     with open(py_file, 'w') as f:
