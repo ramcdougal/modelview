@@ -529,13 +529,16 @@ def set_action_to_all(tree, action):
 def nseg_analysis(secs, cell_id, root_name):
     dx_max = 0
     dxs = []
+    nseg_vals = []
     for sec in secs:
         dx = sec.L / sec.nseg
         dxs += ['dx = %g' % dx] * sec.nseg
+        nseg_vals += ['nseg = %d' % sec.nseg] * sec.nseg
         if dx > dx_max:
             dx_max = dx
             dx_max_loc = sec
     result = nsegs[root_name]
+
     
     # compute bar chart for nseg distribution
     min_nseg = min(sec.nseg for sec in secs)
@@ -548,7 +551,7 @@ def nseg_analysis(secs, cell_id, root_name):
     nseg_bar_data = [[i * delta_nseg + min_nseg, nseg_count] for i, nseg_count in enumerate(nseg_counts)]
 
     # TODO: bar chart for dlambda, dx        
-    set_action_to_all([result], [{'kind': 'neuronviewer', 'id': cell_id}])
+    set_action_to_all([result], [{'kind': 'neuronviewer', 'id': cell_id, 'hover_text': nseg_vals}])
     
     # add bar chart for distinct values of nseg
     # TODO: tooltips!
