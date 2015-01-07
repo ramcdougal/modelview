@@ -43,7 +43,7 @@ except:
 model_id = int(sys.argv[1])
 
 # load, run the model
-if sys.argv < 3 or sys.argv[2].lower() != 'norun':
+if len(sys.argv) < 3 or sys.argv[2].lower() != 'norun':
     h.load_file('mosinit.hoc')
     try:
         h.init()
