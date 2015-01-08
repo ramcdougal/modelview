@@ -114,21 +114,36 @@ mech_files = {}
 mech_modulates = {}
 mech_depends = {}
 mech_counts = {}
+temperature_dependence = False
+mech_temp_dependent = []
 for root, dirs, files in os.walk('.'):
     # TODO: block the other architecture libraries too
     # TODO: of course, there's nothing inherently wrong with a mod file being in one of these
     #       folders... it's just that those tend to be copies made by nrnivmodl
     if 'x86_64' not in root:
         for filename in files:
+            # check for temperature dependence
+            # handle mod files later because we know how to ignore their comments
+            # so can treat them more accurately
+            if not temperature_dependence and filename[-4:].lower() != '.mod' and filename not in ('json_generator.py', 'json_generator.pyc'):
+                with open(os.path.join(root, filename)) as f:
+                    if 'celsius' in f.read():
+                        temperature_dependence = 'celsius'
+            
             if filename[-4:].lower() == '.mod':
                 depends_on = []
                 modulates = []
                 mech_name = None
+                mech_depends_on_temp = False
                 with open(os.path.join(root, filename)) as f:
                     for line in f:
-                        # strip comments (this isn't quite right because : could be inside of a VERBATIM)
+                        # strip comments (this isn't quite right because : could be inside of a VERBATIM or string)
                         if ':' in line:
                             line = line[: line.index(':')]
+                        if 'celsius' in line:
+                            # really: could be temperature dependent
+                            mech_depends_on_temp = True
+                            temperature_dependence = True
                         # TODO: really should be checking to make sure I'm inside of a NEURON block
                         split_line = line.strip().split()
                         split_lower = line.lower().split()
@@ -149,6 +164,8 @@ for root, dirs, files in os.walk('.'):
                                     modulates.append(values[0].strip())
 
                 if mech_name is not None:
+                    if mech_depends_on_temp:
+                        mech_temp_dependent.append(mech_name)
                     mech_depends[mech_name] = depends_on
                     mech_modulates[mech_name] = modulates
                     count = 0
@@ -908,6 +925,8 @@ for row in mechs:
         row['children'].append({'text': 'WRITEs: %s' % ', '.join(modulates)})
     if count:
         row['children'].append({'text': 'Present in %d sections' % count})
+    if mech_name in mech_temp_dependent:
+        row['children'].append({'text': 'Possibly temperature dependent', 'hover_text': 'Source file contains the string "celsius".'})
 mech_in_use = {'text': '%d mechanisms in use' % len(mechs), 'children': mechs}
 
 # density mechanisms
@@ -922,6 +941,17 @@ density_mechanisms = {
         kschan_defs
     ]
 }
+
+if temperature_dependence:
+    temperature_info = {'text': 'Temperature: %g&deg;C' % h.celsius,
+                        'children': [
+                            {'text': '%d MOD files potentially temperature-dependent' % len(mech_temp_dependent),
+                             'hover_text': 'These files include the string "celsius".',
+                             'children': [{'text': '%s%s' % (name, mech_xref.get(name, ''))} for name in sorted(mech_temp_dependent)]                             
+                            }]
+                       }
+else:
+    temperature_info = {'text': 'Temperature: unmodeled'}
 
 def process_values(name, values):
     if len(values) == 1:
@@ -987,6 +1017,7 @@ data = {
             netcons,
             linear_mechanisms,
             blank_line,
+            temperature_info,
             density_mechanisms,
             point_processes,
             blank_line,
