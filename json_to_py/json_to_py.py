@@ -78,6 +78,7 @@ if __name__ == '__main__':
     #     NEURON's GUI tools
     
     from neuron import h, gui
+    {temperature_code}
     cell = {class_name}(name='neuron')
 """
 
@@ -97,6 +98,16 @@ def json_to_py(json_file, py_file, cell_num=0):
             raise Exception('Unable to parse ModelView json.')
     
     if data['modelview_version'] != 0: unknown_modelview_version()
+    
+    # read temperature
+    temperature_code = None
+    for row in data['tree']:
+        if 'text' in row and 'Temperature:' in row['text']:
+            if row['text'] == 'Temperature: unmodeled':
+                temperature_code = ''
+            else:
+                temperature_code = 'h.celsius = %g' % float(row['text'].split(':')[1].split('&deg;C')[0])
+    parse_assert(temperature_code is not None)
     
     cell_line_split = data['tree'][2]['text'].split()
     parse_assert(len(cell_line_split) == 4 and cell_line_split[2] == 'with' and cell_line_split[3] == 'morphology')
@@ -124,12 +135,14 @@ def json_to_py(json_file, py_file, cell_num=0):
     
     # TODO: use the strategy used for constant_parameters for inserted_mechanisms (i.e. don't hardcode position)
     constant_parameters = [child for child in neuron_properties['children'] if 'subsets with constant parameters' in child['text']]
-    parse_assert(len(constant_parameters) == 1)
-    constant_parameters = constant_parameters[0]['children']
+    parse_assert(len(constant_parameters) <= 1)
+    if constant_parameters:
+        constant_parameters = constant_parameters[0]['children']
 
     unique_parameters = [child for child in neuron_properties['children'] if 'sections with unique parameters' in child['text']]
-    parse_assert(len(unique_parameters) == 1)
-    unique_parameters = unique_parameters[0]['children']
+    parse_assert(len(unique_parameters) <= 1)
+    if unique_parameters:
+        unique_parameters = unique_parameters[0]['children']
     
     # get maps of sec names, segment indices, positions, endpoints, etc
     sec_names = set()
@@ -285,7 +298,8 @@ def json_to_py(json_file, py_file, cell_num=0):
                                      section_code=section_code,
                                      connection_code=connection_code,
                                      shape_code=shape_code,
-                                     parameter_code=parameter_code
+                                     parameter_code=parameter_code,
+                                     temperature_code=temperature_code
         ))
 
 
