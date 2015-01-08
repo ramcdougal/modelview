@@ -2,16 +2,30 @@ import os
 from run_protocols import protocol
 import filecmp
 import json
+import sys
+
+if len(sys.argv) >= 2:
+    # (soft) time_limit in seconds; hard time limit is 30s later
+    time_limit = float(sys.argv[1])
+else:
+    time_limit = None
 
 with open('stochastic_list.txt', 'w') as f:
     pass
 
 failed_list = []
 
+def attempt(key):
+    if time_limit is None:
+        os.system('python go.py %s' % key)
+    else:
+        os.system('timelimit -t%g -T30 python go.py %s' % (time_limit, key))
+
+
 for key in protocol:
-    os.system('python go.py %s' % key)
+    attempt(key)
     os.system('mv %s.json %s.old' % (key, key))
-    os.system('python go.py %s' % key)
+    attempt(key)
     
     # if the two versions are not the same, then flag as stochastic
     try:
