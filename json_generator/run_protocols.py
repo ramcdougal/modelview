@@ -3893,6 +3893,15 @@ manually_curated_protocols = {
 #            'run': ['from neuron import h, gui', 'h.load_file("fixed rseed Pilo -54 spill_ tonic 10uS with mossy kill.hoc")'],
 #            'cleanup': ['cd ../', 'rm -fr YuEtAl2013']
 #        },
+    '152028_1':
+        {
+            'variant': 'Chans in All',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-in-all.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
     '151482_1':
         {
             'variant': 'Fig. 3B',

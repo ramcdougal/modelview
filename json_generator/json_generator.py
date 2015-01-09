@@ -743,11 +743,14 @@ def cell_mech_analysis(secs, cell_id):
                 })
             child['children'] = child_parts
         children.append(child)
-    return {
+    result = {
         'text': '%d inserted mechanisms' % len(mechs),
         'action': [{'kind': 'neuronviewer', 'id': cell_id, 'hover_text': seg_mechanisms(secs)}],
         'children': children
     }
+    if len(root_sections) < 4:
+        result['default_action'] = True
+    return result
 
 
 
@@ -823,10 +826,13 @@ references = {
     'noop': True
 }
 
+cellviews = None
 if len(sys.argv) > 3:
     # sys.argv[3] assumed to be the run protocol
     if sys.argv[3] in protocol:
         p = protocol[sys.argv[3]]
+        if 'cellviews' in p:
+            cellviews = p['cellviews']
         references['children'].append({
             'text': 'Run Protocol',
             'noop': True,
@@ -848,7 +854,6 @@ if len(sys.argv) > 3:
                 }
             ]
         })
-
 
 # process uniques to remove {} and add highlighting
 for cell_id, root in enumerate(root_sections):
@@ -1043,6 +1048,12 @@ data = {
         }
     ]
 }
+
+if cellviews is not None:
+    print 'has cellviews'
+    data['cellviews'] = cellviews
+else:
+    print 'no cellviews', sys.argv
 
 if len(sys.argv) < 4:
     with open('%d.json' % model_id, 'w') as f:

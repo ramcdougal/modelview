@@ -2,7 +2,8 @@ var modelview_neuron_viewers = [];
 
 var last_right, last_top;
 var doc_width = document.width;
-
+var default_action = [];
+var cellviews;
 
 function reposition_dialog(id) {
     // set next to the last positioned dialog
@@ -33,6 +34,12 @@ function init_modelview() {
         return;
     }
     setup_modelview();
+    
+    $.each(default_action, function(i, action) {
+        if (action != undefined) {
+            action(false);
+        }
+    });
 }
 
 var json_parent_obj_, json_index_;
@@ -73,6 +80,7 @@ function process_level_(data) {
 
 
 function setup_modelview() {
+    cellviews = modelview_data.cellviews;
     if (modelview_data.title != undefined) {
         document.title = 'ModelView: ' + modelview_data.title;
     } else {
@@ -137,7 +145,13 @@ function setup_modelview() {
     
     $.each(modelview_data.neuronviewer, function(i, neuron_view) {
         var neuron_data = modelview_data.neuron[neuron_view];
-        var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology);
+        var my_cell_views = undefined;
+        if (modelview_data.cellviews != undefined) {
+            if (i < modelview_data.cellviews.length) {
+                my_cell_views = modelview_data.cellviews[i];
+            }
+        }            
+        var new_view_id = MakeNeuronViewer(neuron_data.title, neuron_data.morphology, my_cell_views);
         seg_names_[new_view_id] = neuron_data.seg_names;
         reposition_dialog(new_view_id);
         modelview_neuron_viewers.push(new_view_id);
@@ -246,8 +260,10 @@ function modelview_build_tree_(src_tree) {
             f = undefined;
         } else {
             if (row.action != undefined) {
-                f = function() {
-                    modelview_hide_all_();
+                f = function(do_hide_all) {
+                    if (do_hide_all == undefined || do_hide_all) {
+                        modelview_hide_all_();
+                    }
                     $.each(row.action, function (j, action) {                    
                         if (action.kind == 'neuronviewer') {
                             var id = modelview_neuron_viewers[action.id];
@@ -349,7 +365,14 @@ function modelview_build_tree_(src_tree) {
                     });
                 }
             } else {
-                f = modelview_hide_all_;
+                f = function(do_hide_all) {
+                    if (do_hide_all == undefined || do_hide_all) {
+                        modelview_hide_all_();
+                    }
+                }
+            }
+            if (row.default_action) {
+                default_action.push(f);
             }
         }
         result.push([row.text, {children: children, callback: f, noop: row.noop, mouseover: row.mouseover}]);
