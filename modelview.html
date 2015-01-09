@@ -34,13 +34,13 @@
         if (window.location.hash == '') {
             document.write("No model specified.");
         } else {
-            var json_file = window.location.hash.substr(1) + '.json';
+            var json_file = '/modeldb/getJsonFile.asp?file=' + window.location.hash.substr(1) + '.json';
             $.getJSON(json_file, function(json) {
                 $('#loading_modelview').hide();
                 modelview_data = json;
                 init_modelview();
                 $('#download_button').button()
-                                     .attr('href', 'http://senselab.med.yale.edu/modeldb/getJsonFile.asp?file=' + json_file)
+                                     .attr('href', json_file)
                                      .show();
             }).fail(function() {
                 $('#loading_modelview').text('Unable to load the ModelView data. If you got here from a link on ModelDB, please report this error and the page URL to the ModelDB administrator.');
