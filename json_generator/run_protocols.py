@@ -3902,6 +3902,132 @@ manually_curated_protocols = {
             'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
             'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
         },
+    '152028_2':
+        {
+            'variant': 'Chans Ext Axon 70 um',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_3':
+        {
+            'variant': 'Chans Ext Axon 70 um tomasz',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-tomasz.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_4':
+        {
+            'variant': 'Chans Ext Axon 70 um only Na',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-onlyNa.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_5':
+        {
+            'variant': 'Chans Ext Axon 70 um mimic synapses',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-mimic-synapses.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_6':
+        {
+            'variant': 'Chans Ext Axon 70 um mimic synapses v change',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-mimic-synapses-v-change.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_7':
+        {
+            'variant': 'Chans Ext Axon 70 um mimic synapses sustained currents',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-mimic-synapses-sustained-currents.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_8':
+        {
+            'variant': 'Chans Ext Axon 70 um 10x mimic sustained',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-10x-mimic-sustained.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_9':
+        {
+            'variant': 'Chans Ext Axon 70 um 10x mimic sustained random',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-10x-mimic-sustained-random.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_10':
+        {
+            'variant': 'Chans Ext Axon 70 um 10 alpha synapses',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-70um-10alphasynapses.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_11':
+        {
+            'variant': 'Chans Ext Axon 50 only Na',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-ext-axon-50um-onlyNa.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_12':
+        {
+            'variant': 'Chans Ext Axon botdend',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-botdend.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_13':
+        {
+            'variant': 'Chans Ext Axon',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-axon.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_14':
+        {
+            'variant': 'Chans Ext Axon Last',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2-chans-axon-last.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
+    '152028_15':
+        {
+            'variant': 'Chans Ext Axon [base]',
+            'compile': ['cd Gunay_etal_2014/neuron-model'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("exp-axon-tail2.ses")', 'h.run()'],
+            'cellviews': [[[0, 0, 100, 100], [20, -20, 80, 40], [0, -50, 100, 50]]],
+            'cleanup': ['cd ../../', 'rm -fr Gunay_etal_2014']
+        },
     '151482_1':
         {
             'variant': 'Fig. 3B',
