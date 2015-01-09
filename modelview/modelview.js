@@ -99,6 +99,10 @@ function setup_modelview() {
     var tree_dialog_handle = $('#' + tree_dialog);
     tree_dialog_handle.parent().addClass('no-close');
     
+    if (modelview_data.stochastic == true) {
+        AddComponent(tree_dialog, '<div style="background-color: #ff5a5a;"><b>This model contains stochastic features.</b> This is one possible view.</div>');
+    }
+    
     // generate the tree
     AddTree(tree_dialog, modelview_build_tree_(modelview_data.tree));
 
