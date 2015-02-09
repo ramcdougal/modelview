@@ -6465,6 +6465,8 @@ protocol.update(manually_curated_protocols)
 
 if __name__ == '__main__':
     import json
+    import sys
+    import os
     multi = {}
     all_ids = {}
     for key in protocol:
@@ -6476,19 +6478,23 @@ if __name__ == '__main__':
             multi[split[0]].append([protocol[key]['variant'], key])
     for id in multi:
         multi[id] = sorted(multi[id], key=lambda row: row[0])
-    print json.dumps(multi)
-    print
-    print
-    print 'models with multiple protocols:'
-    for key in multi:
-        print key
-    print
-    print
-    print 'all models with at least one protocol:'
-    for key in all_ids:
-        print key
-    print
-    print
-    print 'Protocols for %d models' % len(all_ids.keys())
-    print 'Number of models with multiple protocols: %d' % len(multi.keys())
-    print 'Total number of protocols: %d' % len(protocol.keys())
+    if len(sys.argv) == 1:
+        print json.dumps(multi)
+        print
+        print
+        print 'models with multiple protocols:'
+        for key in multi:
+            print key
+        print
+        print
+        print 'all models with at least one protocol:'
+        for key in all_ids:
+            print key
+        print
+        print
+        print 'Protocols for %d models' % len(all_ids.keys())
+        print 'Number of models with multiple protocols: %d' % len(multi.keys())
+        print 'Total number of protocols: %d' % len(protocol.keys())
+    elif sys.argv[1] == 'savejson':
+        with open(os.path.join('/home/tmm46/senselab/Web/ModelDB/jsondata', 'modelview_duplicates.txt'), 'w') as f:
+            f.write(json.dumps(multi))
