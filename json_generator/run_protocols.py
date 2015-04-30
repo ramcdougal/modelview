@@ -152,6 +152,13 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '180373':
+        {
+            'compile': ['cd ShaiEtAl2015', 'nrnivmodl simulationcode'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")'],
+            'cleanup': ['cd ../', 'rm -fr ShaiEtAl2015']
+        },
     '122442_1':
         {
             'variant': 'Double Cable Model (DCM)',
