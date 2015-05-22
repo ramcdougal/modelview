@@ -10,7 +10,7 @@ Note: This script necessarily makes a number of assumptions on how to interpret
 Some known assumptions/limitations:
 - If endpoints occupy the same point, they are assumed to be connected
 - all ion mechanisms are assumed to be inserted by mod files
-- connections to the root are assumed to occur at either end; I'm not sure how common this is in practice, but it's true for e.g. 87284
+- connections to the root are assumed to occur at either end; I'm not sure how common this is in practice, but it's true for e.g. 87284... more recently generated modelviews (with a parents attribute for each neuron) do not have this limitation
 - all connections to the child are assumed to occur at child(0)
 - point processes are ignored (usually no big deal because these are often for synaptic connections/other input)
 - linear mechanisms, kschan mechanisms are ignored
@@ -252,26 +252,32 @@ def json_to_py(json_file, py_file, cell_num=0):
         for child in parm_subset['children']:
             parameter_code += separator + '    sec.' + child['text'] + '\n'
     
-    # code for locating shared endpoints (and hence: connections)
     connection_code = ''
-    connection_pts = collections.defaultdict(list)
-    for name, coords in ends0.iteritems():
-        connection_pts[tuple(coords)].append(name + '(0)')
-    for name, coords in ends1.iteritems():
-        connection_pts[tuple(coords)].append(name + '(1)')
-    # ensure the root node is connected to the rest of the tree (well... this guarantees it's connected to something; it doesn't guarantee it's connected to everything)
-    root_ends = [tuple(ends0[root_node]), tuple(ends1[root_node])]
-    parse_assert(len(connection_pts[root_ends[0]]) + len(connection_pts[root_ends[1]]) > 2)
-    # now write the connection code
-    for connection_pt in sorted(connection_pts.keys()):
-        nodes = connection_pts[connection_pt]
-        if len(nodes) < 2: continue
-        parent = [node for node in nodes if '(1)' in node] + [node for node in nodes if node == root_node + '(0)']
-        parse_assert(len(parent) == 1)
-        parent = parent[0]
-        for node in sorted(nodes):
-            if node != parent:
-                connection_code += '%sself.%s.connect(self.%s, 0)\n' % (separator, node.split('(')[0], parent)
+    if 'parents' not in neuron:
+        # code for locating shared endpoints (and hence: connections)
+
+        connection_pts = collections.defaultdict(list)
+        for name, coords in ends0.iteritems():
+            connection_pts[tuple(coords)].append(name + '(0)')
+        for name, coords in ends1.iteritems():
+            connection_pts[tuple(coords)].append(name + '(1)')
+        # ensure the root node is connected to the rest of the tree (well... this guarantees it's connected to something; it doesn't guarantee it's connected to everything)
+        root_ends = [tuple(ends0[root_node]), tuple(ends1[root_node])]
+        parse_assert(len(connection_pts[root_ends[0]]) + len(connection_pts[root_ends[1]]) > 2)
+        # now write the connection code
+        for connection_pt in sorted(connection_pts.keys()):
+            nodes = connection_pts[connection_pt]
+            if len(nodes) < 2: continue
+            parent = [node for node in nodes if '(1)' in node] + [node for node in nodes if node == root_node + '(0)']
+            parse_assert(len(parent) == 1)
+            parent = parent[0]
+            for node in sorted(nodes):
+                if node != parent:
+                    connection_code += '%sself.%s.connect(self.%s, 0)\n' % (separator, node.split('(')[0], parent)
+    else:
+        for sec, parent in zip(neuron['secs'], neuron['parents']):
+            if parent is not None:
+                connection_code += '%sself.%s.connect(%s)\n' % (separator, sec, parent)
     connection_code = connection_code.strip()        
     
     # code for supporting the unique parameters
