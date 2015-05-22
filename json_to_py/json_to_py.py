@@ -277,7 +277,7 @@ def json_to_py(json_file, py_file, cell_num=0):
     else:
         for sec, parent in zip(neuron['secs'], neuron['parents']):
             if parent is not None:
-                connection_code += '%sself.%s.connect(%s)\n' % (separator, sec, parent)
+                connection_code += '%sself.%s.connect(self.%s)\n' % (separator, sec, parent)
     connection_code = connection_code.strip()        
     
     # code for supporting the unique parameters
