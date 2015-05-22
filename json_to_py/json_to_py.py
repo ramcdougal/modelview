@@ -190,10 +190,15 @@ def json_to_py(json_file, py_file, cell_num=0):
     # code for constructing the sections and section arrays
     # we sort to ensure consistency
     sec_names = sorted(sec_names)
+    sec_array_keys = sorted(sec_arrays.keys())
+    # move the soma to the top of the list (thus it automatically becomes the default section when this is the only cell)
+    # TODO: make this less of a hack; what I'm really trying to do is have the root be created first
+    sec_names = [name for name in sec_names if 'soma' in name] + [name for name in sec_names if 'soma' not in name]
+    sec_array_keys = [name for name in sec_array_keys if 'soma' in name] + [name for name in sec_array_keys if 'soma' not in name]
     # start with those that aren't arrays
     section_code = separator.join('self.{sec} = h.Section(cell=self, name="{sec}")\n'.format(sec=sec) for sec in sec_names)
     # now the arrays
-    section_code += ''.join(separator + 'self.{array} = [h.Section(cell=self, name="{array}[%d]" % i) for i in xrange({length})]\n'.format(array=array_name, length=sec_arrays[array_name]) for array_name in sorted(sec_arrays.keys()))
+    section_code += ''.join(separator + 'self.{array} = [h.Section(cell=self, name="{array}[%d]" % i) for i in xrange({length})]\n'.format(array=array_name, length=sec_arrays[array_name]) for array_name in sec_array_keys)
     # remove any leading or trailing whitespace
     section_code = section_code.strip()
     
@@ -212,8 +217,14 @@ def json_to_py(json_file, py_file, cell_num=0):
         length = sec_arrays[array_name]
         distinct_nseg = set(len(section_indices['%s[%d]' % (array_name, i)]) for i in xrange(length))
         for nseg in distinct_nseg:
-            nseg_code += separator + 'for i in %r:\n' % ([i for i in xrange(length) if len(section_indices['%s[%d]' % (array_name, i)]) == nseg])
-            nseg_code += separator + '    self.%s[i].nseg = %d\n' % (array_name, nseg)
+            # Note: no need to set nseg to 1
+            if nseg != 1:
+                index_list = [i for i in xrange(length) if len(section_indices['%s[%d]' % (array_name, i)]) == nseg]
+                if len(index_list) > 1:
+                    nseg_code += separator + 'for i in %r:\n' % (index_list)
+                    nseg_code += separator + '    self.%s[i].nseg = %d\n' % (array_name, nseg)
+                else:
+                    nseg_code += separator + 'self.%s[%d].nseg = %d\n' % (array_name, index_list[0], nseg)
         
     nseg_code = nseg_code.strip()
     
