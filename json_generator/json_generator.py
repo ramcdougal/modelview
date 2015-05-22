@@ -958,6 +958,9 @@ if temperature_dependence:
 else:
     temperature_info = {'text': 'Temperature: unmodeled'}
 
+def parents(secs):
+    return ['%s(%g)' % (h.SectionRef(sec=sec).parent().sec.name(), h.parent_connection(sec=sec)) if h.SectionRef(sec=sec).has_parent() else None for sec in secs]
+
 def process_values(name, values):
     if len(values) == 1:
         # TODO: plot location
@@ -1010,7 +1013,7 @@ make_noop([components])
 
 data = {
     'modelview_version': 0,
-    'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root), 'seg_names': seg_names_per_root(root)} for root in root_sections],
+    'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root), 'secs': [sec.name() for sec in secs_with_root(root)], 'parents': parents(secs_with_root(root)), 'seg_names': seg_names_per_root(root)} for root in root_sections],
     'title': title, 
     'short_title': short_title,
     'neuronviewer': range(len(root_sections)),
