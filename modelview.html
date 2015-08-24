@@ -9,6 +9,9 @@
     <script src="neuronweb/static/js/jquery-ui.js"></script>
 	<script src="neuronweb/static/js/jquery.dialogextend.js"></script>
 	
+	<!-- MathJax from their CDN -->
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
 	<!-- The following are imports for Flot!-->
 	<script type="text/javascript" src="neuronweb/flot/jquery.flot.js"></script>
 	<script type="text/javascript" src="neuronweb/flot/jquery.flot.navigate.js"></script>
@@ -31,10 +34,13 @@
     <script src="modelview/modelview.js" type="text/javascript"></script>
 
     <script type="text/javascript">
+        $(function() {
+            $('#loading_modelview').html('Loading ModelView... This may take several seconds.');
+        });
         if (window.location.hash == '') {
             document.write("No model specified.");
         } else {
-            var json_file = '/modeldb/getJsonFile.asp?file=' + window.location.hash.substr(1) + '.json';
+            var json_file = '/modeldb/getJsonFile.cshtml?file=' + window.location.hash.substr(1) + '.json';
             $.getJSON(json_file, function(json) {
                 $('#loading_modelview').hide();
                 modelview_data = json;
@@ -51,8 +57,11 @@
 
 <body>
     <div id='loading_modelview'>
-        Loading ModelView... This may take several seconds.
+
     </div>
+    <noscript>
+        Unable to load ModelView. Please enable JavaScript and reload this page.
+    </noscript>
     <div style='position: absolute; right: 0px; bottom: 0px'>
         <a id='download_button' style='display:none;'>Download Data</a>
     </div>
