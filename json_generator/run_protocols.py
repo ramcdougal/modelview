@@ -152,6 +152,38 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '83344_1':
+        {
+            'variant': 'a. Backpropagating AP',
+            'compile': ['cd BACFiring', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.figBAP()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr BACFiring']
+        },
+    '83344_2':
+        {
+            'variant': 'b. EPSP',
+            'compile': ['cd BACFiring', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.figEPSP()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr BACFiring']
+        },
+    '83344_3':
+        {
+            'variant': 'c. Ca spike',
+            'compile': ['cd BACFiring', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.figCa()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr BACFiring']
+        },
+    '83344_4':
+        {
+            'variant': 'd. BAC firing',
+            'compile': ['cd BACFiring', 'nrnivmodl mod'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.figBAC()', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr BACFiring']
+        },
     '180373':
         {
             'compile': ['cd ShaiEtAl2015', 'nrnivmodl simulationcode'],
@@ -6503,5 +6535,5 @@ if __name__ == '__main__':
         print 'Number of models with multiple protocols: %d' % len(multi.keys())
         print 'Total number of protocols: %d' % len(protocol.keys())
     elif sys.argv[1] == 'savejson':
-        with open(os.path.join('/home/tmm46/senselab/Web/ModelDB/jsondata', 'modelview_duplicates.txt'), 'w') as f:
+        with open(os.path.join('/home/morse/senselab/Web/ModelDB/jsondata', 'modelview_duplicates.txt'), 'w') as f:
             f.write(json.dumps(multi))
