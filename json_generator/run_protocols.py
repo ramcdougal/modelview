@@ -152,6 +152,22 @@ remove 20212_2 since missing a variable definition? or make work?
 
 """
 automatically_curated_protocols = {
+    '170030_1':
+        {
+            'variant':'Kv7.2+Kv7.3',
+            'compile': ['cd Kv72_ModelDB', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.run()'],
+            'cleanup': ['cd ../', 'rm -fr Kv72_ModelDB']
+        },
+    '170030_2':
+        {
+            'variant':'Kv7.2+Kv7.2R201C+Kv7.3',
+            'compile': ['cd Kv72_ModelDB', 'nrnivmodl'],
+            'launch': ['nrngui -python'],
+            'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h("setKvR201C()")'],
+            'cleanup': ['cd ../', 'rm -fr Kv72_ModelDB']
+        },
     '83344_1':
         {
             'variant': 'a. Backpropagating AP',
