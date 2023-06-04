@@ -126,8 +126,8 @@ for root, dirs, files in os.walk('.'):
             # handle mod files later because we know how to ignore their comments
             # so can treat them more accurately
             if not temperature_dependence and filename[-4:].lower() != '.mod' and filename not in ('json_generator.py', 'json_generator.pyc'):
-                with open(os.path.join(root, filename)) as f:
-                    if 'celsius' in f.read():
+                with open(os.path.join(root, filename), 'rb') as f:
+                    if b'celsius' in f.read():
                         temperature_dependence = 'celsius'
             
             if filename.lower().endswith('.mod'):

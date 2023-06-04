@@ -37,7 +37,7 @@ if dir_name[0] == dir_name[-1] == '"':
     dir_name_sh = dir_name[1:-1]
 else:
     dir_name_sh = dir_name
-os.system('unzip zipfile.zip')
+os.system('unzip -n zipfile.zip')
 os.system('cp json_generator.py %s/' % dir_name)
 os.chdir(dir_name_sh)
 
