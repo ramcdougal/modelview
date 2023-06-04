@@ -95,7 +95,7 @@ for link_ref in modeldb_soup.find_all(id='reference'):
             href = link.get('href')
             if href is not None:
                 pubmed_links.append('<a href="%s">%s</a>' % (href, link.text))
-if len(paper_links) == 0:
+if not paper_links:
     paper_links = pubmed_links
 
 full_title = modeldb_soup.find_all('title')[0].text
@@ -120,7 +120,7 @@ for root, dirs, files in os.walk('.'):
     # TODO: block the other architecture libraries too
     # TODO: of course, there's nothing inherently wrong with a mod file being in one of these
     #       folders... it's just that those tend to be copies made by nrnivmodl
-    if 'x86_64' not in root:
+    if 'x86_64' not in root and 'arm64' not in root:
         for filename in files:
             # check for temperature dependence
             # handle mod files later because we know how to ignore their comments
@@ -130,7 +130,7 @@ for root, dirs, files in os.walk('.'):
                     if 'celsius' in f.read():
                         temperature_dependence = 'celsius'
             
-            if filename[-4:].lower() == '.mod':
+            if filename.lower().endswith('.mod'):
                 depends_on = []
                 modulates = []
                 mech_name = None
@@ -178,7 +178,7 @@ for root, dirs, files in os.walk('.'):
 
 mech_xref = {}
 for name, filename in mech_files.items():
-    link = '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d&file=/%s/%s">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
+    link = '<a href="//showmodel?model=%d&file=/%s/%s&tab=3">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
     if name in mech_types:
         row = '%s, %s' % (mech_types[name], link)
     else:
@@ -420,7 +420,7 @@ if 'children' in point_processes:
             child['text'] += ' ' + mech_xref[name]
         elif name in ['AlphaSynapse', 'Exp2Syn', 'ExpSyn', 'IClamp', 'IntFire1', 'IntFire2', 'IntFire4', 'NetStim', 'SEClamp', 'VClamp']:
             # TODO: this will need changed if help documentation is moved
-            child['text'] += ' (builtin: <a href="http://neuron.yale.edu/neuron/static/new_doc/modelspec/programmatic/mechanisms/mech.html#%s">ref</a>)' % name
+            child['text'] += ' (builtin: <a href="https://nrn.readthedocs.io/en/latest/python/modelspec/programmatic/mechanisms/mech.html#%s">ref</a>)' % name
         child['action'] = []
         for i, root in enumerate(root_sections):
             #print 'name:', name
@@ -495,12 +495,12 @@ def morph_per_root(root):
     morph = []
     h.define_shape()
     for sec in secs_with_root(root):
-        n3d = int(h.n3d(sec=sec))
-        x = [h.x3d(i, sec=sec) for i in range(n3d)]
-        y = [h.y3d(i, sec=sec) for i in range(n3d)]
-        z = [h.z3d(i, sec=sec) for i in range(n3d)]
-        d = [h.diam3d(i, sec=sec) for i in range(n3d)]
-        arc = [h.arc3d(i, sec=sec) for i in range(n3d)]
+        n3d = int(sec.n3d())
+        x = [sec.x3d(i) for i in range(n3d)]
+        y = [sec.y3d(i) for i in range(n3d)]
+        z = [sec.z3d(i) for i in range(n3d)]
+        d = [sec.diam3d(i) for i in range(n3d)]
+        arc = [sec.arc3d(i) for i in range(n3d)]
         length = sec.L
         half_dx = 0.5 / sec.nseg
         for seg in sec:
@@ -817,7 +817,7 @@ if len(paper_links):
 else:
     children = []
 children.append({
-    'text': '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d">ModelDB Entry</a>' % model_id,
+    'text': '<a href="https://modeldb.science/%d">ModelDB Entry</a>' % model_id,
     'noop': True
 })
 references = {
@@ -1000,7 +1000,7 @@ if netcon_list.count():
 
 # include for components data
 # TODO: make this use an API to get dynamically
-components = {'include': '//senselab.med.yale.edu/modeldb/modelview_components.asp?model=%d&callback=jsonp_callback_' % model_id}
+components = {'include': '//modelview_components?model=%d&callback=jsonp_callback_' % model_id}
 
 # make all of the components noop
 def make_noop(tree):
