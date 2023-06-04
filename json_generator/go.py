@@ -49,7 +49,7 @@ for i, command in enumerate(protocol['compile']):
 # load the model into NEURON
 #
 assert(len(protocol['launch']) == 1)
-assert(protocol['launch'][0] == 'nrngui -python')
+assert(protocol['launch'][0] == 'python')
 
 # this import has to be done after the mod files have been compiled
 from neuron import h
