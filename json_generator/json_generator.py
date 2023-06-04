@@ -90,11 +90,11 @@ for link_ref in modeldb_soup.find_all(id='reference'):
         if link.text.lower().strip() != 'pubmed':
             href = link.get('href')
             if href is not None:
-                paper_links.append('<a href="%s">%s</a>' % (href, link.text))
+                paper_links.append('<a href="%s" target="_blank">%s</a>' % (href, link.text))
         else:
             href = link.get('href')
             if href is not None:
-                pubmed_links.append('<a href="%s">%s</a>' % (href, link.text))
+                pubmed_links.append('<a href="%s" target="_blank">%s</a>' % (href, link.text))
 if not paper_links:
     paper_links = pubmed_links
 
@@ -178,7 +178,7 @@ for root, dirs, files in os.walk('.'):
 
 mech_xref = {}
 for name, filename in mech_files.items():
-    link = '<a href="/%d?file=/%s/%s&tab=3">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
+    link = '<a href="/%d?file=/%s/%s&tab=3" target="_blank">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
     if name in mech_types:
         row = '%s, %s' % (mech_types[name], link)
     else:
@@ -420,7 +420,7 @@ if 'children' in point_processes:
             child['text'] += ' ' + mech_xref[name]
         elif name in ['AlphaSynapse', 'Exp2Syn', 'ExpSyn', 'IClamp', 'IntFire1', 'IntFire2', 'IntFire4', 'NetStim', 'SEClamp', 'VClamp']:
             # TODO: this will need changed if help documentation is moved
-            child['text'] += ' (builtin: <a href="https://nrn.readthedocs.io/en/latest/python/modelspec/programmatic/mechanisms/mech.html#%s">ref</a>)' % name
+            child['text'] += ' (builtin: <a href="https://nrn.readthedocs.io/en/latest/python/modelspec/programmatic/mechanisms/mech.html#%s" target="_blank">ref</a>)' % name
         child['action'] = []
         for i, root in enumerate(root_sections):
             #print 'name:', name
