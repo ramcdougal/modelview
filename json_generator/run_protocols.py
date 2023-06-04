@@ -4529,7 +4529,7 @@ manually_curated_protocols = {
             'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1a()', 'h.run()'],
-            'cleanup': ['cd ../', 'rm -fr patdemo']
+            'cleanup': ['cd ../', 'rm -fr cells']
         },
     '2488_2':
         {
@@ -4537,7 +4537,7 @@ manually_curated_protocols = {
             'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1b()', 'h.run()'],
-            'cleanup': ['cd ../', 'rm -fr patdemo']
+            'cleanup': ['cd ../', 'rm -fr cells']
         },
     '2488_3':
         {
@@ -4545,7 +4545,7 @@ manually_curated_protocols = {
             'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1c()', 'h.run()'],
-            'cleanup': ['cd ../', 'rm -fr patdemo']
+            'cleanup': ['cd ../', 'rm -fr cells']
         },
     '2488_4':
         {
@@ -4553,7 +4553,7 @@ manually_curated_protocols = {
             'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1d()', 'h.run()'],
-            'cleanup': ['cd ../', 'rm -fr patdemo']
+            'cleanup': ['cd ../', 'rm -fr cells']
         },
     '2488_5':
         {
@@ -4561,7 +4561,7 @@ manually_curated_protocols = {
             'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_2()', 'h.run()'],
-            'cleanup': ['cd ../', 'rm -fr patdemo']
+            'cleanup': ['cd ../', 'rm -fr cells']
         },
     '2730_1':
         {
