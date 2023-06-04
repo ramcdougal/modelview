@@ -4526,7 +4526,7 @@ manually_curated_protocols = {
     '2488_1':
         {
             'variant': '1a. L3 Aspiny',
-            'compile': ['cd patdemo', 'nrnivmodl'],
+            'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1a()', 'h.run()'],
             'cleanup': ['cd ../', 'rm -fr patdemo']
@@ -4534,7 +4534,7 @@ manually_curated_protocols = {
     '2488_2':
         {
             'variant': '1b. L4 Stellate',
-            'compile': ['cd patdemo', 'nrnivmodl'],
+            'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1b()', 'h.run()'],
             'cleanup': ['cd ../', 'rm -fr patdemo']
@@ -4542,7 +4542,7 @@ manually_curated_protocols = {
     '2488_3':
         {
             'variant': '1c. L3 Pyramid',
-            'compile': ['cd patdemo', 'nrnivmodl'],
+            'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1c()', 'h.run()'],
             'cleanup': ['cd ../', 'rm -fr patdemo']
@@ -4550,7 +4550,7 @@ manually_curated_protocols = {
     '2488_4':
         {
             'variant': '1d. L5 Pyramid',
-            'compile': ['cd patdemo', 'nrnivmodl'],
+            'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_1()', 'h.fig1d()', 'h.run()'],
             'cleanup': ['cd ../', 'rm -fr patdemo']
@@ -4558,7 +4558,7 @@ manually_curated_protocols = {
     '2488_5':
         {
             'variant': '2',
-            'compile': ['cd patdemo', 'nrnivmodl'],
+            'compile': ['cd cells', 'nrnivmodl'],
             'launch': ['python'],
             'run': ['from neuron import h, gui', 'h.load_file("mosinit.hoc")', 'h.fig_2()', 'h.run()'],
             'cleanup': ['cd ../', 'rm -fr patdemo']
