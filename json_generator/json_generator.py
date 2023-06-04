@@ -1000,7 +1000,7 @@ if netcon_list.count():
 
 # include for components data
 # TODO: make this use an API to get dynamically
-components = {'include': '//modelview_components?model=%d&callback=jsonp_callback_' % model_id}
+components = {'include': '/modelview_components/%d?callback=jsonp_callback_' % model_id}
 
 # make all of the components noop
 def make_noop(tree):
