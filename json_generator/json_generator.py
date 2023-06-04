@@ -178,7 +178,7 @@ for root, dirs, files in os.walk('.'):
 
 mech_xref = {}
 for name, filename in mech_files.items():
-    link = '<a href="//showmodel?model=%d&file=/%s/%s&tab=3">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
+    link = '<a href="/%d?file=/%s/%s&tab=3">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
     if name in mech_types:
         row = '%s, %s' % (mech_types[name], link)
     else:
