@@ -6534,22 +6534,22 @@ if __name__ == '__main__':
     for id in multi:
         multi[id] = sorted(multi[id], key=lambda row: row[0])
     if len(sys.argv) == 1:
-        print json.dumps(multi)
-        print
-        print
-        print 'models with multiple protocols:'
+        print(json.dumps(multi))
+        print()
+        print()
+        print('models with multiple protocols:')
         for key in multi:
-            print key
-        print
-        print
-        print 'all models with at least one protocol:'
+            print(key)
+        print()
+        print()
+        print('all models with at least one protocol:')
         for key in all_ids:
-            print key
-        print
-        print
-        print 'Protocols for %d models' % len(all_ids.keys())
-        print 'Number of models with multiple protocols: %d' % len(multi.keys())
-        print 'Total number of protocols: %d' % len(protocol.keys())
+            print(key)
+        print()
+        print()
+        print('Protocols for %d models' % len(list(all_ids.keys())))
+        print('Number of models with multiple protocols: %d' % len(list(multi.keys())))
+        print('Total number of protocols: %d' % len(list(protocol.keys())))
     elif sys.argv[1] == 'savejson':
         with open(os.path.join('/home/morse/senselab/Web/ModelDB/jsondata', 'modelview_duplicates.txt'), 'w') as f:
             f.write(json.dumps(multi))

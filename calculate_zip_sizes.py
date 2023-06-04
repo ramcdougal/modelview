@@ -1,7 +1,7 @@
-from urllib2 import urlopen
-import urllib2
+from urllib.request import urlopen
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
-import cPickle
+import pickle
 from matplotlib import pyplot
 
 # get list of neuron models
@@ -23,7 +23,7 @@ def analyze_zip(model_id):
     try:
         zipfile = urlopen('http://senselab.med.yale.edu/modeldb/eavBinDown.asp?o=%d&a=23&mime=application/zip' % model_id).read()
         zip_lengths[model_id] = len(zipfile)
-    except urllib2.HTTPError:
+    except urllib.error.HTTPError:
         no_zip.append(model_id)
         return False
     return True
@@ -32,9 +32,9 @@ for model in neuron_models:
     analyze_zip(model)
 
 with open('zip_lengths.txt', 'w') as f:
-    f.write(cPickle.dumps({'zip_lengths': zip_lengths, 'no_zip': no_zip}))
+    f.write(pickle.dumps({'zip_lengths': zip_lengths, 'no_zip': no_zip}))
 
-pyplot.hist(zip_lengths.values(), 50)
+pyplot.hist(list(zip_lengths.values()), 50)
 pyplot.xlabel('Zip length (bytes)')
 pyplot.ylabel('Count')
 pyplot.title('%d dropped because no zip' % len(no_zip))

@@ -215,11 +215,11 @@ def json_to_py(json_file, py_file, cell_num=0):
     nseg_code = separator.join('self.{sec}.nseg = {nseg}\n'.format(sec=sec, nseg=len(section_indices[sec])) for sec in sec_names)
     for array_name in sorted(sec_arrays.keys()):
         length = sec_arrays[array_name]
-        distinct_nseg = set(len(section_indices['%s[%d]' % (array_name, i)]) for i in xrange(length))
+        distinct_nseg = set(len(section_indices['%s[%d]' % (array_name, i)]) for i in range(length))
         for nseg in distinct_nseg:
             # Note: no need to set nseg to 1
             if nseg != 1:
-                index_list = [i for i in xrange(length) if len(section_indices['%s[%d]' % (array_name, i)]) == nseg]
+                index_list = [i for i in range(length) if len(section_indices['%s[%d]' % (array_name, i)]) == nseg]
                 if len(index_list) > 1:
                     nseg_code += separator + 'for i in %r:\n' % (index_list)
                     nseg_code += separator + '    self.%s[i].nseg = %d\n' % (array_name, nseg)
@@ -268,9 +268,9 @@ def json_to_py(json_file, py_file, cell_num=0):
         # code for locating shared endpoints (and hence: connections)
 
         connection_pts = collections.defaultdict(list)
-        for name, coords in ends0.iteritems():
+        for name, coords in ends0.items():
             connection_pts[tuple(coords)].append(name + '(0)')
-        for name, coords in ends1.iteritems():
+        for name, coords in ends1.items():
             connection_pts[tuple(coords)].append(name + '(1)')
         # ensure the root node is connected to the rest of the tree (well... this guarantees it's connected to something; it doesn't guarantee it's connected to everything)
         root_ends = [tuple(ends0[root_node]), tuple(ends1[root_node])]
@@ -323,7 +323,7 @@ def json_to_py(json_file, py_file, cell_num=0):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) not in (3, 4):
-        print 'Usage: python %s FILENAME.JSON FILENAME.PY [CELL#]' % sys.argv[0]
+        print('Usage: python %s FILENAME.JSON FILENAME.PY [CELL#]' % sys.argv[0])
 
     json_file = sys.argv[1]
     py_file = sys.argv[2]

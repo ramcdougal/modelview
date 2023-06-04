@@ -1,6 +1,6 @@
 import sys
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from run_protocols import protocol
 
 p = sys.argv[1]
@@ -15,12 +15,12 @@ initial_path = os.getcwd() + '/'
 #
 # TODO: a better way to do this would be to find the link with the downloadzip id in the ShowModel page
 #       especially since we will do that later anyways
-zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
+zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
 if zip_file == 'File not found!':
     # attribute 311 instead of 23 if an "alternate" version of the model
-    zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
+    zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
     if zip_file == 'File not found!':
-        print 'could not access the zip file; is the model id correct?'
+        print('could not access the zip file; is the model id correct?')
         sys.exit()
 
 
@@ -81,10 +81,10 @@ for i, command in enumerate(protocol['run']):
         h.CVode().extra_scatter_gather(0, generate_stats)
     exec(command)
 
-print 'WARNING: Never actually did an fadvance.'
-print '         Attempting to do statistics anyways.'
+print('WARNING: Never actually did an fadvance.')
+print('         Attempting to do statistics anyways.')
 h.t = 1
 good = False
 generate_stats()
-print 'WARNING: Never actually did an fadvance.'
+print('WARNING: Never actually did an fadvance.')
 

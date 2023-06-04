@@ -1,9 +1,9 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from matplotlib import pyplot
 
 # load the list of models by simulator
-all_models_html = urllib2.urlopen('http://senselab.med.yale.edu/modeldb/FindBySimulator.asp').read()
+all_models_html = urllib.request.urlopen('http://senselab.med.yale.edu/modeldb/FindBySimulator.asp').read()
 all_models_soup = BeautifulSoup(all_models_html, 'html5lib')
 
 table = all_models_soup.find_all('table')[1]
@@ -19,13 +19,13 @@ def get_count(sim):
 
 sims = ('All Others', 'NEURON', 'MATLAB',  'C or C++ program', 'XPP','GENESIS',  'Python', 'Brian',  'FORTRAN')
 val = [get_count(sim) for sim in sims]
-pos = [i + 0.5 for i in xrange(len(sims))]
+pos = [i + 0.5 for i in range(len(sims))]
 
-print val
+print(val)
 
 
 # set all others
-val[0] = sum(v for v in stats.values()) - sum(val)
+val[0] = sum(v for v in list(stats.values())) - sum(val)
 pos[0] -= 0.5
 
 pyplot.barh(pos, val, color='black', align='center')

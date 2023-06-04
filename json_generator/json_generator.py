@@ -1,7 +1,7 @@
 from neuron import h
 import numpy
 import json
-from urllib import urlopen
+from urllib.request import urlopen
 from bs4 import BeautifulSoup, Comment
 import os
 import sys
@@ -14,7 +14,7 @@ except:
     protocol = {}
 
 if len(sys.argv) < 2:
-    print 'Usage: python %s MODELID' % sys.argv[0]
+    print('Usage: python %s MODELID' % sys.argv[0])
     sys.exit()
 
 active_model = None
@@ -51,7 +51,7 @@ if len(sys.argv) < 3 or sys.argv[2].lower() != 'norun':
         pass
     if model_id in commands:
         for command in commands[model_id]:
-            print 'running: ', command
+            print('running: ', command)
             h(command)
 
 # TODO: add this to modeldb, then read from there
@@ -177,7 +177,7 @@ for root, dirs, files in os.walk('.'):
 
 
 mech_xref = {}
-for name, filename in mech_files.iteritems():
+for name, filename in mech_files.items():
     link = '<a href="http://senselab.med.yale.edu/modeldb/ShowModel.asp?model=%d&file=/%s/%s">%s</a>' % (model_id, top_level_folder, filename, filename.split(os.path.sep)[-1])
     if name in mech_types:
         row = '%s, %s' % (mech_types[name], link)
@@ -263,7 +263,7 @@ def highlight_if_sec(secs, match_sec):
     i = 0
     for sec in secs:
         if sec == match_sec:
-            result += range(i, i + sec.nseg)
+            result += list(range(i, i + sec.nseg))
         i += sec.nseg
     return result
 
@@ -274,7 +274,7 @@ def highlight_if_secs(secs, match_secs):
     match_secs = set(match_secs)
     for sec in secs:
         if sec in match_secs:
-            result += range(i, i + sec.nseg)
+            result += list(range(i, i + sec.nseg))
         i += sec.nseg
     return result
 
@@ -298,8 +298,8 @@ def highlight_if_sec_parms(secs, parms):
     result = []
     i = 0
     for sec in secs:
-        if all(all_segs_have(sec, name, value) for name, value in parms.iteritems()):
-            result += range(i, i + sec.nseg)
+        if all(all_segs_have(sec, name, value) for name, value in parms.items()):
+            result += list(range(i, i + sec.nseg))
         i += sec.nseg
     return result
 
@@ -310,7 +310,7 @@ def highlight_if_secname(secs, match_secname):
     i = 0
     for sec in secs:
         if sec.name() == match_secname:
-            result += range(i, i + sec.nseg)
+            result += list(range(i, i + sec.nseg))
         i += sec.nseg
     return result
 
@@ -320,7 +320,7 @@ def highlight_if_mech_present(secs, mech):
     i = 0
     for sec in secs:
         if hasattr(sec, mech) or hasattr(sec(0.5), mech):
-            result += range(i, i + sec.nseg)
+            result += list(range(i, i + sec.nseg))
         i += sec.nseg
     return result
 
@@ -365,7 +365,7 @@ json_var = 0
 strdef mname
 """)
 h.mt = h.MechanismType(0)
-for i in xrange(int(h.mt.count())):
+for i in range(int(h.mt.count())):
     h.mt.select(i)
     h('mt.selected(mname)')
     mech_names.append(h.mname)
@@ -373,7 +373,7 @@ for i in xrange(int(h.mt.count())):
 # get all point process names
 pointprocess_names = []
 h.mt = h.MechanismType(1)
-for i in xrange(int(h.mt.count())):
+for i in range(int(h.mt.count())):
     h.mt.select(i)
     h('mt.selected(mname)')
     pointprocess_names.append(h.mname)
@@ -381,10 +381,10 @@ for i in xrange(int(h.mt.count())):
 def pt_from_seg(seg):
     sec = seg.sec
     n = int(h.n3d(sec=sec))
-    x = [h.x3d(i, sec=sec) for i in xrange(n)]
-    y = [h.y3d(i, sec=sec) for i in xrange(n)]
-    z = [h.z3d(i, sec=sec) for i in xrange(n)]
-    arc = [h.arc3d(i, sec=sec) for i in xrange(n)]
+    x = [h.x3d(i, sec=sec) for i in range(n)]
+    y = [h.y3d(i, sec=sec) for i in range(n)]
+    z = [h.z3d(i, sec=sec) for i in range(n)]
+    arc = [h.arc3d(i, sec=sec) for i in range(n)]
     f = seg.x * sec.L
     return (numpy.interp(f, arc, x), numpy.interp(f, arc, y), numpy.interp(f, arc, z))
 
@@ -400,7 +400,7 @@ for name in pointprocess_names:
     #pointprocess_locs_by_root[name] = {root: [] for root in root_sections}
     #pointprocess_mouseovers_by_root[name] = {root: [] for root in root_sections}
     ell = h.List(name)
-    for i in xrange(int(ell.count())):
+    for i in range(int(ell.count())):
         obj = ell.o(i)
         if obj.has_loc():
             seg = obj.get_segment()
@@ -448,7 +448,7 @@ for mech in mech_names:
     range_vars[mech] = []
     suffix = '_' + mech
     lensuffix = len(suffix)
-    for i in xrange(int(h.mt.count())):
+    for i in range(int(h.mt.count())):
         h('mt.name(mname, %d)' % i)
         mname = h.mname
         if mname[-lensuffix :] == suffix:
@@ -496,11 +496,11 @@ def morph_per_root(root):
     h.define_shape()
     for sec in secs_with_root(root):
         n3d = int(h.n3d(sec=sec))
-        x = [h.x3d(i, sec=sec) for i in xrange(n3d)]
-        y = [h.y3d(i, sec=sec) for i in xrange(n3d)]
-        z = [h.z3d(i, sec=sec) for i in xrange(n3d)]
-        d = [h.diam3d(i, sec=sec) for i in xrange(n3d)]
-        arc = [h.arc3d(i, sec=sec) for i in xrange(n3d)]
+        x = [h.x3d(i, sec=sec) for i in range(n3d)]
+        y = [h.y3d(i, sec=sec) for i in range(n3d)]
+        z = [h.z3d(i, sec=sec) for i in range(n3d)]
+        d = [h.diam3d(i, sec=sec) for i in range(n3d)]
+        arc = [h.arc3d(i, sec=sec) for i in range(n3d)]
         length = sec.L
         half_dx = 0.5 / sec.nseg
         for seg in sec:
@@ -571,7 +571,7 @@ def nseg_analysis(secs, cell_id, root_name):
     max_nseg = max(sec.nseg for sec in secs)
     num_bins = 10
     delta_nseg = max(math.ceil((max_nseg + 1 - min_nseg) / float(num_bins)), 1)
-    nseg_counts = [0 for i in xrange(num_bins)]
+    nseg_counts = [0 for i in range(num_bins)]
     for sec in secs:
         nseg_counts[int((sec.nseg - min_nseg) / delta_nseg)] += 1
     nseg_bar_data = [[i * delta_nseg + min_nseg, nseg_count] for i, nseg_count in enumerate(nseg_counts)]
@@ -803,7 +803,7 @@ real_cells = {
         {
             'kind': 'neuronviewer',
             'id': i
-        } for i in xrange(len(root_sections))
+        } for i in range(len(root_sections))
     ]
 }
 if root_sections:
@@ -883,7 +883,7 @@ def parm_subset_properties(node):
     # grab a section
     mvps = h.ModelViewParmSubset[subset_id]
     allseclist = [sec for sec in mvps.realcell.allseclist]
-    secs = [allseclist[int(mvps.subset[i])] for i in xrange(int(mvps.subset.size()))]
+    secs = [allseclist[int(mvps.subset[i])] for i in range(int(mvps.subset.size()))]
 
     for row in node.get('children', []):
         text = row['text'].split()
@@ -980,7 +980,7 @@ if netcon_list.count():
     delays = []
     threshold = []
     # TODO: talk to Michael about why this doesn't work in pure python
-    for i in xrange(int(netcon_list.count())):
+    for i in range(int(netcon_list.count())):
         h.mt = netcon_list.object(i)
         h('json_var = mt.weight')
         weights.append(h.json_var)
@@ -1016,7 +1016,7 @@ data = {
     'neuron': [{'title': 'root: ' + root.name(), 'morphology': morph_per_root(root), 'secs': [sec.name() for sec in secs_with_root(root)], 'parents': parents(secs_with_root(root)), 'seg_names': seg_names_per_root(root)} for root in root_sections],
     'title': title, 
     'short_title': short_title,
-    'neuronviewer': range(len(root_sections)),
+    'neuronviewer': list(range(len(root_sections))),
     'tree': [
             summary,
             blank_line,
@@ -1053,10 +1053,10 @@ data = {
 }
 
 if cellviews is not None:
-    print 'has cellviews'
+    print('has cellviews')
     data['cellviews'] = cellviews
 else:
-    print 'no cellviews', sys.argv
+    print('no cellviews', sys.argv)
 
 if len(sys.argv) < 4:
     with open('%d.json' % model_id, 'w') as f:
@@ -1066,5 +1066,5 @@ else:
         f.write(json.dumps(data))
     
 if len(paper_links) == 0:
-    print 'No paper link found.'
+    print('No paper link found.')
     

@@ -1,6 +1,6 @@
 import sys
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from run_protocols import protocol
 
 p = sys.argv[1]
@@ -15,12 +15,12 @@ initial_path = os.getcwd() + '/'
 #
 # TODO: a better way to do this would be to find the link with the downloadzip id in the ShowModel page
 #       especially since we will do that later anyways
-zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
+zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
 if zip_file == 'File not found!':
     # attribute 311 instead of 23 if an "alternate" version of the model
-    zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
+    zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
     if zip_file == 'File not found!':
-        print 'could not access the zip file; is the model id correct?'
+        print('could not access the zip file; is the model id correct?')
         sys.exit()
 
 
@@ -70,7 +70,7 @@ def generate_json(*args, **kwargs):
     if '/' in dir_name_sh: dir_name_sh = dir_name_sh[:dir_name_sh.index('/')] # linux-specific
     os.system('rm -fr %s' % dir_name_sh)
     if not good:
-        print 'WARNING: Never actually did an fadvance'
+        print('WARNING: Never actually did an fadvance')
     sys.exit()
 
 # add the cwd to the path (needed for Python models)
@@ -78,16 +78,16 @@ sys.path = [os.getcwd()] + sys.path
 
 good = True    
 for i, command in enumerate(protocol['run']):
-    print i, command
+    print(i, command)
     if i == len(protocol['run']) - 1 and protocol.get('stopmidsim', True):
         h.CVode().extra_scatter_gather(0, generate_json)
-        print 'added the extra scatter gather catch'
+        print('added the extra scatter gather catch')
     exec(command)
 
-print 'WARNING: Never actually did an fadvance.'
-print '         Attempting to generate JSON anyways.'
+print('WARNING: Never actually did an fadvance.')
+print('         Attempting to generate JSON anyways.')
 h.t = 1
 good = False
 generate_json()
-print 'WARNING: Never actually did an fadvance.'
+print('WARNING: Never actually did an fadvance.')
 

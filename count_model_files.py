@@ -1,4 +1,4 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 from matplotlib import pyplot
 import os
@@ -7,15 +7,15 @@ import os
 import statsmodels.api as sm
 
 # load the list of models by simulator
-all_models_html = urllib2.urlopen('http://senselab.med.yale.edu/modeldb/ListByModelName.asp?c=19&lin=-1').read()
+all_models_html = urllib.request.urlopen('http://senselab.med.yale.edu/modeldb/ListByModelName.asp?c=19&lin=-1').read()
 all_models_soup = BeautifulSoup(all_models_html, 'html5lib')
 
 
 def download_zip(model_id):
-    zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % model_id).read()
+    zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % model_id).read()
     if zip_file == 'File not found!':
         # attribute 311 instead of 23 if an "alternate" version of the model
-        zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % model_id).read()
+        zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % model_id).read()
         if zip_file == 'File not found!':
             raise Exception('no zip')
     with open('zipfile.zip', 'wb') as f:
@@ -29,7 +29,7 @@ lengths = []
 for link in table.find_all('a'):
     href = link.get('href')
 
-    print link.text
+    print(link.text)
     try:
         download_zip(int(href.split('=')[1]))
     except:

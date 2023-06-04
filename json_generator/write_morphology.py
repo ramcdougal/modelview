@@ -1,7 +1,7 @@
 from neuron import h
 import numpy
 import json
-from urllib import urlopen
+from urllib.request import urlopen
 import os
 import sys
 import math
@@ -37,10 +37,10 @@ for sec in h.allsec():
 def pt_from_seg(seg):
     sec = seg.sec
     n = int(h.n3d(sec=sec))
-    x = [h.x3d(i, sec=sec) for i in xrange(n)]
-    y = [h.y3d(i, sec=sec) for i in xrange(n)]
-    z = [h.z3d(i, sec=sec) for i in xrange(n)]
-    arc = [h.arc3d(i, sec=sec) for i in xrange(n)]
+    x = [h.x3d(i, sec=sec) for i in range(n)]
+    y = [h.y3d(i, sec=sec) for i in range(n)]
+    z = [h.z3d(i, sec=sec) for i in range(n)]
+    arc = [h.arc3d(i, sec=sec) for i in range(n)]
     f = seg.x * sec.L
     return (numpy.interp(f, arc, x), numpy.interp(f, arc, y), numpy.interp(f, arc, z))
 
@@ -51,11 +51,11 @@ def morph_per_root(root):
     h.define_shape()
     for sec in secs_with_root(root):
         n3d = int(h.n3d(sec=sec))
-        x = [h.x3d(i, sec=sec) for i in xrange(n3d)]
-        y = [h.y3d(i, sec=sec) for i in xrange(n3d)]
-        z = [h.z3d(i, sec=sec) for i in xrange(n3d)]
-        d = [h.diam3d(i, sec=sec) for i in xrange(n3d)]
-        arc = [h.arc3d(i, sec=sec) for i in xrange(n3d)]
+        x = [h.x3d(i, sec=sec) for i in range(n3d)]
+        y = [h.y3d(i, sec=sec) for i in range(n3d)]
+        z = [h.z3d(i, sec=sec) for i in range(n3d)]
+        d = [h.diam3d(i, sec=sec) for i in range(n3d)]
+        arc = [h.arc3d(i, sec=sec) for i in range(n3d)]
         length = sec.L
         half_dx = 0.5 / sec.nseg
         for seg in sec:

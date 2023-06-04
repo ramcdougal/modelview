@@ -1,5 +1,5 @@
-from urllib2 import urlopen
-import urllib2
+from urllib.request import urlopen
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup, Comment
 
 # get list of neuron models
@@ -17,7 +17,7 @@ neuron_models.sort()
 def does_modelview_exist(model_id):
     try:
         urlopen('http://senselab.med.yale.edu/modeldb/modelview/%d.json' % model_id)
-    except urllib2.HTTPError:
+    except urllib.error.HTTPError:
         return False
     return True
 
@@ -31,9 +31,9 @@ for model in neuron_models:
         no_modelview.append(model)
 
 
-print 'modelview exists for:'
-print has_modelview
-print
-print 'modelview does not exist for:'
-print no_modelview
+print('modelview exists for:')
+print(has_modelview)
+print()
+print('modelview does not exist for:')
+print(no_modelview)
 

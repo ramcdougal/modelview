@@ -24,7 +24,7 @@ for line in map_lines:
 
 # now sprinkle the generators
 failed_path_list = []
-for accession, folder in map.iteritems():
+for accession, folder in map.items():
   # accession left out: don't use relative_path = nrn_version_folder+"/"+accession+"/"+folder+"/"+folder
   relative_path = nrn_version_folder+"/"+folder+"/"+folder
   try:
@@ -34,8 +34,8 @@ for accession, folder in map.iteritems():
     stuff = ''
     failed_path_list.append(relative_path)
 
-print "The following paths likely had a problem (perhaps there was nothing there):"
-print failed_path_list
+print("The following paths likely had a problem (perhaps there was nothing there):")
+print(failed_path_list)
 
 # finally start all the generators 
 #
@@ -56,14 +56,14 @@ for json_file in prev_json_files:
   omit_ext=json_file[:-5]
   skip_over.append(omit_ext.split("/")[-1])
 
-for accessionnum, folder in map.iteritems():
+for accessionnum, folder in map.items():
   if accessionnum in skip_over:
-    print "**** skipping over accessionnum "+accessionnum+", folder: ",folder
+    print("**** skipping over accessionnum "+accessionnum+", folder: ",folder)
     continue
   # accession left out: relative_path = nrn_version_folder+"/"+folder+"/"+folder
   relative_path = nrn_version_folder+"/"+folder+"/"+folder
   if relative_path in failed_path_list:
-    print "**** Not even trying to run this failed path: "+relative_path
+    print("**** Not even trying to run this failed path: "+relative_path)
   else:
     # accessionnum = "143604"
     # folder = "singleDendrite"
@@ -77,8 +77,8 @@ for accessionnum, folder in map.iteritems():
     st = os.stat(cmd_filename)
     os.chmod(cmd_filename, st.st_mode | stat.S_IEXEC)
     cmd_list = [cmd_filename]
-    print "Initiating command: "+repr(cmd_list)
+    print("Initiating command: "+repr(cmd_list))
     timeout_command(cmd_list,600,relative_path)
 
-print "done"
+print("done")
 

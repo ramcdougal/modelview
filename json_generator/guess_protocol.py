@@ -1,10 +1,10 @@
 import sys
 import os
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import subprocess
 
 if len(sys.argv) < 2:
-    print 'did you forget to specify a model id?'
+    print('did you forget to specify a model id?')
     sys.exit()
 id = int(sys.argv[1])
 
@@ -17,12 +17,12 @@ warnings = []
 #
 # TODO: a better way to do this would be to find the link with the downloadzip id in the ShowModel page
 #       BUT: that would require loading the ShowModel page
-zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
+zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=23&mime=application/zip' % id).read()
 if zip_file == 'File not found!':
     # attribute 311 instead of 23 if an "alternate" version of the model
-    zip_file = urllib2.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
+    zip_file = urllib.request.urlopen('http://senselab.med.yale.edu/ModelDB/eavBinDown.asp?o=%d&a=311&mime=application/zip' % id).read()
     if zip_file == 'File not found!':
-        print 'could not access the zip file; is the model id correct?'
+        print('could not access the zip file; is the model id correct?')
         sys.exit()
 
 if 'temp_files_guess_protocol' in os.listdir('.'):
@@ -60,7 +60,7 @@ with open('mosinit.hoc') as f:
 mod_files = subprocess.Popen('find . -name "*.mod"', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n')
 
 if len([m for m in mod_files if m != '']):
-    print 'mod_files:', mod_files
+    print('mod_files:', mod_files)
     if first_line[: 9] == '//moddir ':
         compile_instructions = 'nrnivmodl ' + first_line[9:].strip()
     else:
@@ -68,8 +68,8 @@ if len([m for m in mod_files if m != '']):
 
     os.system(compile_instructions)
 else:
-    print 'mod_files:', mod_files
-    print 'none'
+    print('mod_files:', mod_files)
+    print('none')
     compile_instructions = None
     
 from neuron import h
@@ -80,7 +80,7 @@ xbutton_commands = []
 for button in xbuttons:
     if button:
         # strip out the filename
-        print repr(button)
+        print(repr(button))
         button = button[button.index(':') + 1:].strip()
         if '//' in button:
             if button.index('//') < button.index('xbutton'):
@@ -107,19 +107,19 @@ load_model = ['from neuron import h, gui', 'h.load_file("mosinit.hoc")']
 
 def print_compile_instructions():
     if compile_instructions is not None:
-        print "            'compile': ['%s', '%s']," % (chdir_command, compile_instructions)
+        print("            'compile': ['%s', '%s']," % (chdir_command, compile_instructions))
     else:
-        print "            'compile': ['%s']," % (chdir_command)
+        print("            'compile': ['%s']," % (chdir_command))
 
 
 def print_results_and_exit():
-    print "    '%d':" % id
-    print "        {"
+    print("    '%d':" % id)
+    print("        {")
     print_compile_instructions()
-    print "            'launch': ['%s']," % load_neuron
-    print "            'run': %r," % load_model
-    print "            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name)
-    print "        },"
+    print("            'launch': ['%s']," % load_neuron)
+    print("            'run': %r," % load_model)
+    print("            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name))
+    print("        },")
 
     import sys
     sys.exit()
@@ -147,34 +147,34 @@ else:
     i = 0
     for label, command in zip(xbutton_labels, xbutton_commands):
         i += 1
-        print "    '%d_%d':" % (id, i)
-        print "        {"
-        print "            'variant': '%s'," % label.strip()
+        print("    '%d_%d':" % (id, i))
+        print("        {")
+        print("            'variant': '%s'," % label.strip())
         print_compile_instructions()
-        print "            'launch': ['%s']," % load_neuron
-        print "            'run': %r," % (load_model + [command])
-        print "            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name)
-        print "        },"
+        print("            'launch': ['%s']," % load_neuron)
+        print("            'run': %r," % (load_model + [command]))
+        print("            'cleanup': ['cd %s', 'rm -fr %s']" % (path_to_root, model_name))
+        print("        },")
 
 
 if len(warnings):
-    print
-    print '*** WARNING%s ***' % ('S' if len(warnings) > 1 else '')
+    print()
+    print('*** WARNING%s ***' % ('S' if len(warnings) > 1 else ''))
     for warning in warnings:
-        print warning
+        print(warning)
 
 xradiobuttons = [item for item in subprocess.Popen('grep -r xradiobutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n') if item.strip() != '']
 
 if len(xradiobuttons):
-    print
-    print '*** there were xradiobuttons ***'
+    print()
+    print('*** there were xradiobuttons ***')
     for line in xradiobuttons:
-        print '    ', line
+        print('    ', line)
 
 xstatebuttons = [item for item in subprocess.Popen('grep -r xstatebutton .', shell=True, stdout=subprocess.PIPE).communicate()[0].strip().split('\n') if item.strip() != '']
 
 if len(xstatebuttons):
-    print
-    print '*** there were xstatebuttons ***'
+    print()
+    print('*** there were xstatebuttons ***')
     for line in xstatebuttons:
-        print '    ', line
+        print('    ', line)

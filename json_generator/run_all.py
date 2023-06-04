@@ -42,7 +42,7 @@ for key in protocol:
         failed_list.append(key)
 
 if len(failed_list):
-    print 'some modelviews failed:'
-    print failed_list
+    print('some modelviews failed:')
+    print(failed_list)
 else:
-    print 'all modelviews generated successfully'
+    print('all modelviews generated successfully')
