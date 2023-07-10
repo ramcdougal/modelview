@@ -242,15 +242,12 @@ def json_to_py(json_file, py_file, cell_num=0):
         if mechanism_name[-4:] == '_ion': continue
         mechanism_secs = sorted(set(seg_names[i].split('(')[0] for i in mechanism['action'][0]['highlight']))
         if mechanism_secs:
-            if len(mechanism_secs) == num_secs:
-                mechanism_code += separator + 'for sec in h.allsec():\n'
-            else:
-                sec_list = '[%s]' % ', '.join('self.%s' % sec for sec in mechanism_secs)
-                if sec_list not in sec_lists:
-                    sec_lists[sec_list] = len(sec_lists)
-                    mechanism_code += separator + 'sec_list%d = %s\n' % (len(sec_lists) - 1, sec_list)
-                sec_list = 'sec_list%d' % sec_lists[sec_list]
-                mechanism_code += separator + 'for sec in %s:\n' % sec_list
+            sec_list = '[%s]' % ', '.join('self.%s' % sec for sec in mechanism_secs)
+            if sec_list not in sec_lists:
+                sec_lists[sec_list] = len(sec_lists)
+                mechanism_code += separator + 'sec_list%d = %s\n' % (len(sec_lists) - 1, sec_list)
+            sec_list = 'sec_list%d' % sec_lists[sec_list]
+            mechanism_code += separator + 'for sec in %s:\n' % sec_list
             mechanism_code += separator + '    sec.insert("%s")\n' % mechanism_name
     mechanism_code = mechanism_code.strip()
     
