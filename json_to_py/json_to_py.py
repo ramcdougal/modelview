@@ -43,10 +43,10 @@ class {class_name}:
     def _set_section_morphology(self, sec, xyzdiams):
         '''sets the shape and position for a section, shifting it by the offset position'''
         from neuron import h
-        h.pt3dclear(sec=sec)
+        sec.pt3dclear()
         for pt in xyzdiams:
             x, y, z, diam = pt
-            h.pt3dadd(x + self._x, y + self._y, z + self._z, diam, sec=sec)
+            sec.pt3dadd(x + self._x, y + self._y, z + self._z, diam)
             
     def _setup_morphology(self):
         self._create_sections()
@@ -198,7 +198,7 @@ def json_to_py(json_file, py_file, cell_num=0):
     # start with those that aren't arrays
     section_code = separator.join('self.{sec} = h.Section(cell=self, name="{sec}")\n'.format(sec=sec) for sec in sec_names)
     # now the arrays
-    section_code += ''.join(separator + 'self.{array} = [h.Section(cell=self, name="{array}[%d]" % i) for i in xrange({length})]\n'.format(array=array_name, length=sec_arrays[array_name]) for array_name in sec_array_keys)
+    section_code += ''.join(separator + 'self.{array} = [h.Section(cell=self, name="{array}[%d]" % i) for i in range({length})]\n'.format(array=array_name, length=sec_arrays[array_name]) for array_name in sec_array_keys)
     # remove any leading or trailing whitespace
     section_code = section_code.strip()
     
